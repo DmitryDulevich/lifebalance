@@ -9,7 +9,7 @@ enum GoalStatus: String, Codable, Sendable {
 }
 
 @Model
-final class Goal {
+final class Goal: Identifiable {
     var id: UUID
     var title: String
     var status: GoalStatus

@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class BalanceSnapshot {
+final class BalanceSnapshot: Identifiable {
     var id: UUID
     var createdAt: Date
     var note: String?

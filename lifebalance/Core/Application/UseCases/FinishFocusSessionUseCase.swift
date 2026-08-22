@@ -10,14 +10,23 @@ final class FinishFocusSessionUseCase {
         self.taskRepository = taskRepository
     }
 
-    func execute(_ session: FocusSession, completeTask: Bool, cancelled: Bool = false) throws {
+    func execute(
+        _ session: FocusSession,
+        completeTask: Bool,
+        cancelled: Bool = false,
+        endedAt: Date = .now
+    ) throws {
+        if session.status == .paused, let pausedAt = session.pausedAt {
+            session.pausedSeconds += max(0, Int(endedAt.timeIntervalSince(pausedAt).rounded()))
+        }
+        session.pausedAt = nil
         session.status = cancelled ? .cancelled : .completed
-        session.endAt = .now
+        session.endAt = endedAt
         try focusSessionRepository.save()
 
         if completeTask, let task = session.task, task.status != .completed {
             task.status = .completed
-            task.completedAt = .now
+            task.completedAt = endedAt
             try taskRepository.save()
         }
     }

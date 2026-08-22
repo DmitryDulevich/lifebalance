@@ -8,7 +8,7 @@ enum TaskStatus: String, Codable, Sendable {
 
 /// Named `TaskItem` (not `Task`) to avoid clashing with Swift's structured-concurrency `Task`.
 @Model
-final class TaskItem {
+final class TaskItem: Identifiable {
     var id: UUID
     var title: String
     var note: String?

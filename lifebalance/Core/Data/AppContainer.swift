@@ -22,6 +22,7 @@ final class AppContainer {
     let createGoalUseCase: CreateGoalUseCase
     let startFocusSessionUseCase: StartFocusSessionUseCase
     let finishFocusSessionUseCase: FinishFocusSessionUseCase
+    let restoreActiveFocusSessionUseCase: RestoreActiveFocusSessionUseCase
     let adjustBalanceRatingUseCase: AdjustBalanceRatingUseCase
 
     init(modelContext: ModelContext) {
@@ -58,9 +59,14 @@ final class AppContainer {
         self.deleteTaskUseCase = DeleteTaskUseCase(taskRepository: taskRepository)
         self.createGoalUseCase = CreateGoalUseCase(goalRepository: goalRepository)
         self.startFocusSessionUseCase = StartFocusSessionUseCase(focusSessionRepository: focusSessionRepository)
-        self.finishFocusSessionUseCase = FinishFocusSessionUseCase(
+        let finishFocusSessionUseCase = FinishFocusSessionUseCase(
             focusSessionRepository: focusSessionRepository,
             taskRepository: taskRepository
+        )
+        self.finishFocusSessionUseCase = finishFocusSessionUseCase
+        self.restoreActiveFocusSessionUseCase = RestoreActiveFocusSessionUseCase(
+            focusSessionRepository: focusSessionRepository,
+            finishFocusSessionUseCase: finishFocusSessionUseCase
         )
         self.adjustBalanceRatingUseCase = AdjustBalanceRatingUseCase(balanceRepository: balanceRepository)
     }

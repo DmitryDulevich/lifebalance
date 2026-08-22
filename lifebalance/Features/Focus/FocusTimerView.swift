@@ -15,8 +15,9 @@ struct FocusTimerView: View {
             VStack {
                 HStack {
                     Button {
-                        viewModel.cancel()
-                        dismiss()
+                        if viewModel.cancel() {
+                            dismiss()
+                        }
                     } label: {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 16, weight: .semibold))
@@ -61,7 +62,7 @@ struct FocusTimerView: View {
                                 .font(.system(size: 44, weight: .bold, design: .rounded))
                                 .monospacedDigit()
                                 .foregroundStyle(Palette.textPrimary)
-                            Text(viewModel.isPaused ? "На паузе" : "Идёт сессия")
+                            Text(viewModel.statusText)
                                 .font(.system(size: 13))
                                 .foregroundStyle(Palette.textSecondary)
                         }
@@ -69,9 +70,13 @@ struct FocusTimerView: View {
 
                     HStack(spacing: 14) {
                         Button {
-                            viewModel.togglePause()
+                            if viewModel.didFinish {
+                                dismiss()
+                            } else {
+                                viewModel.togglePause()
+                            }
                         } label: {
-                            Image(systemName: viewModel.isPaused ? "play.fill" : "pause.fill")
+                            Image(systemName: viewModel.didFinish ? "checkmark" : (viewModel.isPaused ? "play.fill" : "pause.fill"))
                                 .font(.system(size: 20))
                                 .foregroundStyle(Palette.textPrimary)
                                 .frame(width: 64, height: 64)
@@ -80,10 +85,11 @@ struct FocusTimerView: View {
                         .buttonStyle(.plain)
 
                         Button {
-                            viewModel.finish()
-                            dismiss()
+                            if viewModel.didFinish || viewModel.finish() {
+                                dismiss()
+                            }
                         } label: {
-                            Text("Завершить")
+                            Text(viewModel.didFinish ? "Готово" : "Завершить")
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 30)
@@ -107,6 +113,19 @@ struct FocusTimerView: View {
         .navigationBarBackButtonHidden(true)
         .task {
             viewModel.start()
+        }
+        .alert(
+            "Не удалось выполнить действие",
+            isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
+            )
+        ) {
+            Button("ОК", role: .cancel) {
+                viewModel.errorMessage = nil
+            }
+        } message: {
+            Text(viewModel.errorMessage ?? "Неизвестная ошибка")
         }
     }
 

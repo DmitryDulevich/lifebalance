@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class LifeArea {
+final class LifeArea: Identifiable {
     var id: UUID
     var name: String
     var icon: String

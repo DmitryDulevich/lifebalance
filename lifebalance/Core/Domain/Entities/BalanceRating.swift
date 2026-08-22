@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class BalanceRating {
+final class BalanceRating: Identifiable {
     var id: UUID
     var value: Int?
     var note: String?

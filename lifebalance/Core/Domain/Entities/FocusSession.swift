@@ -9,12 +9,13 @@ enum FocusSessionStatus: String, Codable, Sendable {
 }
 
 @Model
-final class FocusSession {
+final class FocusSession: Identifiable {
     var id: UUID
     var startAt: Date
     var endAt: Date?
     var plannedSeconds: Int
     var pausedSeconds: Int
+    var pausedAt: Date?
     var status: FocusSessionStatus
     var task: TaskItem?
 
@@ -24,6 +25,7 @@ final class FocusSession {
         endAt: Date? = nil,
         plannedSeconds: Int,
         pausedSeconds: Int = 0,
+        pausedAt: Date? = nil,
         status: FocusSessionStatus = .running,
         task: TaskItem? = nil
     ) {
@@ -32,6 +34,7 @@ final class FocusSession {
         self.endAt = endAt
         self.plannedSeconds = plannedSeconds
         self.pausedSeconds = pausedSeconds
+        self.pausedAt = pausedAt
         self.status = status
         self.task = task
     }
