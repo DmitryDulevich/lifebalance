@@ -1,0 +1,79 @@
+import Foundation
+import Observation
+
+@Observable
+@MainActor
+final class TaskFormViewModel {
+    var title: String
+    var note: String
+    var selectedAreaID: UUID?
+    var selectedGoalID: UUID?
+    var dueDate: Date?
+    var hasDueDate: Bool
+    var important: Bool?
+    var urgent: Bool?
+    var estimateMinutesText: String
+    var errorMessage: String?
+
+    let lifeAreas: [LifeArea]
+    let goals: [Goal]
+    private let editingTask: TaskItem?
+    private let createTaskUseCase: CreateTaskUseCase
+    private let updateTaskUseCase: UpdateTaskUseCase
+
+    init(container: AppContainer, lifeAreas: [LifeArea], goals: [Goal], editingTask: TaskItem?) {
+        self.lifeAreas = lifeAreas
+        self.goals = goals
+        self.editingTask = editingTask
+        self.createTaskUseCase = container.createTaskUseCase
+        self.updateTaskUseCase = container.updateTaskUseCase
+
+        if let task = editingTask {
+            title = task.title
+            note = task.note ?? ""
+            selectedAreaID = task.lifeArea?.id
+            selectedGoalID = task.goal?.id
+            dueDate = task.dueDate
+            hasDueDate = task.dueDate != nil
+            important = task.important
+            urgent = task.urgent
+            estimateMinutesText = task.estimateMinutes.map(String.init) ?? ""
+        } else {
+            title = ""
+            note = ""
+            selectedAreaID = nil
+            selectedGoalID = nil
+            dueDate = nil
+            hasDueDate = false
+            important = nil
+            urgent = nil
+            estimateMinutesText = ""
+        }
+    }
+
+    var isEditing: Bool { editingTask != nil }
+
+    func save() -> Bool {
+        let input = TaskInput(
+            title: title,
+            note: note,
+            dueDate: hasDueDate ? (dueDate ?? .now) : nil,
+            important: important,
+            urgent: urgent,
+            estimateMinutes: Int(estimateMinutesText),
+            lifeArea: lifeAreas.first { $0.id == selectedAreaID },
+            goal: goals.first { $0.id == selectedGoalID }
+        )
+        do {
+            if let editingTask {
+                try updateTaskUseCase.execute(editingTask, with: input)
+            } else {
+                try createTaskUseCase.execute(input)
+            }
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+}
