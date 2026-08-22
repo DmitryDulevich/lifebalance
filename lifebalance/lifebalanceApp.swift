@@ -1,6 +1,6 @@
 //
-//  testApp.swift
-//  test
+//  lifebalanceApp.swift
+//  lifebalance
 //
 //  Created by DDS on 06.03.2026.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct testApp: App {
+struct lifebalanceApp: App {
     let modelContainer: ModelContainer = {
         let schema = Schema([
             UserSettings.self,

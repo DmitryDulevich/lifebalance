@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		CE9550762F5B5467000E20E2 /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE9550762F5B5467000E20E2 /* lifebalance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lifebalance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CE9550782F5B5467000E20E2 /* test */ = {
+		CE9550782F5B5467000E20E2 /* lifebalance */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = test;
+			path = lifebalance;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		CE95506D2F5B5467000E20E2 = {
 			isa = PBXGroup;
 			children = (
-				CE9550782F5B5467000E20E2 /* test */,
+				CE9550782F5B5467000E20E2 /* lifebalance */,
 				CE9550772F5B5467000E20E2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		CE9550772F5B5467000E20E2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CE9550762F5B5467000E20E2 /* test.app */,
+				CE9550762F5B5467000E20E2 /* lifebalance.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CE9550752F5B5467000E20E2 /* test */ = {
+		CE9550752F5B5467000E20E2 /* lifebalance */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CE9550812F5B5469000E20E2 /* Build configuration list for PBXNativeTarget "test" */;
+			buildConfigurationList = CE9550812F5B5469000E20E2 /* Build configuration list for PBXNativeTarget "lifebalance" */;
 			buildPhases = (
 				CE9550722F5B5467000E20E2 /* Sources */,
 				CE9550732F5B5467000E20E2 /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CE9550782F5B5467000E20E2 /* test */,
+				CE9550782F5B5467000E20E2 /* lifebalance */,
 			);
-			name = test;
+			name = lifebalance;
 			packageProductDependencies = (
 			);
 			productName = test;
-			productReference = CE9550762F5B5467000E20E2 /* test.app */;
+			productReference = CE9550762F5B5467000E20E2 /* lifebalance.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CE9550712F5B5467000E20E2 /* Build configuration list for PBXProject "test" */;
+			buildConfigurationList = CE9550712F5B5467000E20E2 /* Build configuration list for PBXProject "lifebalance" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CE9550752F5B5467000E20E2 /* test */,
+				CE9550752F5B5467000E20E2 /* lifebalance */,
 			);
 		};
 /* End PBXProject section */
@@ -313,7 +313,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE9550712F5B5467000E20E2 /* Build configuration list for PBXProject "test" */ = {
+		CE9550712F5B5467000E20E2 /* Build configuration list for PBXProject "lifebalance" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE95507F2F5B5469000E20E2 /* Debug */,
@@ -322,7 +322,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CE9550812F5B5469000E20E2 /* Build configuration list for PBXNativeTarget "test" */ = {
+		CE9550812F5B5469000E20E2 /* Build configuration list for PBXNativeTarget "lifebalance" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE9550822F5B5469000E20E2 /* Debug */,
