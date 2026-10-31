@@ -47,4 +47,45 @@ struct CreateTaskUseCaseTests {
         }
         #expect(repository.insertedTasks.isEmpty)
     }
+
+    @Test("Non-positive estimate is rejected")
+    func rejectsInvalidEstimate() {
+        let repository = FakeTaskRepository()
+        let useCase = CreateTaskUseCase(taskRepository: repository)
+        let input = TaskInput(
+            title: "Prepare release",
+            note: nil,
+            dueDate: nil,
+            important: nil,
+            urgent: nil,
+            estimateMinutes: 0,
+            lifeArea: nil,
+            goal: nil
+        )
+
+        #expect(throws: TaskValidationError.self) {
+            try useCase.execute(input)
+        }
+        #expect(repository.insertedTasks.isEmpty)
+    }
+
+    @Test("Title longer than 120 characters is rejected")
+    func rejectsLongTitle() {
+        let repository = FakeTaskRepository()
+        let useCase = CreateTaskUseCase(taskRepository: repository)
+        let input = TaskInput(
+            title: String(repeating: "a", count: 121),
+            note: nil,
+            dueDate: nil,
+            important: nil,
+            urgent: nil,
+            estimateMinutes: nil,
+            lifeArea: nil,
+            goal: nil
+        )
+
+        #expect(throws: TaskValidationError.self) {
+            try useCase.execute(input)
+        }
+    }
 }

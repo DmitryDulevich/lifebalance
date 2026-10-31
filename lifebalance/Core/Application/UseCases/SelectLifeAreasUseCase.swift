@@ -11,6 +11,9 @@ final class SelectLifeAreasUseCase {
     enum ValidationError: LocalizedError {
         case tooFew
         case tooMany
+        case invalidName
+        case duplicateName
+        case conflictsWithSavedSelection
 
         var errorDescription: String? {
             switch self {
@@ -18,6 +21,12 @@ final class SelectLifeAreasUseCase {
                 return "Выберите минимум 3 сферы."
             case .tooMany:
                 return "Можно выбрать не более 8 сфер."
+            case .invalidName:
+                return "Название сферы должно содержать от 1 до 30 символов."
+            case .duplicateName:
+                return "Названия выбранных сфер не должны повторяться."
+            case .conflictsWithSavedSelection:
+                return "В приложении уже сохранён другой набор сфер."
             }
         }
     }
@@ -34,7 +43,35 @@ final class SelectLifeAreasUseCase {
         guard drafts.count >= 3 else { throw ValidationError.tooFew }
         guard drafts.count <= 8 else { throw ValidationError.tooMany }
 
-        let areas = drafts.enumerated().map { index, draft in
+        let normalizedDrafts = drafts.map { draft in
+            LifeAreaDraft(
+                name: draft.name.trimmingCharacters(in: .whitespacesAndNewlines),
+                icon: draft.icon,
+                colorHex: draft.colorHex
+            )
+        }
+        guard normalizedDrafts.allSatisfy({ (1...30).contains($0.name.count) }) else {
+            throw ValidationError.invalidName
+        }
+        let normalizedNames = normalizedDrafts.map {
+            $0.name.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: .current)
+        }
+        guard Set(normalizedNames).count == normalizedNames.count else {
+            throw ValidationError.duplicateName
+        }
+
+        let existingAreas = try lifeAreaRepository.fetchActiveAreas()
+        if !existingAreas.isEmpty {
+            let existingNames = existingAreas.map(\.name)
+            let requestedNames = normalizedDrafts.map(\.name)
+            guard existingNames == requestedNames else {
+                throw ValidationError.conflictsWithSavedSelection
+            }
+            try userSettingsRepository.updateOnboardingStep(.initialBalance)
+            return
+        }
+
+        let areas = normalizedDrafts.enumerated().map { index, draft in
             LifeArea(name: draft.name, icon: draft.icon, colorHex: draft.colorHex, order: index)
         }
         try lifeAreaRepository.insert(areas)

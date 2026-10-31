@@ -64,4 +64,51 @@ struct SelectLifeAreasUseCaseTests {
         #expect(lifeAreaRepository.insertedBatches.isEmpty)
         #expect(settingsRepository.updatedSteps.isEmpty)
     }
+
+    @Test("Retry after settings failure does not insert duplicate areas")
+    func retryIsIdempotent() throws {
+        let lifeAreaRepository = FakeLifeAreaRepository()
+        let settingsRepository = FakeUserSettingsRepository()
+        settingsRepository.updateError = FakeRepositoryError.forcedFailure
+        let useCase = SelectLifeAreasUseCase(
+            lifeAreaRepository: lifeAreaRepository,
+            userSettingsRepository: settingsRepository
+        )
+        let drafts = [
+            LifeAreaDraft(name: "Health", icon: "heart", colorHex: "#FF0000"),
+            LifeAreaDraft(name: "Work", icon: "briefcase", colorHex: "#00FF00"),
+            LifeAreaDraft(name: "Family", icon: "person.2", colorHex: "#0000FF")
+        ]
+
+        #expect(throws: FakeRepositoryError.self) {
+            try useCase.execute(drafts)
+        }
+        #expect(lifeAreaRepository.insertedBatches.count == 1)
+
+        settingsRepository.updateError = nil
+        try useCase.execute(drafts)
+
+        #expect(lifeAreaRepository.insertedBatches.count == 1)
+        #expect(settingsRepository.updatedSteps == [.initialBalance])
+    }
+
+    @Test("Duplicate area names are rejected case-insensitively")
+    func rejectsDuplicateNames() {
+        let lifeAreaRepository = FakeLifeAreaRepository()
+        let settingsRepository = FakeUserSettingsRepository()
+        let useCase = SelectLifeAreasUseCase(
+            lifeAreaRepository: lifeAreaRepository,
+            userSettingsRepository: settingsRepository
+        )
+        let drafts = [
+            LifeAreaDraft(name: "Health", icon: "heart", colorHex: "#FF0000"),
+            LifeAreaDraft(name: "health", icon: "heart", colorHex: "#00FF00"),
+            LifeAreaDraft(name: "Family", icon: "person.2", colorHex: "#0000FF")
+        ]
+
+        #expect(throws: SelectLifeAreasUseCase.ValidationError.self) {
+            try useCase.execute(drafts)
+        }
+        #expect(lifeAreaRepository.insertedBatches.isEmpty)
+    }
 }

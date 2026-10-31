@@ -11,8 +11,16 @@ final class UpdateTaskQuadrantUseCase {
     }
 
     func execute(_ task: TaskItem, important: Bool?, urgent: Bool?) throws {
+        let previousImportant = task.important
+        let previousUrgent = task.urgent
         task.important = important
         task.urgent = urgent
-        try taskRepository.save()
+        do {
+            try taskRepository.save()
+        } catch {
+            task.important = previousImportant
+            task.urgent = previousUrgent
+            throw error
+        }
     }
 }

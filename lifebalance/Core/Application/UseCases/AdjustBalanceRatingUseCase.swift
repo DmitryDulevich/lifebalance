@@ -9,6 +9,7 @@ final class AdjustBalanceRatingUseCase {
     }
 
     func execute(ratings: [AreaRatingInput]) throws {
-        try balanceRepository.upsertTodaySnapshot(ratings: ratings)
+        try BalanceRatingsValidator.validate(ratings)
+        try balanceRepository.upsertTodaySnapshot(ratings: ratings, note: nil)
     }
 }

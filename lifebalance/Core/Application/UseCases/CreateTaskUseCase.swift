@@ -13,10 +13,43 @@ struct TaskInput {
 
 enum TaskValidationError: LocalizedError {
     case emptyTitle
+    case titleTooLong
+    case invalidEstimate
 
     var errorDescription: String? {
-        "Введите название задачи."
+        switch self {
+        case .emptyTitle:
+            return "Введите название задачи."
+        case .titleTooLong:
+            return "Название задачи не должно превышать 120 символов."
+        case .invalidEstimate:
+            return "Оценка времени должна быть от 1 минуты до 24 часов."
+        }
     }
+}
+
+enum TaskInputValidator {
+    static let maximumTitleLength = 120
+    static let validEstimateMinutes = 1...1_440
+
+    static func validateAndNormalize(_ input: TaskInput) throws -> TaskInput {
+        var normalized = input
+        normalized.title = input.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        normalized.note = input.note?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .nilIfEmpty
+
+        guard !normalized.title.isEmpty else { throw TaskValidationError.emptyTitle }
+        guard normalized.title.count <= maximumTitleLength else { throw TaskValidationError.titleTooLong }
+        if let estimate = normalized.estimateMinutes {
+            guard validEstimateMinutes.contains(estimate) else { throw TaskValidationError.invalidEstimate }
+        }
+        return normalized
+    }
+}
+
+private extension String {
+    var nilIfEmpty: String? { isEmpty ? nil : self }
 }
 
 @MainActor
@@ -29,12 +62,11 @@ final class CreateTaskUseCase {
 
     @discardableResult
     func execute(_ input: TaskInput) throws -> TaskItem {
-        let trimmedTitle = input.title.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedTitle.isEmpty else { throw TaskValidationError.emptyTitle }
+        let input = try TaskInputValidator.validateAndNormalize(input)
 
         let task = TaskItem(
-            title: trimmedTitle,
-            note: (input.note?.trimmingCharacters(in: .whitespacesAndNewlines)).flatMap { $0.isEmpty ? nil : $0 },
+            title: input.title,
+            note: input.note,
             dueDate: input.dueDate,
             important: input.important,
             urgent: input.urgent,

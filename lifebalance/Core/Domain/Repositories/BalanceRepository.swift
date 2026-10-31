@@ -13,5 +13,5 @@ protocol BalanceRepository {
     /// Updates today's snapshot in place if one already exists, otherwise creates one.
     /// Used by the Balance tab's steppers so repeated small adjustments don't spawn a
     /// new snapshot row per tap.
-    func upsertTodaySnapshot(ratings: [AreaRatingInput]) throws
+    func upsertTodaySnapshot(ratings: [AreaRatingInput], note: String?) throws
 }

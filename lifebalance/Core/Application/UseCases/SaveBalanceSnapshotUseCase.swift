@@ -4,9 +4,18 @@ import Foundation
 final class SaveBalanceSnapshotUseCase {
     enum ValidationError: LocalizedError {
         case noRatings
+        case valueOutOfRange
+        case duplicateArea
 
         var errorDescription: String? {
-            "Оцените хотя бы одну сферу, чтобы сохранить снимок."
+            switch self {
+            case .noRatings:
+                return "Оцените хотя бы одну сферу, чтобы сохранить снимок."
+            case .valueOutOfRange:
+                return "Оценка сферы должна быть от 1 до 10."
+            case .duplicateArea:
+                return "Одна сфера не может встречаться в снимке несколько раз."
+            }
         }
     }
 
@@ -19,10 +28,25 @@ final class SaveBalanceSnapshotUseCase {
     }
 
     func execute(ratings: [AreaRatingInput], note: String?) throws {
-        guard ratings.contains(where: { $0.value != nil }) else {
-            throw ValidationError.noRatings
-        }
-        try balanceRepository.saveSnapshot(ratings: ratings, note: note)
+        try BalanceRatingsValidator.validate(ratings)
+        try balanceRepository.upsertTodaySnapshot(ratings: ratings, note: note)
         try userSettingsRepository.updateOnboardingStep(.completed)
+    }
+}
+
+enum BalanceRatingsValidator {
+    static func validate(_ ratings: [AreaRatingInput]) throws {
+        guard ratings.contains(where: { $0.value != nil }) else {
+            throw SaveBalanceSnapshotUseCase.ValidationError.noRatings
+        }
+        guard ratings.allSatisfy({ input in
+            input.value.map { (1...10).contains($0) } ?? true
+        }) else {
+            throw SaveBalanceSnapshotUseCase.ValidationError.valueOutOfRange
+        }
+        let areaIDs = ratings.map { $0.area.id }
+        guard Set(areaIDs).count == areaIDs.count else {
+            throw SaveBalanceSnapshotUseCase.ValidationError.duplicateArea
+        }
     }
 }

@@ -1,12 +1,17 @@
 import Foundation
 @testable import lifebalance
 
+enum FakeRepositoryError: Error {
+    case forcedFailure
+}
+
 @MainActor
 final class FakeTaskRepository: TaskRepository {
     var tasks: [TaskItem] = []
     private(set) var insertedTasks: [TaskItem] = []
     private(set) var deletedTasks: [TaskItem] = []
     private(set) var saveCallCount = 0
+    var saveError: Error?
 
     func fetchAll() throws -> [TaskItem] {
         tasks
@@ -24,6 +29,7 @@ final class FakeTaskRepository: TaskRepository {
 
     func save() throws {
         saveCallCount += 1
+        if let saveError { throw saveError }
     }
 }
 
@@ -72,13 +78,63 @@ final class FakeLifeAreaRepository: LifeAreaRepository {
 final class FakeUserSettingsRepository: UserSettingsRepository {
     var settings = UserSettings()
     private(set) var updatedSteps: [OnboardingStep] = []
+    var updateError: Error?
 
     func fetchOrCreate() throws -> UserSettings {
         settings
     }
 
     func updateOnboardingStep(_ step: OnboardingStep) throws {
+        if let updateError { throw updateError }
         settings.onboardingStep = step
         updatedSteps.append(step)
+    }
+}
+
+@MainActor
+final class FakeGoalRepository: GoalRepository {
+    var activeGoals: [Goal] = []
+    private(set) var insertedGoals: [Goal] = []
+    private(set) var saveCallCount = 0
+
+    func fetchActive() throws -> [Goal] {
+        activeGoals
+    }
+
+    func insert(_ goal: Goal) throws {
+        activeGoals.append(goal)
+        insertedGoals.append(goal)
+    }
+
+    func save() throws {
+        saveCallCount += 1
+    }
+}
+
+@MainActor
+final class FakeBalanceRepository: BalanceRepository {
+    var latestSnapshot: BalanceSnapshot?
+    private(set) var savedSnapshotCallCount = 0
+    private(set) var upsertCallCount = 0
+    private(set) var lastRatings: [AreaRatingInput] = []
+    private(set) var lastNote: String?
+
+    func saveSnapshot(ratings: [AreaRatingInput], note: String?) throws {
+        savedSnapshotCallCount += 1
+        lastRatings = ratings
+        lastNote = note
+    }
+
+    func fetchLatestSnapshot() throws -> BalanceSnapshot? {
+        latestSnapshot
+    }
+
+    func upsertTodaySnapshot(ratings: [AreaRatingInput], note: String?) throws {
+        upsertCallCount += 1
+        lastRatings = ratings
+        lastNote = note
+        if latestSnapshot == nil {
+            latestSnapshot = BalanceSnapshot(note: note)
+        }
     }
 }

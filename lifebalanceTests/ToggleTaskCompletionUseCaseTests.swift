@@ -29,4 +29,19 @@ struct ToggleTaskCompletionUseCaseTests {
         #expect(task.completedAt == nil)
         #expect(repository.saveCallCount == 1)
     }
+
+    @Test("Task state is restored when persistence fails")
+    func rollsBackOnFailure() {
+        let repository = FakeTaskRepository()
+        repository.saveError = FakeRepositoryError.forcedFailure
+        let useCase = ToggleTaskCompletionUseCase(taskRepository: repository)
+        let task = TaskItem(title: "Write tests")
+
+        #expect(throws: FakeRepositoryError.self) {
+            try useCase.execute(task)
+        }
+
+        #expect(task.status == .active)
+        #expect(task.completedAt == nil)
+    }
 }

@@ -30,10 +30,13 @@ final class SwiftDataBalanceRepository: BalanceRepository {
         return try context.fetch(descriptor).first
     }
 
-    func upsertTodaySnapshot(ratings: [AreaRatingInput]) throws {
+    func upsertTodaySnapshot(ratings: [AreaRatingInput], note: String?) throws {
         let latest = try fetchLatestSnapshot()
 
         if let latest, Calendar.current.isDateInToday(latest.createdAt) {
+            if let note {
+                latest.note = note
+            }
             for rating in latest.ratings {
                 context.delete(rating)
             }
@@ -43,7 +46,7 @@ final class SwiftDataBalanceRepository: BalanceRepository {
                 context.insert(rating)
             }
         } else {
-            let snapshot = BalanceSnapshot()
+            let snapshot = BalanceSnapshot(note: note)
             context.insert(snapshot)
             for input in ratings {
                 let rating = BalanceRating(value: input.value, note: input.note, area: input.area, snapshot: snapshot)

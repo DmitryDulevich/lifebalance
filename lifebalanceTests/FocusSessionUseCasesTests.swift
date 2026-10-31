@@ -31,6 +31,17 @@ struct FocusSessionUseCasesTests {
         #expect(repository.insertedSessions.isEmpty)
     }
 
+    @Test("Invalid focus duration is rejected")
+    func rejectsInvalidDuration() {
+        let repository = FakeFocusSessionRepository()
+        let useCase = StartFocusSessionUseCase(focusSessionRepository: repository)
+
+        #expect(throws: StartFocusSessionUseCase.ActiveSessionError.self) {
+            try useCase.execute(task: nil, plannedSeconds: 0)
+        }
+        #expect(repository.insertedSessions.isEmpty)
+    }
+
     @Test("Expired running session is completed during restoration")
     func restoresExpiredSession() throws {
         let start = Date(timeIntervalSince1970: 1_000)

@@ -4,9 +4,15 @@ import Foundation
 final class StartFocusSessionUseCase {
     enum ActiveSessionError: LocalizedError {
         case alreadyRunning
+        case invalidDuration
 
         var errorDescription: String? {
-            "Уже есть активная фокус-сессия. Завершите её перед началом новой."
+            switch self {
+            case .alreadyRunning:
+                return "Уже есть активная фокус-сессия. Завершите её перед началом новой."
+            case .invalidDuration:
+                return "Продолжительность фокус-сессии должна быть от 1 минуты до 24 часов."
+            }
         }
     }
 
@@ -18,6 +24,9 @@ final class StartFocusSessionUseCase {
 
     @discardableResult
     func execute(task: TaskItem?, plannedSeconds: Int) throws -> FocusSession {
+        guard (60...86_400).contains(plannedSeconds) else {
+            throw ActiveSessionError.invalidDuration
+        }
         guard try focusSessionRepository.fetchActiveSession() == nil else {
             throw ActiveSessionError.alreadyRunning
         }
