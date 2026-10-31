@@ -27,4 +27,23 @@ extension LifebalanceSchemaV1 {
     }
 }
 
-typealias UserSettings = LifebalanceSchemaV1.UserSettings
+extension LifebalanceSchemaV2 {
+    @Model
+    final class UserSettings {
+        @Attribute(.unique) var id: UUID
+        var onboardingStep: OnboardingStep
+        var createdAt: Date
+
+        init(
+            id: UUID = UUID(),
+            onboardingStep: OnboardingStep = .welcome,
+            createdAt: Date = .now
+        ) {
+            self.id = id
+            self.onboardingStep = onboardingStep
+            self.createdAt = createdAt
+        }
+    }
+}
+
+typealias UserSettings = LifebalanceSchemaV2.UserSettings

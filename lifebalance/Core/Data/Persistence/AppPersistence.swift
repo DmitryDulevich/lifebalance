@@ -28,7 +28,7 @@ struct AppPersistence {
     }
 
     static func makeContainer(isStoredInMemoryOnly: Bool = false) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: LifebalanceSchemaV1.self)
+        let schema = Schema(versionedSchema: LifebalanceSchemaV2.self)
         let configuration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: isStoredInMemoryOnly

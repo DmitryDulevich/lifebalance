@@ -20,12 +20,37 @@ enum LifebalanceSchemaV1: VersionedSchema {
     }
 }
 
+/// Adds database-level uniqueness for every entity identifier.
+enum LifebalanceSchemaV2: VersionedSchema {
+    static let versionIdentifier = Schema.Version(2, 0, 0)
+
+    static var models: [any PersistentModel.Type] {
+        [
+            UserSettings.self,
+            LifeArea.self,
+            BalanceSnapshot.self,
+            BalanceRating.self,
+            TaskItem.self,
+            Goal.self,
+            FocusSession.self
+        ]
+    }
+}
+
 enum LifebalanceMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
-        [LifebalanceSchemaV1.self]
+        [
+            LifebalanceSchemaV1.self,
+            LifebalanceSchemaV2.self
+        ]
     }
 
     static var stages: [MigrationStage] {
-        []
+        [
+            .lightweight(
+                fromVersion: LifebalanceSchemaV1.self,
+                toVersion: LifebalanceSchemaV2.self
+            )
+        ]
     }
 }

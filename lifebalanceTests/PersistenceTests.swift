@@ -16,10 +16,11 @@ struct PersistenceTests {
     }
 
     @Test
-    func migrationPlanStartsAtVersionOne() {
-        #expect(LifebalanceMigrationPlan.schemas.count == 1)
-        #expect(LifebalanceMigrationPlan.stages.isEmpty)
+    func migrationPlanContainsVersionOneToVersionTwoTransition() {
+        #expect(LifebalanceMigrationPlan.schemas.count == 2)
+        #expect(LifebalanceMigrationPlan.stages.count == 1)
         #expect(LifebalanceSchemaV1.versionIdentifier == Schema.Version(1, 0, 0))
+        #expect(LifebalanceSchemaV2.versionIdentifier == Schema.Version(2, 0, 0))
     }
 
     @Test
@@ -42,12 +43,14 @@ struct PersistenceTests {
                 for: legacySchema,
                 configurations: legacyConfiguration
             )
-            let settings = UserSettings(onboardingStep: .completed)
+            let settings = LifebalanceSchemaV1.UserSettings(onboardingStep: .completed)
+            let task = LifebalanceSchemaV1.TaskItem(title: "Сохранённая задача")
             legacyContainer.mainContext.insert(settings)
+            legacyContainer.mainContext.insert(task)
             try legacyContainer.mainContext.save()
         }
 
-        let versionedSchema = Schema(versionedSchema: LifebalanceSchemaV1.self)
+        let versionedSchema = Schema(versionedSchema: LifebalanceSchemaV2.self)
         let versionedConfiguration = ModelConfiguration(
             schema: versionedSchema,
             url: storeURL,
@@ -59,8 +62,24 @@ struct PersistenceTests {
             configurations: versionedConfiguration
         )
         let settings = try versionedContainer.mainContext.fetch(FetchDescriptor<UserSettings>())
+        let tasks = try versionedContainer.mainContext.fetch(FetchDescriptor<TaskItem>())
 
         #expect(settings.count == 1)
         #expect(settings.first?.onboardingStep == OnboardingStep.completed)
+        #expect(tasks.map(\.title) == ["Сохранённая задача"])
+    }
+
+    @Test
+    func uniqueIdentifierPreventsDuplicateRows() throws {
+        let container = try AppPersistence.makeContainer(isStoredInMemoryOnly: true)
+        let id = UUID()
+        container.mainContext.insert(TaskItem(id: id, title: "Первая версия"))
+        container.mainContext.insert(TaskItem(id: id, title: "Вторая версия"))
+
+        try container.mainContext.save()
+
+        let tasks = try container.mainContext.fetch(FetchDescriptor<TaskItem>())
+        #expect(tasks.count == 1)
+        #expect(tasks.first?.id == id)
     }
 }

@@ -42,4 +42,38 @@ extension LifebalanceSchemaV1 {
     }
 }
 
-typealias FocusSession = LifebalanceSchemaV1.FocusSession
+extension LifebalanceSchemaV2 {
+    @Model
+    final class FocusSession: Identifiable {
+        @Attribute(.unique) var id: UUID
+        var startAt: Date
+        var endAt: Date?
+        var plannedSeconds: Int
+        var pausedSeconds: Int
+        var pausedAt: Date?
+        var status: FocusSessionStatus
+        var task: TaskItem?
+
+        init(
+            id: UUID = UUID(),
+            startAt: Date = .now,
+            endAt: Date? = nil,
+            plannedSeconds: Int,
+            pausedSeconds: Int = 0,
+            pausedAt: Date? = nil,
+            status: FocusSessionStatus = .running,
+            task: TaskItem? = nil
+        ) {
+            self.id = id
+            self.startAt = startAt
+            self.endAt = endAt
+            self.plannedSeconds = plannedSeconds
+            self.pausedSeconds = pausedSeconds
+            self.pausedAt = pausedAt
+            self.status = status
+            self.task = task
+        }
+    }
+}
+
+typealias FocusSession = LifebalanceSchemaV2.FocusSession
