@@ -6,7 +6,7 @@ struct GoalFormView: View {
     var onSaved: () -> Void
 
     init(container: AppContainer, lifeAreas: [LifeArea], onSaved: @escaping () -> Void) {
-        _viewModel = State(initialValue: GoalFormViewModel(container: container, lifeAreas: lifeAreas))
+        _viewModel = State(initialValue: container.makeGoalFormViewModel(lifeAreas: lifeAreas))
         self.onSaved = onSaved
     }
 

@@ -9,7 +9,7 @@ struct TasksView: View {
     init(container: AppContainer, refreshToken: Int = 0) {
         self.container = container
         self.refreshToken = refreshToken
-        _viewModel = State(initialValue: TasksViewModel(container: container))
+        _viewModel = State(initialValue: container.makeTasksViewModel())
     }
 
     var body: some View {
@@ -30,6 +30,7 @@ struct TasksView: View {
                                 .font(.system(size: 26))
                                 .foregroundStyle(Palette.accent)
                         }
+                        .accessibilityIdentifier("tasks.add")
                     }
 
                     SegmentedToggle(options: ["Список", "Матрица"], selection: $viewModel.viewMode)

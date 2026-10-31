@@ -9,7 +9,7 @@ struct TodayView: View {
     init(container: AppContainer, refreshToken: Int = 0) {
         self.container = container
         self.refreshToken = refreshToken
-        _viewModel = State(initialValue: TodayViewModel(container: container))
+        _viewModel = State(initialValue: container.makeTodayViewModel())
     }
 
     private static let dateFormatter: DateFormatter = {

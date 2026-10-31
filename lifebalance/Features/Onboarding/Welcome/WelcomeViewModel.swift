@@ -9,13 +9,14 @@ final class WelcomeViewModel {
 
     private let advanceOnboardingStepUseCase: AdvanceOnboardingStepUseCase
 
-    init(container: AppContainer) {
-        self.advanceOnboardingStepUseCase = container.advanceOnboardingStepUseCase
+    init(advanceOnboardingStepUseCase: AdvanceOnboardingStepUseCase) {
+        self.advanceOnboardingStepUseCase = advanceOnboardingStepUseCase
     }
 
     func start() -> Bool {
         do {
             try advanceOnboardingStepUseCase.execute(to: .areaSelection)
+            errorMessage = nil
             return true
         } catch {
             AppLogger.error(error, context: "onboarding.welcome.start")

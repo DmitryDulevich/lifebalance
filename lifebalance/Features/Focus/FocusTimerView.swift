@@ -5,7 +5,7 @@ struct FocusTimerView: View {
     @Environment(\.dismiss) private var dismiss
 
     init(task: TaskItem?, plannedSeconds: Int, container: AppContainer) {
-        _viewModel = State(initialValue: FocusTimerViewModel(task: task, plannedSeconds: plannedSeconds, container: container))
+        _viewModel = State(initialValue: container.makeFocusTimerViewModel(task: task, plannedSeconds: plannedSeconds))
     }
 
     var body: some View {
@@ -39,6 +39,7 @@ struct FocusTimerView: View {
                             .font(.system(size: 12, weight: .semibold))
                             .tracking(0.5)
                             .foregroundStyle(Palette.textSecondary)
+                            .accessibilityIdentifier("focus.title")
 
                         Text(viewModel.task?.title ?? "Свободная сессия")
                             .font(.system(size: 21, weight: .bold))
@@ -83,6 +84,7 @@ struct FocusTimerView: View {
                                 .background(Circle().fill(Palette.softAccentBackground))
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("focus.pause")
 
                         Button {
                             if viewModel.didFinish || viewModel.finish() {
@@ -97,6 +99,7 @@ struct FocusTimerView: View {
                                 .background(Capsule().fill(Palette.accent))
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("focus.finish")
                     }
 
                     Text("Ограничение Pro: пользовательские интервалы и автопереходы доступны в подписке")

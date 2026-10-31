@@ -71,3 +71,88 @@ final class AppContainer {
         self.adjustBalanceRatingUseCase = AdjustBalanceRatingUseCase(balanceRepository: balanceRepository)
     }
 }
+
+extension AppContainer {
+    func makeTasksViewModel() -> TasksViewModel {
+        TasksViewModel(
+            taskRepository: taskRepository,
+            lifeAreaRepository: lifeAreaRepository,
+            goalRepository: goalRepository,
+            toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
+            updateTaskQuadrantUseCase: updateTaskQuadrantUseCase,
+            deleteTaskUseCase: deleteTaskUseCase
+        )
+    }
+
+    func makeTaskFormViewModel(
+        lifeAreas: [LifeArea],
+        goals: [Goal],
+        editingTask: TaskItem?
+    ) -> TaskFormViewModel {
+        TaskFormViewModel(
+            lifeAreas: lifeAreas,
+            goals: goals,
+            editingTask: editingTask,
+            createTaskUseCase: createTaskUseCase,
+            updateTaskUseCase: updateTaskUseCase
+        )
+    }
+
+    func makeGoalsViewModel() -> GoalsViewModel {
+        GoalsViewModel(
+            goalRepository: goalRepository,
+            lifeAreaRepository: lifeAreaRepository
+        )
+    }
+
+    func makeGoalFormViewModel(lifeAreas: [LifeArea]) -> GoalFormViewModel {
+        GoalFormViewModel(
+            lifeAreas: lifeAreas,
+            createGoalUseCase: createGoalUseCase
+        )
+    }
+
+    func makeTodayViewModel() -> TodayViewModel {
+        TodayViewModel(
+            lifeAreaRepository: lifeAreaRepository,
+            taskRepository: taskRepository,
+            focusSessionRepository: focusSessionRepository,
+            toggleTaskCompletionUseCase: toggleTaskCompletionUseCase
+        )
+    }
+
+    func makeBalanceViewModel() -> BalanceViewModel {
+        BalanceViewModel(
+            lifeAreaRepository: lifeAreaRepository,
+            balanceRepository: balanceRepository,
+            adjustBalanceRatingUseCase: adjustBalanceRatingUseCase
+        )
+    }
+
+    func makeFocusTimerViewModel(task: TaskItem?, plannedSeconds: Int) -> FocusTimerViewModel {
+        FocusTimerViewModel(
+            task: task,
+            plannedSeconds: plannedSeconds,
+            startFocusSessionUseCase: startFocusSessionUseCase,
+            finishFocusSessionUseCase: finishFocusSessionUseCase,
+            restoreActiveFocusSessionUseCase: restoreActiveFocusSessionUseCase,
+            focusSessionRepository: focusSessionRepository
+        )
+    }
+
+    func makeWelcomeViewModel() -> WelcomeViewModel {
+        WelcomeViewModel(advanceOnboardingStepUseCase: advanceOnboardingStepUseCase)
+    }
+
+    func makeAreaSelectionViewModel() -> AreaSelectionViewModel {
+        AreaSelectionViewModel(selectLifeAreasUseCase: selectLifeAreasUseCase)
+    }
+
+    func makeInitialBalanceViewModel() -> InitialBalanceViewModel {
+        InitialBalanceViewModel(
+            lifeAreaRepository: lifeAreaRepository,
+            saveBalanceSnapshotUseCase: saveBalanceSnapshotUseCase,
+            advanceOnboardingStepUseCase: advanceOnboardingStepUseCase
+        )
+    }
+}

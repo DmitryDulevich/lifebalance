@@ -5,7 +5,7 @@ struct WelcomeView: View {
     let onStart: () -> Void
 
     init(container: AppContainer, onStart: @escaping () -> Void) {
-        _viewModel = State(initialValue: WelcomeViewModel(container: container))
+        _viewModel = State(initialValue: container.makeWelcomeViewModel())
         self.onStart = onStart
     }
 
@@ -59,6 +59,7 @@ struct WelcomeView: View {
                     }
                 }
                 .buttonStyle(.primary())
+                .accessibilityIdentifier("onboarding.start")
 
                 Button("Политика конфиденциальности") {
                     viewModel.showPrivacyPolicy = true

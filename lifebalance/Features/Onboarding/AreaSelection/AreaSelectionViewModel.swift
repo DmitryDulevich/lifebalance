@@ -27,8 +27,8 @@ final class AreaSelectionViewModel {
 
     private let selectLifeAreasUseCase: SelectLifeAreasUseCase
 
-    init(container: AppContainer) {
-        self.selectLifeAreasUseCase = container.selectLifeAreasUseCase
+    init(selectLifeAreasUseCase: SelectLifeAreasUseCase) {
+        self.selectLifeAreasUseCase = selectLifeAreasUseCase
     }
 
     var selectedCount: Int {
@@ -103,6 +103,7 @@ final class AreaSelectionViewModel {
 
         do {
             try selectLifeAreasUseCase.execute(drafts)
+            errorMessage = nil
             return true
         } catch {
             if !(error is SelectLifeAreasUseCase.ValidationError) {

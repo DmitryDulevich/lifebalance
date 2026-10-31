@@ -5,7 +5,7 @@ struct AreaSelectionView: View {
     let onContinue: () -> Void
 
     init(container: AppContainer, onContinue: @escaping () -> Void) {
-        _viewModel = State(initialValue: AreaSelectionViewModel(container: container))
+        _viewModel = State(initialValue: container.makeAreaSelectionViewModel())
         self.onContinue = onContinue
     }
 
@@ -34,6 +34,7 @@ struct AreaSelectionView: View {
                             ) {
                                 viewModel.togglePreset(preset)
                             }
+                            .accessibilityIdentifier("area.preset.\(preset.name)")
                         }
 
                         ForEach(viewModel.customAreas) { area in
@@ -100,6 +101,7 @@ struct AreaSelectionView: View {
                 }
                 .buttonStyle(.primary(isEnabled: viewModel.canContinue))
                 .disabled(!viewModel.canContinue)
+                .accessibilityIdentifier("onboarding.areas.continue")
             }
             .padding(20)
             .background(Palette.cardBackground.opacity(0.9))

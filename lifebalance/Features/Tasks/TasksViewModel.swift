@@ -23,13 +23,20 @@ final class TasksViewModel {
     private let updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase
     private let deleteTaskUseCase: DeleteTaskUseCase
 
-    init(container: AppContainer) {
-        self.taskRepository = container.taskRepository
-        self.lifeAreaRepository = container.lifeAreaRepository
-        self.goalRepository = container.goalRepository
-        self.toggleTaskCompletionUseCase = container.toggleTaskCompletionUseCase
-        self.updateTaskQuadrantUseCase = container.updateTaskQuadrantUseCase
-        self.deleteTaskUseCase = container.deleteTaskUseCase
+    init(
+        taskRepository: TaskRepository,
+        lifeAreaRepository: LifeAreaRepository,
+        goalRepository: GoalRepository,
+        toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
+        updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase,
+        deleteTaskUseCase: DeleteTaskUseCase
+    ) {
+        self.taskRepository = taskRepository
+        self.lifeAreaRepository = lifeAreaRepository
+        self.goalRepository = goalRepository
+        self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
+        self.updateTaskQuadrantUseCase = updateTaskQuadrantUseCase
+        self.deleteTaskUseCase = deleteTaskUseCase
     }
 
     func load() {
@@ -37,6 +44,7 @@ final class TasksViewModel {
             tasks = try taskRepository.fetchAll()
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
             goals = try goalRepository.fetchActive()
+            errorMessage = nil
         } catch {
             AppLogger.error(error, context: "tasks.load")
             errorMessage = error.localizedDescription

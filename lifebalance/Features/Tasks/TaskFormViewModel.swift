@@ -21,12 +21,18 @@ final class TaskFormViewModel {
     private let createTaskUseCase: CreateTaskUseCase
     private let updateTaskUseCase: UpdateTaskUseCase
 
-    init(container: AppContainer, lifeAreas: [LifeArea], goals: [Goal], editingTask: TaskItem?) {
+    init(
+        lifeAreas: [LifeArea],
+        goals: [Goal],
+        editingTask: TaskItem?,
+        createTaskUseCase: CreateTaskUseCase,
+        updateTaskUseCase: UpdateTaskUseCase
+    ) {
         self.lifeAreas = lifeAreas
         self.goals = goals
         self.editingTask = editingTask
-        self.createTaskUseCase = container.createTaskUseCase
-        self.updateTaskUseCase = container.updateTaskUseCase
+        self.createTaskUseCase = createTaskUseCase
+        self.updateTaskUseCase = updateTaskUseCase
 
         if let task = editingTask {
             title = task.title
@@ -70,6 +76,7 @@ final class TaskFormViewModel {
             } else {
                 try createTaskUseCase.execute(input)
             }
+            errorMessage = nil
             return true
         } catch {
             if !(error is TaskValidationError) {

@@ -17,10 +17,14 @@ final class BalanceViewModel {
     private let balanceRepository: BalanceRepository
     private let adjustBalanceRatingUseCase: AdjustBalanceRatingUseCase
 
-    init(container: AppContainer) {
-        self.lifeAreaRepository = container.lifeAreaRepository
-        self.balanceRepository = container.balanceRepository
-        self.adjustBalanceRatingUseCase = container.adjustBalanceRatingUseCase
+    init(
+        lifeAreaRepository: LifeAreaRepository,
+        balanceRepository: BalanceRepository,
+        adjustBalanceRatingUseCase: AdjustBalanceRatingUseCase
+    ) {
+        self.lifeAreaRepository = lifeAreaRepository
+        self.balanceRepository = balanceRepository
+        self.adjustBalanceRatingUseCase = adjustBalanceRatingUseCase
     }
 
     var averageScore: Double {
@@ -47,6 +51,7 @@ final class BalanceViewModel {
             rows = areas.map { area in
                 AreaRow(area: area, value: ratingsByAreaID[area.id] ?? 0)
             }
+            errorMessage = nil
         } catch {
             AppLogger.error(error, context: "balance.load")
             errorMessage = error.localizedDescription

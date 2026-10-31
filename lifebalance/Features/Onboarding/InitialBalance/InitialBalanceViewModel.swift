@@ -19,10 +19,14 @@ final class InitialBalanceViewModel {
     private let saveBalanceSnapshotUseCase: SaveBalanceSnapshotUseCase
     private let advanceOnboardingStepUseCase: AdvanceOnboardingStepUseCase
 
-    init(container: AppContainer) {
-        self.lifeAreaRepository = container.lifeAreaRepository
-        self.saveBalanceSnapshotUseCase = container.saveBalanceSnapshotUseCase
-        self.advanceOnboardingStepUseCase = container.advanceOnboardingStepUseCase
+    init(
+        lifeAreaRepository: LifeAreaRepository,
+        saveBalanceSnapshotUseCase: SaveBalanceSnapshotUseCase,
+        advanceOnboardingStepUseCase: AdvanceOnboardingStepUseCase
+    ) {
+        self.lifeAreaRepository = lifeAreaRepository
+        self.saveBalanceSnapshotUseCase = saveBalanceSnapshotUseCase
+        self.advanceOnboardingStepUseCase = advanceOnboardingStepUseCase
     }
 
     var canSave: Bool {
@@ -33,6 +37,7 @@ final class InitialBalanceViewModel {
         do {
             let areas = try lifeAreaRepository.fetchActiveAreas()
             drafts = areas.map { AreaRatingDraft(area: $0) }
+            errorMessage = nil
         } catch {
             AppLogger.error(error, context: "onboarding.initial_balance.load")
             errorMessage = error.localizedDescription
@@ -63,6 +68,7 @@ final class InitialBalanceViewModel {
         }
         do {
             try saveBalanceSnapshotUseCase.execute(ratings: ratings, note: nil)
+            errorMessage = nil
             return true
         } catch {
             if !(error is SaveBalanceSnapshotUseCase.ValidationError) {
@@ -76,6 +82,7 @@ final class InitialBalanceViewModel {
     func skip() -> Bool {
         do {
             try advanceOnboardingStepUseCase.execute(to: .completed)
+            errorMessage = nil
             return true
         } catch {
             AppLogger.error(error, context: "onboarding.initial_balance.skip")

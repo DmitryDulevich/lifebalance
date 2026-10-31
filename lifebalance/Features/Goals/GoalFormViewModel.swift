@@ -13,9 +13,9 @@ final class GoalFormViewModel {
     let lifeAreas: [LifeArea]
     private let createGoalUseCase: CreateGoalUseCase
 
-    init(container: AppContainer, lifeAreas: [LifeArea]) {
+    init(lifeAreas: [LifeArea], createGoalUseCase: CreateGoalUseCase) {
         self.lifeAreas = lifeAreas
-        self.createGoalUseCase = container.createGoalUseCase
+        self.createGoalUseCase = createGoalUseCase
     }
 
     func save() -> Bool {
@@ -25,6 +25,7 @@ final class GoalFormViewModel {
                 lifeArea: lifeAreas.first { $0.id == selectedAreaID },
                 targetDate: hasTargetDate ? targetDate : nil
             )
+            errorMessage = nil
             return true
         } catch {
             if !(error is GoalValidationError) {

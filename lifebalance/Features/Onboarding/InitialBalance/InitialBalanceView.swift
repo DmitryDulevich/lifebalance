@@ -5,7 +5,7 @@ struct InitialBalanceView: View {
     let onFinished: () -> Void
 
     init(container: AppContainer, onFinished: @escaping () -> Void) {
-        _viewModel = State(initialValue: InitialBalanceViewModel(container: container))
+        _viewModel = State(initialValue: container.makeInitialBalanceViewModel())
         self.onFinished = onFinished
     }
 
@@ -82,6 +82,7 @@ struct InitialBalanceView: View {
                 }
                 .font(.subheadline)
                 .foregroundStyle(Palette.textSecondary)
+                .accessibilityIdentifier("onboarding.balance.skip")
             }
             .padding(20)
             .background(Palette.cardBackground.opacity(0.9))

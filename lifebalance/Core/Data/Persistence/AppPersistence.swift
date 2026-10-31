@@ -1,3 +1,4 @@
+import Foundation
 import SwiftData
 
 struct AppPersistence {
@@ -6,6 +7,16 @@ struct AppPersistence {
 
     @MainActor
     static func bootstrap() -> AppPersistence {
+        if ProcessInfo.processInfo.arguments.contains("--ui-testing") {
+            do {
+                let container = try makeContainer(isStoredInMemoryOnly: true)
+                try seedUITestDataIfNeeded(in: container)
+                return AppPersistence(modelContainer: container, startupErrorMessage: nil)
+            } catch {
+                AppLogger.error(error, context: "ui_testing.container.create")
+            }
+        }
+
         do {
             return AppPersistence(
                 modelContainer: try makeContainer(),
@@ -48,5 +59,31 @@ struct AppPersistence {
             isStoredInMemoryOnly: true
         )
         return try ModelContainer(for: schema, configurations: configuration)
+    }
+
+    @MainActor
+    private static func seedUITestDataIfNeeded(in container: ModelContainer) throws {
+        guard ProcessInfo.processInfo.arguments.contains("--ui-testing-completed") else {
+            return
+        }
+
+        let context = container.mainContext
+        let settings = UserSettings(onboardingStep: .completed)
+        let area = LifeArea(
+            name: "Работа",
+            icon: "briefcase.fill",
+            colorHex: "#5B8DEF",
+            order: 0
+        )
+        let task = TaskItem(
+            title: "Тестовая фокус-задача",
+            dueDate: .now,
+            estimateMinutes: 25,
+            lifeArea: area
+        )
+        context.insert(settings)
+        context.insert(area)
+        context.insert(task)
+        try context.save()
     }
 }

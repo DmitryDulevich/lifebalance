@@ -12,8 +12,7 @@ struct TaskFormView: View {
         editingTask: TaskItem?,
         onSaved: @escaping () -> Void
     ) {
-        _viewModel = State(initialValue: TaskFormViewModel(
-            container: container,
+        _viewModel = State(initialValue: container.makeTaskFormViewModel(
             lifeAreas: lifeAreas,
             goals: goals,
             editingTask: editingTask
@@ -26,6 +25,7 @@ struct TaskFormView: View {
             Form {
                 Section("Название") {
                     TextField("Название задачи", text: $viewModel.title)
+                        .accessibilityIdentifier("task.title")
                 }
 
                 Section("Заметка") {
@@ -90,6 +90,7 @@ struct TaskFormView: View {
                             dismiss()
                         }
                     }
+                    .accessibilityIdentifier("task.save")
                 }
             }
         }

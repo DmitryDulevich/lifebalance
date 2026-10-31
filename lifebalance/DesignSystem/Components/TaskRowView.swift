@@ -25,6 +25,7 @@ struct TaskRowView: View {
                 .frame(width: 24, height: 24)
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("task.toggle.\(title)")
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
@@ -48,6 +49,7 @@ struct TaskRowView: View {
                         .background(Circle().fill(Palette.softAccentBackground))
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("task.play.\(title)")
             }
         }
         .padding(.horizontal, 14)

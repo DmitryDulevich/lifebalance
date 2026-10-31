@@ -29,6 +29,20 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B20000000000000000000006"
+               BuildableName = "lifebalanceUITests.xctest"
+               BlueprintName = "lifebalanceUITests"
+               ReferencedContainer = "container:lifebalance.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "A10000000000000000000006"
                BuildableName = "lifebalanceTests.xctest"
                BlueprintName = "lifebalanceTests"
@@ -52,6 +66,17 @@
                BlueprintIdentifier = "A10000000000000000000006"
                BuildableName = "lifebalanceTests.xctest"
                BlueprintName = "lifebalanceTests"
+               ReferencedContainer = "container:lifebalance.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B20000000000000000000006"
+               BuildableName = "lifebalanceUITests.xctest"
+               BlueprintName = "lifebalanceUITests"
                ReferencedContainer = "container:lifebalance.xcodeproj">
             </BuildableReference>
          </TestableReference>

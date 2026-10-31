@@ -18,14 +18,21 @@ final class FocusTimerViewModel {
     private let restoreActiveFocusSessionUseCase: RestoreActiveFocusSessionUseCase
     private let focusSessionRepository: FocusSessionRepository
 
-    init(task: TaskItem?, plannedSeconds: Int, container: AppContainer) {
+    init(
+        task: TaskItem?,
+        plannedSeconds: Int,
+        startFocusSessionUseCase: StartFocusSessionUseCase,
+        finishFocusSessionUseCase: FinishFocusSessionUseCase,
+        restoreActiveFocusSessionUseCase: RestoreActiveFocusSessionUseCase,
+        focusSessionRepository: FocusSessionRepository
+    ) {
         self.task = task
         self.plannedSeconds = plannedSeconds
         self.displaySeconds = plannedSeconds
-        self.startFocusSessionUseCase = container.startFocusSessionUseCase
-        self.finishFocusSessionUseCase = container.finishFocusSessionUseCase
-        self.restoreActiveFocusSessionUseCase = container.restoreActiveFocusSessionUseCase
-        self.focusSessionRepository = container.focusSessionRepository
+        self.startFocusSessionUseCase = startFocusSessionUseCase
+        self.finishFocusSessionUseCase = finishFocusSessionUseCase
+        self.restoreActiveFocusSessionUseCase = restoreActiveFocusSessionUseCase
+        self.focusSessionRepository = focusSessionRepository
     }
 
     var isPaused: Bool {

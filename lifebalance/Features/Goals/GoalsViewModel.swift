@@ -12,15 +12,16 @@ final class GoalsViewModel {
     private let goalRepository: GoalRepository
     private let lifeAreaRepository: LifeAreaRepository
 
-    init(container: AppContainer) {
-        self.goalRepository = container.goalRepository
-        self.lifeAreaRepository = container.lifeAreaRepository
+    init(goalRepository: GoalRepository, lifeAreaRepository: LifeAreaRepository) {
+        self.goalRepository = goalRepository
+        self.lifeAreaRepository = lifeAreaRepository
     }
 
     func load() {
         do {
             goals = try goalRepository.fetchActive()
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
+            errorMessage = nil
         } catch {
             AppLogger.error(error, context: "goals.load")
             errorMessage = error.localizedDescription

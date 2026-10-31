@@ -4,7 +4,7 @@ struct BalanceView: View {
     @State private var viewModel: BalanceViewModel
 
     init(container: AppContainer) {
-        _viewModel = State(initialValue: BalanceViewModel(container: container))
+        _viewModel = State(initialValue: container.makeBalanceViewModel())
     }
 
     var body: some View {

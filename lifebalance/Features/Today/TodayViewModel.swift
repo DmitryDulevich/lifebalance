@@ -23,14 +23,21 @@ final class TodayViewModel {
     private let focusSessionRepository: FocusSessionRepository
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
 
-    init(container: AppContainer) {
-        self.lifeAreaRepository = container.lifeAreaRepository
-        self.taskRepository = container.taskRepository
-        self.focusSessionRepository = container.focusSessionRepository
-        self.toggleTaskCompletionUseCase = container.toggleTaskCompletionUseCase
+    init(
+        lifeAreaRepository: LifeAreaRepository,
+        taskRepository: TaskRepository,
+        focusSessionRepository: FocusSessionRepository,
+        toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
+    ) {
+        self.lifeAreaRepository = lifeAreaRepository
+        self.taskRepository = taskRepository
+        self.focusSessionRepository = focusSessionRepository
+        self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
     }
 
     func load() {
+        state = .loading
+        errorMessage = nil
         do {
             let areas = try lifeAreaRepository.fetchActiveAreas()
             let allTasks = try taskRepository.fetchAll()
