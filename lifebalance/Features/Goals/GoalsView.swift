@@ -3,9 +3,11 @@ import SwiftUI
 struct GoalsView: View {
     @State private var viewModel: GoalsViewModel
     let container: AppContainer
+    let refreshToken: Int
 
-    init(container: AppContainer) {
+    init(container: AppContainer, refreshToken: Int = 0) {
         self.container = container
+        self.refreshToken = refreshToken
         _viewModel = State(initialValue: GoalsViewModel(container: container))
     }
 
@@ -63,7 +65,7 @@ struct GoalsView: View {
                 GoalFormView(container: container, lifeAreas: viewModel.lifeAreas, onSaved: { viewModel.load() })
             }
         }
-        .task { viewModel.load() }
+        .task(id: refreshToken) { viewModel.load() }
     }
 
     private func goalCard(_ goal: Goal) -> some View {

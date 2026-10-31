@@ -3,10 +3,12 @@ import SwiftUI
 struct TasksView: View {
     @State private var viewModel: TasksViewModel
     let container: AppContainer
+    let refreshToken: Int
     @State private var focusTarget: FocusNavigationTarget?
 
-    init(container: AppContainer) {
+    init(container: AppContainer, refreshToken: Int = 0) {
         self.container = container
+        self.refreshToken = refreshToken
         _viewModel = State(initialValue: TasksViewModel(container: container))
     }
 
@@ -87,6 +89,6 @@ struct TasksView: View {
                 )
             }
         }
-        .task { viewModel.load() }
+        .task(id: refreshToken) { viewModel.load() }
     }
 }

@@ -3,10 +3,12 @@ import SwiftUI
 struct TodayView: View {
     @State private var viewModel: TodayViewModel
     let container: AppContainer
+    let refreshToken: Int
     @State private var focusTarget: FocusNavigationTarget?
 
-    init(container: AppContainer) {
+    init(container: AppContainer, refreshToken: Int = 0) {
         self.container = container
+        self.refreshToken = refreshToken
         _viewModel = State(initialValue: TodayViewModel(container: container))
     }
 
@@ -33,7 +35,7 @@ struct TodayView: View {
                 )
             }
         }
-        .task { viewModel.load() }
+        .task(id: refreshToken) { viewModel.load() }
     }
 
     @ViewBuilder

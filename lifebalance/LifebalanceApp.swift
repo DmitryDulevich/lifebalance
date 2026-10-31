@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct lifebalanceApp: App {
+struct LifebalanceApp: App {
     let modelContainer: ModelContainer = {
         let schema = Schema([
             UserSettings.self,

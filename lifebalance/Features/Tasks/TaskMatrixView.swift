@@ -102,7 +102,7 @@ struct TaskMatrixView: View {
                 .strokeBorder(borderColor ?? color.opacity(0.25), lineWidth: 1.5)
         )
         .dropDestination(for: String.self) { items, _ in
-            handleDrop(items, important: important, urgent: urgent)
+            return handleDrop(items, important: important, urgent: urgent)
         }
     }
 
@@ -157,7 +157,7 @@ struct TaskMatrixView: View {
         .padding(10)
         .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Palette.cardBackground))
         .dropDestination(for: String.self) { items, _ in
-            handleDrop(items, important: nil, urgent: nil)
+            return handleDrop(items, important: nil, urgent: nil)
         }
     }
 
