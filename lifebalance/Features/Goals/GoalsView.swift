@@ -4,6 +4,7 @@ struct GoalsView: View {
     @State private var viewModel: GoalsViewModel
     let container: AppContainer
     let refreshToken: Int
+    @State private var selectedGoal: Goal?
 
     init(container: AppContainer, refreshToken: Int = 0) {
         self.container = container
@@ -72,6 +73,14 @@ struct GoalsView: View {
                     onSaved: { viewModel.load() }
                 )
             }
+            .sheet(item: $selectedGoal) { goal in
+                GoalDetailView(
+                    container: container,
+                    goal: goal,
+                    lifeAreas: viewModel.lifeAreas,
+                    onChanged: { viewModel.load() }
+                )
+            }
         }
         .task(id: refreshToken) { viewModel.load() }
         .appErrorAlert($viewModel.errorMessage)
@@ -79,7 +88,7 @@ struct GoalsView: View {
 
     private func goalCard(_ goal: Goal) -> some View {
         let color = goal.lifeArea.map { Color(hex: $0.colorHex) } ?? Palette.accent
-        let progress = GoalProgressCalculator.progress(for: goal)
+        let progress = GoalProgressCalculator.summary(for: goal)
 
         return VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
@@ -96,10 +105,25 @@ struct GoalsView: View {
                 .foregroundStyle(Palette.textPrimary)
 
             HStack(spacing: 10) {
-                ProgressBarView(progress: progress, color: color)
-                Text("\(Int(progress * 100))%")
+                ProgressBarView(progress: progress.fraction, color: color)
+                Text("\(progress.percentage)%")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(Palette.textSecondary)
+            }
+
+            HStack {
+                Label(
+                    "\(progress.completedTaskCount) из \(progress.totalTaskCount) задач",
+                    systemImage: "checklist"
+                )
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(Palette.textSecondary)
+
+                Spacer()
+
+                Button("Открыть") { selectedGoal = goal }
+                    .font(.system(size: 12, weight: .semibold))
+                    .accessibilityIdentifier("goal.tasks.\(goal.title)")
             }
         }
         .padding(16)

@@ -93,6 +93,24 @@ final class LifebalanceUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Тестовая цель"].waitForExistence(timeout: 5))
     }
 
+    func testShowsGoalTasksAndUpdatesProgress() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.tabBars.buttons["Цели"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Цели"].tap()
+
+        let openTasks = app.buttons["goal.tasks.Тестовая цель"]
+        XCTAssertTrue(openTasks.waitForExistence(timeout: 5))
+        openTasks.tap()
+
+        XCTAssertTrue(app.staticTexts["0 из 1 задач выполнено"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Тестовая фокус-задача"].exists)
+        app.buttons["task.toggle.Тестовая фокус-задача"].tap()
+
+        XCTAssertTrue(app.staticTexts["1 из 1 задач выполнено"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["100%"].exists)
+    }
+
     private func launchApp(completedOnboarding: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing"]

@@ -10,12 +10,14 @@ struct TaskFormView: View {
         lifeAreas: [LifeArea],
         goals: [Goal],
         editingTask: TaskItem?,
+        preselectedGoal: Goal? = nil,
         onSaved: @escaping () -> Void
     ) {
         _viewModel = State(initialValue: container.makeTaskFormViewModel(
             lifeAreas: lifeAreas,
             goals: goals,
-            editingTask: editingTask
+            editingTask: editingTask,
+            preselectedGoal: preselectedGoal
         ))
         self.onSaved = onSaved
     }

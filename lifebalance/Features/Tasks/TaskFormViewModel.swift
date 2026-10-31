@@ -25,6 +25,7 @@ final class TaskFormViewModel {
         lifeAreas: [LifeArea],
         goals: [Goal],
         editingTask: TaskItem?,
+        preselectedGoal: Goal? = nil,
         createTaskUseCase: CreateTaskUseCase,
         updateTaskUseCase: UpdateTaskUseCase
     ) {
@@ -48,7 +49,7 @@ final class TaskFormViewModel {
             title = ""
             note = ""
             selectedAreaID = nil
-            selectedGoalID = nil
+            selectedGoalID = preselectedGoal?.id
             dueDate = nil
             hasDueDate = false
             important = nil

@@ -123,6 +123,49 @@ struct ViewModelTests {
     }
 
     @Test
+    func taskFormPreselectsGoalWhenOpenedFromGoalDetails() {
+        let repository = FakeTaskRepository()
+        let goal = Goal(title: "Выпустить приложение")
+        let viewModel = TaskFormViewModel(
+            lifeAreas: [],
+            goals: [goal],
+            editingTask: nil,
+            preselectedGoal: goal,
+            createTaskUseCase: CreateTaskUseCase(taskRepository: repository),
+            updateTaskUseCase: UpdateTaskUseCase(taskRepository: repository)
+        )
+
+        viewModel.title = "Подготовить релиз"
+
+        #expect(viewModel.selectedGoalID == goal.id)
+        #expect(viewModel.save())
+        #expect(repository.insertedTasks.first?.goal?.id == goal.id)
+    }
+
+    @Test
+    func goalDetailsShowsLinkedTasksAndUpdatesProgress() {
+        let repository = FakeTaskRepository()
+        let activeTask = TaskItem(title: "Реализовать")
+        let completedTask = TaskItem(title: "Спроектировать", status: .completed, completedAt: .now)
+        let goal = Goal(title: "Выпустить приложение")
+        goal.tasks = [completedTask, activeTask]
+        let viewModel = GoalDetailViewModel(
+            goal: goal,
+            toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: repository)
+        )
+
+        #expect(viewModel.tasks.map(\.id).first == activeTask.id)
+        #expect(viewModel.progress.completedTaskCount == 1)
+        #expect(viewModel.progress.totalTaskCount == 2)
+
+        viewModel.toggleCompletion(activeTask)
+
+        #expect(viewModel.progress.completedTaskCount == 2)
+        #expect(viewModel.progress.percentage == 100)
+        #expect(viewModel.errorMessage == nil)
+    }
+
+    @Test
     func welcomeViewModelRecoversAfterFailedStart() {
         let repository = FakeUserSettingsRepository()
         let viewModel = WelcomeViewModel(

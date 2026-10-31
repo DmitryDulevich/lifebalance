@@ -97,14 +97,23 @@ extension AppContainer {
     func makeTaskFormViewModel(
         lifeAreas: [LifeArea],
         goals: [Goal],
-        editingTask: TaskItem?
+        editingTask: TaskItem?,
+        preselectedGoal: Goal? = nil
     ) -> TaskFormViewModel {
         TaskFormViewModel(
             lifeAreas: lifeAreas,
             goals: goals,
             editingTask: editingTask,
+            preselectedGoal: preselectedGoal,
             createTaskUseCase: createTaskUseCase,
             updateTaskUseCase: updateTaskUseCase
+        )
+    }
+
+    func makeGoalDetailViewModel(goal: Goal) -> GoalDetailViewModel {
+        GoalDetailViewModel(
+            goal: goal,
+            toggleTaskCompletionUseCase: toggleTaskCompletionUseCase
         )
     }
 

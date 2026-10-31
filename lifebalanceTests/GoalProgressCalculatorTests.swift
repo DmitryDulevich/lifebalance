@@ -20,6 +20,11 @@ struct GoalProgressCalculatorTests {
             TaskItem(title: "Publish")
         ]
 
-        #expect(GoalProgressCalculator.progress(for: goal) == 2.0 / 3.0)
+        let progress = GoalProgressCalculator.summary(for: goal)
+
+        #expect(progress.completedTaskCount == 2)
+        #expect(progress.totalTaskCount == 3)
+        #expect(progress.fraction == 2.0 / 3.0)
+        #expect(progress.percentage == 67)
     }
 }
