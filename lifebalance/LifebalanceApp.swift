@@ -23,6 +23,7 @@ struct LifebalanceApp: App {
         do {
             return try ModelContainer(for: schema)
         } catch {
+            AppLogger.error(error, context: "storage.container.create")
             fatalError("Failed to create ModelContainer: \(error)")
         }
     }()

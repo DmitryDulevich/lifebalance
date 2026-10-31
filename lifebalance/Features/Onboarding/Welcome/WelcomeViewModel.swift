@@ -18,6 +18,7 @@ final class WelcomeViewModel {
             try advanceOnboardingStepUseCase.execute(to: .areaSelection)
             return true
         } catch {
+            AppLogger.error(error, context: "onboarding.welcome.start")
             errorMessage = error.localizedDescription
             return false
         }

@@ -70,6 +70,7 @@ struct RootView: View {
             settings = try appContainer.userSettingsRepository.fetchOrCreate()
             startupState = .ready
         } catch {
+            AppLogger.error(error, context: "startup.initialize")
             startupState = .failed(error.localizedDescription)
         }
     }

@@ -66,6 +66,7 @@ struct GoalsView: View {
             }
         }
         .task(id: refreshToken) { viewModel.load() }
+        .appErrorAlert($viewModel.errorMessage)
     }
 
     private func goalCard(_ goal: Goal) -> some View {

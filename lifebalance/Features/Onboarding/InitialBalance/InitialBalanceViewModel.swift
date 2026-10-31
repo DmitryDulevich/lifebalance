@@ -34,6 +34,7 @@ final class InitialBalanceViewModel {
             let areas = try lifeAreaRepository.fetchActiveAreas()
             drafts = areas.map { AreaRatingDraft(area: $0) }
         } catch {
+            AppLogger.error(error, context: "onboarding.initial_balance.load")
             errorMessage = error.localizedDescription
         }
     }
@@ -64,6 +65,9 @@ final class InitialBalanceViewModel {
             try saveBalanceSnapshotUseCase.execute(ratings: ratings, note: nil)
             return true
         } catch {
+            if !(error is SaveBalanceSnapshotUseCase.ValidationError) {
+                AppLogger.error(error, context: "onboarding.initial_balance.save")
+            }
             errorMessage = error.localizedDescription
             return false
         }
@@ -74,6 +78,7 @@ final class InitialBalanceViewModel {
             try advanceOnboardingStepUseCase.execute(to: .completed)
             return true
         } catch {
+            AppLogger.error(error, context: "onboarding.initial_balance.skip")
             errorMessage = error.localizedDescription
             return false
         }

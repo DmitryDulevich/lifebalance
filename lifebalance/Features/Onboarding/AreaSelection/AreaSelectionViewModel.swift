@@ -105,6 +105,9 @@ final class AreaSelectionViewModel {
             try selectLifeAreasUseCase.execute(drafts)
             return true
         } catch {
+            if !(error is SelectLifeAreasUseCase.ValidationError) {
+                AppLogger.error(error, context: "onboarding.areas.save")
+            }
             errorMessage = error.localizedDescription
             return false
         }

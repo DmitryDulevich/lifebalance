@@ -71,6 +71,7 @@ struct WelcomeView: View {
         .sheet(isPresented: $viewModel.showPrivacyPolicy) {
             PrivacyPolicyPlaceholderView()
         }
+        .appErrorAlert($viewModel.errorMessage)
     }
 }
 

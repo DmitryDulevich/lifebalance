@@ -65,19 +65,7 @@ struct MainTabView: View {
                 onSaved: { dataRevision += 1 }
             )
         }
-        .alert(
-            "Не удалось загрузить данные",
-            isPresented: Binding(
-                get: { errorMessage != nil },
-                set: { if !$0 { errorMessage = nil } }
-            )
-        ) {
-            Button("ОК", role: .cancel) {
-                errorMessage = nil
-            }
-        } message: {
-            Text(errorMessage ?? "Неизвестная ошибка")
-        }
+        .appErrorAlert($errorMessage, title: "Не удалось загрузить данные")
     }
 
     private func prepareQuickAddMenu() {
@@ -89,6 +77,7 @@ struct MainTabView: View {
             quickAddGoals = goals
             showQuickAddMenu = true
         } catch {
+            AppLogger.error(error, context: "quick_add.prepare")
             errorMessage = error.localizedDescription
         }
     }

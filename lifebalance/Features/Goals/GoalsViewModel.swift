@@ -22,6 +22,7 @@ final class GoalsViewModel {
             goals = try goalRepository.fetchActive()
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
         } catch {
+            AppLogger.error(error, context: "goals.load")
             errorMessage = error.localizedDescription
         }
     }

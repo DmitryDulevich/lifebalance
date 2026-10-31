@@ -90,5 +90,6 @@ struct TasksView: View {
             }
         }
         .task(id: refreshToken) { viewModel.load() }
+        .appErrorAlert($viewModel.errorMessage)
     }
 }

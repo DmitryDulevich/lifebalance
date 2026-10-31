@@ -48,6 +48,7 @@ final class BalanceViewModel {
                 AreaRow(area: area, value: ratingsByAreaID[area.id] ?? 0)
             }
         } catch {
+            AppLogger.error(error, context: "balance.load")
             errorMessage = error.localizedDescription
         }
     }
@@ -71,6 +72,7 @@ final class BalanceViewModel {
         do {
             try adjustBalanceRatingUseCase.execute(ratings: inputs)
         } catch {
+            AppLogger.error(error, context: "balance.persist")
             errorMessage = error.localizedDescription
         }
     }

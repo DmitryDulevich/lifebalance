@@ -72,6 +72,9 @@ final class TaskFormViewModel {
             }
             return true
         } catch {
+            if !(error is TaskValidationError) {
+                AppLogger.error(error, context: "task_form.save")
+            }
             errorMessage = error.localizedDescription
             return false
         }

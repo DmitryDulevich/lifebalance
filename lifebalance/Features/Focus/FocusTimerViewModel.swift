@@ -60,6 +60,7 @@ final class FocusTimerViewModel {
                 beginTicking()
             }
         } catch {
+            AppLogger.error(error, context: "focus.start")
             errorMessage = error.localizedDescription
         }
     }
@@ -81,6 +82,7 @@ final class FocusTimerViewModel {
         do {
             try focusSessionRepository.save()
         } catch {
+            AppLogger.error(error, context: "focus.toggle_pause")
             errorMessage = error.localizedDescription
         }
     }
@@ -95,6 +97,7 @@ final class FocusTimerViewModel {
             displaySeconds = 0
             return true
         } catch {
+            AppLogger.error(error, context: "focus.finish")
             errorMessage = error.localizedDescription
             return false
         }
@@ -109,6 +112,7 @@ final class FocusTimerViewModel {
             try finishFocusSessionUseCase.execute(session, completeTask: false, cancelled: true)
             return true
         } catch {
+            AppLogger.error(error, context: "focus.cancel")
             errorMessage = error.localizedDescription
             return false
         }

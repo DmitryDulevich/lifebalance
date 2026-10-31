@@ -38,6 +38,7 @@ final class TasksViewModel {
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
             goals = try goalRepository.fetchActive()
         } catch {
+            AppLogger.error(error, context: "tasks.load")
             errorMessage = error.localizedDescription
         }
     }
@@ -57,6 +58,7 @@ final class TasksViewModel {
             try toggleTaskCompletionUseCase.execute(task)
             load()
         } catch {
+            AppLogger.error(error, context: "tasks.toggle_completion")
             errorMessage = error.localizedDescription
         }
     }
@@ -66,6 +68,7 @@ final class TasksViewModel {
             try updateTaskQuadrantUseCase.execute(task, important: important, urgent: urgent)
             load()
         } catch {
+            AppLogger.error(error, context: "tasks.update_quadrant")
             errorMessage = error.localizedDescription
         }
     }
@@ -75,6 +78,7 @@ final class TasksViewModel {
             try deleteTaskUseCase.execute(task)
             load()
         } catch {
+            AppLogger.error(error, context: "tasks.delete")
             errorMessage = error.localizedDescription
         }
     }

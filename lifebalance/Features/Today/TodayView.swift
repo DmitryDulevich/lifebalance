@@ -36,6 +36,7 @@ struct TodayView: View {
             }
         }
         .task(id: refreshToken) { viewModel.load() }
+        .appErrorAlert($viewModel.errorMessage)
     }
 
     @ViewBuilder

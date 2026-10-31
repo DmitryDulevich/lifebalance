@@ -27,6 +27,9 @@ final class GoalFormViewModel {
             )
             return true
         } catch {
+            if !(error is GoalValidationError) {
+                AppLogger.error(error, context: "goal_form.save")
+            }
             errorMessage = error.localizedDescription
             return false
         }

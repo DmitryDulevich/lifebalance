@@ -60,6 +60,7 @@ struct BalanceView: View {
             .toolbar(.hidden, for: .navigationBar)
         }
         .task { viewModel.load() }
+        .appErrorAlert($viewModel.errorMessage)
     }
 
     private func stepperRow(_ row: BalanceViewModel.AreaRow) -> some View {

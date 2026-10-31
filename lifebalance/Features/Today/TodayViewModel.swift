@@ -72,6 +72,7 @@ final class TodayViewModel {
                 focusMinutesToday: focusSeconds / 60
             ))
         } catch {
+            AppLogger.error(error, context: "today.load")
             state = .error(error.localizedDescription)
         }
     }
@@ -81,6 +82,7 @@ final class TodayViewModel {
             try toggleTaskCompletionUseCase.execute(task)
             load()
         } catch {
+            AppLogger.error(error, context: "today.toggle_completion")
             errorMessage = error.localizedDescription
         }
     }
