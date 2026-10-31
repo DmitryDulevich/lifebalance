@@ -3,6 +3,7 @@ import SwiftUI
 struct FocusTimerView: View {
     @State private var viewModel: FocusTimerViewModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
 
     init(task: TaskItem?, plannedSeconds: Int, container: AppContainer) {
         _viewModel = State(initialValue: container.makeFocusTimerViewModel(task: task, plannedSeconds: plannedSeconds))
@@ -116,6 +117,11 @@ struct FocusTimerView: View {
         .navigationBarBackButtonHidden(true)
         .task {
             viewModel.start()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                viewModel.applicationDidBecomeActive()
+            }
         }
         .appErrorAlert($viewModel.errorMessage)
     }

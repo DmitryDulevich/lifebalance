@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-enum GoalStatus: String, Codable, Sendable {
+enum GoalStatus: String, Codable, CaseIterable, Hashable, Sendable {
     case active
     case completed
     case paused

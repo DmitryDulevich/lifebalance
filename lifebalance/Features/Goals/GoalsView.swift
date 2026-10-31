@@ -31,25 +31,28 @@ struct GoalsView: View {
                                 .foregroundStyle(Palette.textPrimary)
                             Spacer()
                             Button {
-                                viewModel.showGoalForm = true
+                                viewModel.startCreating()
                             } label: {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size: 26))
                                     .foregroundStyle(Palette.accent)
                             }
+                            .accessibilityIdentifier("goals.add")
                         }
                         .padding(.top, 8)
 
-                        if viewModel.goals.isEmpty {
+                        statusFilters
+
+                        if viewModel.filteredGoals.isEmpty {
                             ContentUnavailableView(
-                                "Пока нет целей",
+                                emptyTitle,
                                 systemImage: "target",
-                                description: Text("Цель — это измеримый результат, а не разовая задача. Нажмите «+», чтобы создать первую.")
+                                description: Text(emptyDescription)
                             )
                             .padding(.top, 40)
                         } else {
                             VStack(spacing: 10) {
-                                ForEach(viewModel.goals) { goal in
+                                ForEach(viewModel.filteredGoals) { goal in
                                     goalCard(goal)
                                 }
                             }
@@ -62,7 +65,12 @@ struct GoalsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $viewModel.showGoalForm) {
-                GoalFormView(container: container, lifeAreas: viewModel.lifeAreas, onSaved: { viewModel.load() })
+                GoalFormView(
+                    container: container,
+                    lifeAreas: viewModel.lifeAreas,
+                    editingGoal: viewModel.editingGoal,
+                    onSaved: { viewModel.load() }
+                )
             }
         }
         .task(id: refreshToken) { viewModel.load() }
@@ -79,6 +87,8 @@ struct GoalsView: View {
                 Text(captionText(goal))
                     .font(.system(size: 12))
                     .foregroundStyle(Palette.textSecondary)
+                Spacer()
+                goalActions(goal)
             }
 
             Text(goal.title)
@@ -96,6 +106,50 @@ struct GoalsView: View {
         .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Palette.cardBackground))
     }
 
+    private var statusFilters: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(GoalStatus.allCases, id: \.self) { status in
+                    FilterChip(
+                        label: "\(title(for: status)) · \(viewModel.count(for: status))",
+                        isActive: viewModel.selectedStatus == status
+                    ) {
+                        viewModel.selectedStatus = status
+                    }
+                    .accessibilityIdentifier("goals.filter.\(status.rawValue)")
+                }
+            }
+        }
+    }
+
+    private func goalActions(_ goal: Goal) -> some View {
+        Menu {
+            if goal.status != .archived {
+                Button("Редактировать") { viewModel.startEditing(goal) }
+            }
+
+            switch goal.status {
+            case .active:
+                Button("Поставить на паузу") { viewModel.setStatus(.paused, for: goal) }
+                Button("Завершить") { viewModel.setStatus(.completed, for: goal) }
+                Button("Архивировать", role: .destructive) { viewModel.setStatus(.archived, for: goal) }
+            case .paused:
+                Button("Возобновить") { viewModel.setStatus(.active, for: goal) }
+                Button("Завершить") { viewModel.setStatus(.completed, for: goal) }
+                Button("Архивировать", role: .destructive) { viewModel.setStatus(.archived, for: goal) }
+            case .completed:
+                Button("Вернуть в активные") { viewModel.setStatus(.active, for: goal) }
+                Button("Архивировать", role: .destructive) { viewModel.setStatus(.archived, for: goal) }
+            case .archived:
+                Button("Восстановить") { viewModel.setStatus(.active, for: goal) }
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .foregroundStyle(Palette.textSecondary)
+        }
+        .accessibilityIdentifier("goal.menu.\(goal.title)")
+    }
+
     private func captionText(_ goal: Goal) -> String {
         var parts: [String] = []
         if let area = goal.lifeArea { parts.append(area.name) }
@@ -103,5 +157,29 @@ struct GoalsView: View {
             parts.append(Self.relativeFormatter.localizedString(for: targetDate, relativeTo: .now))
         }
         return parts.isEmpty ? "Без сферы" : parts.joined(separator: " · ")
+    }
+
+    private func title(for status: GoalStatus) -> String {
+        switch status {
+        case .active: "Активные"
+        case .paused: "Пауза"
+        case .completed: "Готово"
+        case .archived: "Архив"
+        }
+    }
+
+    private var emptyTitle: String {
+        switch viewModel.selectedStatus {
+        case .active: "Пока нет активных целей"
+        case .paused: "Нет целей на паузе"
+        case .completed: "Нет завершённых целей"
+        case .archived: "Архив пуст"
+        }
+    }
+
+    private var emptyDescription: String {
+        viewModel.selectedStatus == .active
+            ? "Цель — это измеримый результат. Нажмите «+», чтобы создать первую."
+            : "Здесь появятся цели с выбранным статусом."
     }
 }

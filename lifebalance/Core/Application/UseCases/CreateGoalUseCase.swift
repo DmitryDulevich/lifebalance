@@ -14,6 +14,17 @@ enum GoalValidationError: LocalizedError {
     }
 }
 
+enum GoalInputValidator {
+    static let maximumTitleLength = 120
+
+    static func normalizedTitle(_ title: String) throws -> String {
+        let normalized = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalized.isEmpty else { throw GoalValidationError.emptyTitle }
+        guard normalized.count <= maximumTitleLength else { throw GoalValidationError.titleTooLong }
+        return normalized
+    }
+}
+
 @MainActor
 final class CreateGoalUseCase {
     private let goalRepository: GoalRepository
@@ -24,9 +35,7 @@ final class CreateGoalUseCase {
 
     @discardableResult
     func execute(title: String, lifeArea: LifeArea?, targetDate: Date?) throws -> Goal {
-        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedTitle.isEmpty else { throw GoalValidationError.emptyTitle }
-        guard trimmedTitle.count <= 120 else { throw GoalValidationError.titleTooLong }
+        let trimmedTitle = try GoalInputValidator.normalizedTitle(title)
 
         let goal = Goal(title: trimmedTitle, targetDate: targetDate, lifeArea: lifeArea)
         try goalRepository.insert(goal)

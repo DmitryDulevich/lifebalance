@@ -5,8 +5,16 @@ struct GoalFormView: View {
     @Environment(\.dismiss) private var dismiss
     var onSaved: () -> Void
 
-    init(container: AppContainer, lifeAreas: [LifeArea], onSaved: @escaping () -> Void) {
-        _viewModel = State(initialValue: container.makeGoalFormViewModel(lifeAreas: lifeAreas))
+    init(
+        container: AppContainer,
+        lifeAreas: [LifeArea],
+        editingGoal: Goal? = nil,
+        onSaved: @escaping () -> Void
+    ) {
+        _viewModel = State(initialValue: container.makeGoalFormViewModel(
+            lifeAreas: lifeAreas,
+            editingGoal: editingGoal
+        ))
         self.onSaved = onSaved
     }
 
@@ -15,6 +23,7 @@ struct GoalFormView: View {
             Form {
                 Section("Название") {
                     TextField("Например, «Сдать проект»", text: $viewModel.title)
+                        .accessibilityIdentifier("goal.title")
                 }
 
                 Section("Сфера") {
@@ -37,19 +46,20 @@ struct GoalFormView: View {
                     Text(error).foregroundStyle(.red)
                 }
             }
-            .navigationTitle("Новая цель")
+            .navigationTitle(viewModel.isEditing ? "Редактирование цели" : "Новая цель")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Отмена") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Создать") {
+                    Button(viewModel.isEditing ? "Сохранить" : "Создать") {
                         if viewModel.save() {
                             onSaved()
                             dismiss()
                         }
                     }
+                    .accessibilityIdentifier("goal.save")
                 }
             }
         }

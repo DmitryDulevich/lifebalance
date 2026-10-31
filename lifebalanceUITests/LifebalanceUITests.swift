@@ -52,6 +52,47 @@ final class LifebalanceUITests: XCTestCase {
         app.buttons["focus.finish"].tap()
     }
 
+    func testAddsLifeAreaFromProfile() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.tabBars.buttons["Профиль"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Профиль"].tap()
+        app.buttons["profile.life_areas"].tap()
+
+        let addButton = app.buttons["life_area.add"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5))
+        addButton.tap()
+
+        let nameField = app.textFields["life_area.name"]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+        nameField.tap()
+        nameField.typeText("Хобби")
+        app.buttons["life_area.save"].tap()
+
+        XCTAssertTrue(app.staticTexts["Хобби"].waitForExistence(timeout: 5))
+    }
+
+    func testPausesAndArchivesGoal() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.tabBars.buttons["Цели"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Цели"].tap()
+
+        let menu = app.buttons["goal.menu.Тестовая цель"]
+        XCTAssertTrue(menu.waitForExistence(timeout: 5))
+        menu.tap()
+        app.buttons["Поставить на паузу"].tap()
+
+        app.buttons["goals.filter.paused"].tap()
+        XCTAssertTrue(app.staticTexts["Тестовая цель"].waitForExistence(timeout: 5))
+
+        app.buttons["goal.menu.Тестовая цель"].tap()
+        app.buttons["Архивировать"].tap()
+        app.buttons["goals.filter.archived"].tap()
+
+        XCTAssertTrue(app.staticTexts["Тестовая цель"].waitForExistence(timeout: 5))
+    }
+
     private func launchApp(completedOnboarding: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing"]

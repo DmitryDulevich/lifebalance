@@ -17,6 +17,7 @@ final class FocusTimerViewModel {
     private let finishFocusSessionUseCase: FinishFocusSessionUseCase
     private let restoreActiveFocusSessionUseCase: RestoreActiveFocusSessionUseCase
     private let focusSessionRepository: FocusSessionRepository
+    private let notificationScheduler: FocusNotificationScheduling
 
     init(
         task: TaskItem?,
@@ -24,7 +25,8 @@ final class FocusTimerViewModel {
         startFocusSessionUseCase: StartFocusSessionUseCase,
         finishFocusSessionUseCase: FinishFocusSessionUseCase,
         restoreActiveFocusSessionUseCase: RestoreActiveFocusSessionUseCase,
-        focusSessionRepository: FocusSessionRepository
+        focusSessionRepository: FocusSessionRepository,
+        notificationScheduler: FocusNotificationScheduling
     ) {
         self.task = task
         self.plannedSeconds = plannedSeconds
@@ -33,6 +35,7 @@ final class FocusTimerViewModel {
         self.finishFocusSessionUseCase = finishFocusSessionUseCase
         self.restoreActiveFocusSessionUseCase = restoreActiveFocusSessionUseCase
         self.focusSessionRepository = focusSessionRepository
+        self.notificationScheduler = notificationScheduler
     }
 
     var isPaused: Bool {
@@ -61,11 +64,14 @@ final class FocusTimerViewModel {
                     didFinish = true
                 } else if activeSession.status == .running {
                     beginTicking()
+                    scheduleCompletionNotification()
                 }
             } else {
                 session = try startFocusSessionUseCase.execute(task: task, plannedSeconds: plannedSeconds)
                 beginTicking()
+                scheduleCompletionNotification()
             }
+            errorMessage = nil
         } catch {
             AppLogger.error(error, context: "focus.start")
             errorMessage = error.localizedDescription
@@ -74,36 +80,68 @@ final class FocusTimerViewModel {
 
     func togglePause() {
         guard let session else { return }
+        let previousStatus = session.status
+        let previousPausedAt = session.pausedAt
+        let previousPausedSeconds = session.pausedSeconds
+
         if session.status == .running {
             session.status = .paused
             session.pausedAt = .now
-            stopTicking()
         } else if session.status == .paused {
             if let pausedAt = session.pausedAt {
                 session.pausedSeconds += max(0, Int(Date.now.timeIntervalSince(pausedAt).rounded()))
             }
             session.pausedAt = nil
             session.status = .running
-            beginTicking()
         }
         do {
             try focusSessionRepository.save()
+            errorMessage = nil
+            if session.status == .paused {
+                stopTicking()
+                notificationScheduler.cancelCompletion(sessionID: session.id)
+            } else if session.status == .running {
+                beginTicking()
+                scheduleCompletionNotification()
+            }
         } catch {
+            session.status = previousStatus
+            session.pausedAt = previousPausedAt
+            session.pausedSeconds = previousPausedSeconds
+            if session.status == .running {
+                beginTicking()
+                scheduleCompletionNotification()
+            } else {
+                stopTicking()
+                notificationScheduler.cancelCompletion(sessionID: session.id)
+            }
             AppLogger.error(error, context: "focus.toggle_pause")
             errorMessage = error.localizedDescription
         }
+    }
+
+    func applicationDidBecomeActive() {
+        guard session?.status == .running, !didFinish else { return }
+        tick()
+        scheduleCompletionNotification()
     }
 
     @discardableResult
     func finish() -> Bool {
         guard let session else { return false }
         stopTicking()
+        notificationScheduler.cancelCompletion(sessionID: session.id)
         do {
             try finishFocusSessionUseCase.execute(session, completeTask: false)
             didFinish = true
             displaySeconds = 0
+            errorMessage = nil
             return true
         } catch {
+            if session.status == .running {
+                beginTicking()
+                scheduleCompletionNotification()
+            }
             AppLogger.error(error, context: "focus.finish")
             errorMessage = error.localizedDescription
             return false
@@ -115,10 +153,16 @@ final class FocusTimerViewModel {
         stopTicking()
         guard let session else { return true }
         guard !didFinish else { return true }
+        notificationScheduler.cancelCompletion(sessionID: session.id)
         do {
             try finishFocusSessionUseCase.execute(session, completeTask: false, cancelled: true)
+            errorMessage = nil
             return true
         } catch {
+            if session.status == .running {
+                beginTicking()
+                scheduleCompletionNotification()
+            }
             AppLogger.error(error, context: "focus.cancel")
             errorMessage = error.localizedDescription
             return false
@@ -149,6 +193,17 @@ final class FocusTimerViewModel {
             stopTicking()
             _ = finish()
         }
+    }
+
+    private func scheduleCompletionNotification() {
+        guard let session, session.status == .running, !didFinish else { return }
+        let remaining = remainingSeconds(for: session)
+        guard remaining > 0 else { return }
+        notificationScheduler.scheduleCompletion(
+            sessionID: session.id,
+            taskTitle: session.task?.title,
+            after: TimeInterval(remaining)
+        )
     }
 
     private func remainingSeconds(for session: FocusSession, at now: Date = .now) -> Int {

@@ -13,8 +13,12 @@ final class SwiftDataGoalRepository: GoalRepository {
         // Filtered in Swift rather than via #Predicate: SwiftData's predicate macro
         // support for enum equality is inconsistent across iOS 17 point releases,
         // and goal counts are small enough that this costs nothing in practice.
+        try fetchAll().filter { $0.status == .active }
+    }
+
+    func fetchAll() throws -> [Goal] {
         let descriptor = FetchDescriptor<Goal>(sortBy: [SortDescriptor(\.createdAt, order: .reverse)])
-        return try context.fetch(descriptor).filter { $0.status == .active }
+        return try context.fetch(descriptor)
     }
 
     func insert(_ goal: Goal) throws {

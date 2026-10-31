@@ -9,6 +9,7 @@ final class AppContainer {
     let taskRepository: TaskRepository
     let goalRepository: GoalRepository
     let focusSessionRepository: FocusSessionRepository
+    let focusNotificationScheduler: FocusNotificationScheduling
 
     let selectLifeAreasUseCase: SelectLifeAreasUseCase
     let saveBalanceSnapshotUseCase: SaveBalanceSnapshotUseCase
@@ -20,10 +21,13 @@ final class AppContainer {
     let updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase
     let deleteTaskUseCase: DeleteTaskUseCase
     let createGoalUseCase: CreateGoalUseCase
+    let updateGoalUseCase: UpdateGoalUseCase
+    let setGoalStatusUseCase: SetGoalStatusUseCase
     let startFocusSessionUseCase: StartFocusSessionUseCase
     let finishFocusSessionUseCase: FinishFocusSessionUseCase
     let restoreActiveFocusSessionUseCase: RestoreActiveFocusSessionUseCase
     let adjustBalanceRatingUseCase: AdjustBalanceRatingUseCase
+    let manageLifeAreasUseCase: ManageLifeAreasUseCase
 
     init(modelContext: ModelContext) {
         let lifeAreaRepository = SwiftDataLifeAreaRepository(context: modelContext)
@@ -39,6 +43,9 @@ final class AppContainer {
         self.taskRepository = taskRepository
         self.goalRepository = goalRepository
         self.focusSessionRepository = focusSessionRepository
+        self.focusNotificationScheduler = ProcessInfo.processInfo.arguments.contains("--ui-testing")
+            ? NoopFocusNotificationScheduler()
+            : LocalFocusNotificationScheduler()
 
         self.selectLifeAreasUseCase = SelectLifeAreasUseCase(
             lifeAreaRepository: lifeAreaRepository,
@@ -58,6 +65,8 @@ final class AppContainer {
         self.updateTaskQuadrantUseCase = UpdateTaskQuadrantUseCase(taskRepository: taskRepository)
         self.deleteTaskUseCase = DeleteTaskUseCase(taskRepository: taskRepository)
         self.createGoalUseCase = CreateGoalUseCase(goalRepository: goalRepository)
+        self.updateGoalUseCase = UpdateGoalUseCase(goalRepository: goalRepository)
+        self.setGoalStatusUseCase = SetGoalStatusUseCase(goalRepository: goalRepository)
         self.startFocusSessionUseCase = StartFocusSessionUseCase(focusSessionRepository: focusSessionRepository)
         let finishFocusSessionUseCase = FinishFocusSessionUseCase(
             focusSessionRepository: focusSessionRepository,
@@ -69,6 +78,7 @@ final class AppContainer {
             finishFocusSessionUseCase: finishFocusSessionUseCase
         )
         self.adjustBalanceRatingUseCase = AdjustBalanceRatingUseCase(balanceRepository: balanceRepository)
+        self.manageLifeAreasUseCase = ManageLifeAreasUseCase(repository: lifeAreaRepository)
     }
 }
 
@@ -101,14 +111,17 @@ extension AppContainer {
     func makeGoalsViewModel() -> GoalsViewModel {
         GoalsViewModel(
             goalRepository: goalRepository,
-            lifeAreaRepository: lifeAreaRepository
+            lifeAreaRepository: lifeAreaRepository,
+            setGoalStatusUseCase: setGoalStatusUseCase
         )
     }
 
-    func makeGoalFormViewModel(lifeAreas: [LifeArea]) -> GoalFormViewModel {
+    func makeGoalFormViewModel(lifeAreas: [LifeArea], editingGoal: Goal?) -> GoalFormViewModel {
         GoalFormViewModel(
             lifeAreas: lifeAreas,
-            createGoalUseCase: createGoalUseCase
+            editingGoal: editingGoal,
+            createGoalUseCase: createGoalUseCase,
+            updateGoalUseCase: updateGoalUseCase
         )
     }
 
@@ -136,7 +149,8 @@ extension AppContainer {
             startFocusSessionUseCase: startFocusSessionUseCase,
             finishFocusSessionUseCase: finishFocusSessionUseCase,
             restoreActiveFocusSessionUseCase: restoreActiveFocusSessionUseCase,
-            focusSessionRepository: focusSessionRepository
+            focusSessionRepository: focusSessionRepository,
+            notificationScheduler: focusNotificationScheduler
         )
     }
 
@@ -153,6 +167,13 @@ extension AppContainer {
             lifeAreaRepository: lifeAreaRepository,
             saveBalanceSnapshotUseCase: saveBalanceSnapshotUseCase,
             advanceOnboardingStepUseCase: advanceOnboardingStepUseCase
+        )
+    }
+
+    func makeLifeAreasSettingsViewModel() -> LifeAreasSettingsViewModel {
+        LifeAreasSettingsViewModel(
+            repository: lifeAreaRepository,
+            manageLifeAreasUseCase: manageLifeAreasUseCase
         )
     }
 }

@@ -26,7 +26,7 @@ struct MainTabView: View {
                 BalanceView(container: container)
                     .tabItem { Label("Баланс", systemImage: "chart.pie") }
 
-                ProfilePlaceholderView()
+                ProfileView(container: container)
                     .tabItem { Label("Профиль", systemImage: "person.crop.circle") }
             }
             .tint(Palette.accent)

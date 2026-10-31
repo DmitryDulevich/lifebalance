@@ -75,14 +75,35 @@ struct AppPersistence {
             colorHex: "#5B8DEF",
             order: 0
         )
+        let healthArea = LifeArea(
+            name: "Здоровье",
+            icon: "heart.fill",
+            colorHex: "#029E72",
+            order: 1
+        )
+        let learningArea = LifeArea(
+            name: "Обучение",
+            icon: "book.fill",
+            colorHex: "#A58A07",
+            order: 2
+        )
+        let goal = Goal(
+            title: "Тестовая цель",
+            targetDate: Calendar.current.date(byAdding: .month, value: 1, to: .now),
+            lifeArea: area
+        )
         let task = TaskItem(
             title: "Тестовая фокус-задача",
             dueDate: .now,
             estimateMinutes: 25,
-            lifeArea: area
+            lifeArea: area,
+            goal: goal
         )
         context.insert(settings)
         context.insert(area)
+        context.insert(healthArea)
+        context.insert(learningArea)
+        context.insert(goal)
         context.insert(task)
         try context.save()
     }

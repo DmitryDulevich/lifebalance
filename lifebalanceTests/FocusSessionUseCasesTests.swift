@@ -99,4 +99,22 @@ struct FocusSessionUseCasesTests {
         #expect(focusRepository.saveCallCount == 1)
         #expect(taskRepository.saveCallCount == 1)
     }
+
+    @Test("Failed persistence restores the running session")
+    func finishRollsBackOnFailure() {
+        let session = FocusSession(plannedSeconds: 300)
+        let focusRepository = FakeFocusSessionRepository()
+        focusRepository.saveError = FakeRepositoryError.forcedFailure
+        let useCase = FinishFocusSessionUseCase(
+            focusSessionRepository: focusRepository,
+            taskRepository: FakeTaskRepository()
+        )
+
+        #expect(throws: FakeRepositoryError.self) {
+            try useCase.execute(session, completeTask: false)
+        }
+        #expect(session.status == .running)
+        #expect(session.endAt == nil)
+        #expect(session.pausedAt == nil)
+    }
 }

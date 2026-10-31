@@ -61,6 +61,7 @@ struct RepositoryIntegrationTests {
         try goalRepository.insert(Goal(title: "Новая активная", createdAt: Date(timeIntervalSince1970: 200)))
         try goalRepository.insert(Goal(title: "Завершённая", status: .completed, createdAt: Date(timeIntervalSince1970: 300)))
         #expect(try goalRepository.fetchActive().map(\.title) == ["Новая активная", "Старая активная"])
+        #expect(try goalRepository.fetchAll().map(\.title) == ["Завершённая", "Новая активная", "Старая активная"])
     }
 
     @Test
@@ -136,6 +137,52 @@ struct RepositoryIntegrationTests {
 
         #expect(try repository.fetchActiveSession()?.id == newPaused.id)
         #expect(try repository.fetchAll().map(\.id) == [completed.id, newPaused.id, oldRunning.id])
+    }
+
+    @Test
+    func archivingAreaPreservesRelatedTaskAndHistory() throws {
+        let container = try makeContainer()
+        let areaRepository = SwiftDataLifeAreaRepository(context: container.mainContext)
+        let taskRepository = SwiftDataTaskRepository(context: container.mainContext)
+        let balanceRepository = SwiftDataBalanceRepository(context: container.mainContext)
+        let areas = (0..<4).map {
+            LifeArea(name: "Сфера \($0)", icon: "circle", colorHex: "000000", order: $0)
+        }
+        try areaRepository.insert(areas)
+        let archivedArea = areas[3]
+        let task = TaskItem(title: "Связанная задача", lifeArea: archivedArea)
+        try taskRepository.insert(task)
+        try balanceRepository.saveSnapshot(
+            ratings: [AreaRatingInput(area: archivedArea, value: 7, note: nil)],
+            note: nil
+        )
+        let useCase = ManageLifeAreasUseCase(repository: areaRepository)
+
+        try useCase.setActive(archivedArea, isActive: false)
+
+        #expect(try areaRepository.fetchActiveAreas().count == 3)
+        #expect(try areaRepository.fetchAllAreas().count == 4)
+        #expect(try taskRepository.fetchAll().first?.lifeArea?.id == archivedArea.id)
+        #expect(try balanceRepository.fetchLatestSnapshot()?.ratings.first?.area?.id == archivedArea.id)
+    }
+
+    @Test
+    func archivingGoalPreservesItsTasks() throws {
+        let container = try makeContainer()
+        let goalRepository = SwiftDataGoalRepository(context: container.mainContext)
+        let taskRepository = SwiftDataTaskRepository(context: container.mainContext)
+        let goal = Goal(title: "Цель")
+        try goalRepository.insert(goal)
+        let task = TaskItem(title: "Шаг к цели", goal: goal)
+        try taskRepository.insert(task)
+
+        try SetGoalStatusUseCase(goalRepository: goalRepository).execute(goal, status: .archived)
+
+        let fetchedGoals = try goalRepository.fetchAll()
+        let loadedGoal = try #require(fetchedGoals.first)
+        #expect(loadedGoal.status == .archived)
+        #expect(loadedGoal.tasks.map(\.id) == [task.id])
+        #expect(try taskRepository.fetchAll().first?.goal?.id == goal.id)
     }
 
     private func makeContainer() throws -> ModelContainer {

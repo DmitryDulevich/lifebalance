@@ -17,10 +17,19 @@ final class SwiftDataLifeAreaRepository: LifeAreaRepository {
         return try context.fetch(descriptor)
     }
 
+    func fetchAllAreas() throws -> [LifeArea] {
+        let descriptor = FetchDescriptor<LifeArea>(sortBy: [SortDescriptor(\.order)])
+        return try context.fetch(descriptor)
+    }
+
     func insert(_ areas: [LifeArea]) throws {
         for area in areas {
             context.insert(area)
         }
+        try context.save()
+    }
+
+    func save() throws {
         try context.save()
     }
 }

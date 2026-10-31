@@ -75,19 +75,37 @@ final class FakeFocusSessionRepository: FocusSessionRepository {
 @MainActor
 final class FakeLifeAreaRepository: LifeAreaRepository {
     var activeAreas: [LifeArea] = []
+    var inactiveAreas: [LifeArea] = []
     private(set) var insertedBatches: [[LifeArea]] = []
+    private(set) var saveCallCount = 0
     var fetchError: Error?
     var insertError: Error?
+    var saveError: Error?
 
     func fetchActiveAreas() throws -> [LifeArea] {
         if let fetchError { throw fetchError }
         return activeAreas
     }
 
+    func fetchAllAreas() throws -> [LifeArea] {
+        if let fetchError { throw fetchError }
+        return (activeAreas + inactiveAreas).sorted { $0.order < $1.order }
+    }
+
     func insert(_ areas: [LifeArea]) throws {
         if let insertError { throw insertError }
         activeAreas.append(contentsOf: areas)
         insertedBatches.append(areas)
+    }
+
+    func save() throws {
+        saveCallCount += 1
+        if let saveError { throw saveError }
+        inactiveAreas.append(contentsOf: activeAreas.filter { !$0.isActive })
+        activeAreas.removeAll { !$0.isActive }
+        activeAreas.append(contentsOf: inactiveAreas.filter(\.isActive))
+        inactiveAreas.removeAll(where: \.isActive)
+        activeAreas.sort { $0.order < $1.order }
     }
 }
 
@@ -113,6 +131,7 @@ final class FakeUserSettingsRepository: UserSettingsRepository {
 @MainActor
 final class FakeGoalRepository: GoalRepository {
     var activeGoals: [Goal] = []
+    var otherGoals: [Goal] = []
     private(set) var insertedGoals: [Goal] = []
     private(set) var saveCallCount = 0
     var fetchError: Error?
@@ -121,12 +140,21 @@ final class FakeGoalRepository: GoalRepository {
 
     func fetchActive() throws -> [Goal] {
         if let fetchError { throw fetchError }
-        return activeGoals
+        return (activeGoals + otherGoals).filter { $0.status == .active }
+    }
+
+    func fetchAll() throws -> [Goal] {
+        if let fetchError { throw fetchError }
+        return (activeGoals + otherGoals).sorted { $0.createdAt > $1.createdAt }
     }
 
     func insert(_ goal: Goal) throws {
         if let insertError { throw insertError }
-        activeGoals.append(goal)
+        if goal.status == .active {
+            activeGoals.append(goal)
+        } else {
+            otherGoals.append(goal)
+        }
         insertedGoals.append(goal)
     }
 
@@ -166,5 +194,29 @@ final class FakeBalanceRepository: BalanceRepository {
         if latestSnapshot == nil {
             latestSnapshot = BalanceSnapshot(note: note)
         }
+    }
+}
+
+@MainActor
+final class FakeFocusNotificationScheduler: FocusNotificationScheduling {
+    struct ScheduledNotification {
+        let sessionID: UUID
+        let taskTitle: String?
+        let timeInterval: TimeInterval
+    }
+
+    private(set) var scheduledNotifications: [ScheduledNotification] = []
+    private(set) var cancelledSessionIDs: [UUID] = []
+
+    func scheduleCompletion(sessionID: UUID, taskTitle: String?, after timeInterval: TimeInterval) {
+        scheduledNotifications.append(ScheduledNotification(
+            sessionID: sessionID,
+            taskTitle: taskTitle,
+            timeInterval: timeInterval
+        ))
+    }
+
+    func cancelCompletion(sessionID: UUID) {
+        cancelledSessionIDs.append(sessionID)
     }
 }
