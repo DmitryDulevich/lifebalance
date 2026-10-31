@@ -12,6 +12,11 @@ struct RootView: View {
     @State private var container: AppContainer?
     @State private var settings: UserSettings?
     @State private var startupState: StartupState = .loading
+    private let persistenceErrorMessage: String?
+
+    init(persistenceErrorMessage: String? = nil) {
+        self.persistenceErrorMessage = persistenceErrorMessage
+    }
 
     var body: some View {
         Group {
@@ -23,7 +28,10 @@ struct RootView: View {
                 readyContent
 
             case .failed(let message):
-                startupErrorView(message: message)
+                startupErrorView(
+                    message: message,
+                    canRetry: persistenceErrorMessage == nil
+                )
             }
         }
         .task {
@@ -43,25 +51,35 @@ struct RootView: View {
                 )
             }
         } else {
-            startupErrorView(message: "Приложение запущено без необходимых настроек.")
+            startupErrorView(
+                message: "Приложение запущено без необходимых настроек.",
+                canRetry: true
+            )
         }
     }
 
-    private func startupErrorView(message: String) -> some View {
+    private func startupErrorView(message: String, canRetry: Bool) -> some View {
         ContentUnavailableView {
             Label("Не удалось запустить приложение", systemImage: "exclamationmark.triangle")
         } description: {
             Text(message)
         } actions: {
-            Button("Повторить") {
-                initialize()
+            if canRetry {
+                Button("Повторить") {
+                    initialize()
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .buttonStyle(.borderedProminent)
         }
     }
 
     private func initialize() {
         startupState = .loading
+
+        if let persistenceErrorMessage {
+            startupState = .failed(persistenceErrorMessage)
+            return
+        }
 
         let appContainer = container ?? AppContainer(modelContext: modelContext)
         container = appContainer
