@@ -48,17 +48,24 @@ struct GoalLifecycleUseCaseTests {
     func supportsPauseCompleteArchiveAndRestore() throws {
         let repository = FakeGoalRepository()
         let goal = Goal(title: "Цель")
-        repository.activeGoals = [goal]
+        try repository.insert(goal)
         let useCase = SetGoalStatusUseCase(goalRepository: repository)
 
-        try useCase.execute(goal, status: .paused)
+        let pausedAt = Date(timeIntervalSince1970: 100)
+        let completedAt = Date(timeIntervalSince1970: 200)
+        let archivedAt = Date(timeIntervalSince1970: 300)
+        let restoredAt = Date(timeIntervalSince1970: 400)
+
+        try useCase.execute(goal, status: .paused, at: pausedAt)
         #expect(goal.status == .paused)
-        try useCase.execute(goal, status: .completed)
+        try useCase.execute(goal, status: .completed, at: completedAt)
         #expect(goal.status == .completed)
-        try useCase.execute(goal, status: .archived)
+        try useCase.execute(goal, status: .archived, at: archivedAt)
         #expect(goal.status == .archived)
-        try useCase.execute(goal, status: .active)
+        try useCase.execute(goal, status: .active, at: restoredAt)
         #expect(goal.status == .active)
+        #expect(repository.statusEvents.map(\.status) == [.active, .paused, .completed, .archived, .active])
+        #expect(repository.statusEvents.map(\.changedAt) == [goal.createdAt, pausedAt, completedAt, archivedAt, restoredAt])
     }
 
     @Test
@@ -76,10 +83,10 @@ struct GoalLifecycleUseCaseTests {
     }
 
     @Test
-    func statusRollsBackOnPersistenceFailure() {
+    func statusRollsBackOnPersistenceFailure() throws {
         let repository = FakeGoalRepository()
         let goal = Goal(title: "Активная")
-        repository.activeGoals = [goal]
+        try repository.insert(goal)
         repository.saveError = FakeRepositoryError.forcedFailure
         let useCase = SetGoalStatusUseCase(goalRepository: repository)
 
@@ -87,5 +94,6 @@ struct GoalLifecycleUseCaseTests {
             try useCase.execute(goal, status: .archived)
         }
         #expect(goal.status == .active)
+        #expect(repository.statusEvents.map(\.status) == [.active])
     }
 }

@@ -103,11 +103,6 @@ struct FocusTimerView: View {
                         .accessibilityIdentifier("focus.finish")
                     }
 
-                    Text("Ограничение Pro: пользовательские интервалы и автопереходы доступны в подписке")
-                        .font(.system(size: 12))
-                        .foregroundStyle(Palette.textSecondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 40)
                 }
 
                 Spacer()

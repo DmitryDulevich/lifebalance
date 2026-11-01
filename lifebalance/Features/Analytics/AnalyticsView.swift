@@ -77,6 +77,8 @@ struct AnalyticsView: View {
             StatTile(value: "\(report.completedTasks)", label: "задач выполнено")
                 .accessibilityIdentifier("analytics.completed_tasks")
             StatTile(value: "\(report.createdGoals)", label: "целей создано")
+            StatTile(value: "\(report.completedGoals)", label: "целей завершено")
+                .accessibilityIdentifier("analytics.completed_goals")
         }
     }
 

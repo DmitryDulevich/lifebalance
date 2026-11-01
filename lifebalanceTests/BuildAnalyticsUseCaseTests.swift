@@ -32,6 +32,9 @@ struct BuildAnalyticsUseCaseTests {
                 status: .completed
             )
         ]
+        work.name = "Работа после переименования"
+        work.colorHex = "FFFFFF"
+        focusTask.lifeArea = nil
         taskRepository.tasks = [
             TaskItem(title: "Done", status: .completed, completedAt: now.addingTimeInterval(-600)),
             TaskItem(title: "Archived done", status: .archived, completedAt: now.addingTimeInterval(-1_200))
@@ -39,7 +42,16 @@ struct BuildAnalyticsUseCaseTests {
         let activeGoal = Goal(title: "Релиз", createdAt: now.addingTimeInterval(-86_400))
         activeGoal.tasks = [TaskItem(title: "Step", status: .completed)]
         goalRepository.activeGoals = [activeGoal]
-        goalRepository.otherGoals = [Goal(title: "Finished", status: .completed, createdAt: now.addingTimeInterval(-172_800))]
+        let completedGoal = Goal(title: "Finished", status: .completed, createdAt: now.addingTimeInterval(-172_800))
+        goalRepository.otherGoals = [completedGoal]
+        goalRepository.statusEvents = [
+            GoalStatusEvent(
+                goalID: completedGoal.id,
+                goalTitleSnapshot: completedGoal.title,
+                status: .completed,
+                changedAt: completedGoal.createdAt
+            )
+        ]
         let snapshot = BalanceSnapshot(createdAt: now.addingTimeInterval(-3_600))
         snapshot.ratings = [
             BalanceRating(value: 6, area: work, snapshot: snapshot),
@@ -60,7 +72,9 @@ struct BuildAnalyticsUseCaseTests {
         #expect(report.completedFocusSessions == 1)
         #expect(report.completedTasks == 2)
         #expect(report.createdGoals == 2)
+        #expect(report.completedGoals == 1)
         #expect(report.focusByArea.first?.name == "Работа")
+        #expect(report.focusByArea.first?.colorHex == "3284D0")
         #expect(report.focusByArea.first?.minutes == 25)
         #expect(report.goals.first?.progress.percentage == 100)
         #expect(report.balanceHistory.first?.average == 7)

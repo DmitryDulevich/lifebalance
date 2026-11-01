@@ -9,13 +9,22 @@ struct FocusSessionUseCasesTests {
     func startsSession() throws {
         let repository = FakeFocusSessionRepository()
         let useCase = StartFocusSessionUseCase(focusSessionRepository: repository)
-        let task = TaskItem(title: "Deep work")
+        let area = LifeArea(name: "Работа", icon: "briefcase", colorHex: "112233", order: 0)
+        let goal = Goal(title: "Релиз", lifeArea: area)
+        let task = TaskItem(title: "Deep work", lifeArea: area, goal: goal)
 
         let session = try useCase.execute(task: task, plannedSeconds: 1_500)
 
         #expect(session.status == .running)
         #expect(session.plannedSeconds == 1_500)
         #expect(session.task === task)
+        #expect(session.taskIDSnapshot == task.id)
+        #expect(session.taskTitleSnapshot == "Deep work")
+        #expect(session.lifeAreaIDSnapshot == area.id)
+        #expect(session.lifeAreaNameSnapshot == "Работа")
+        #expect(session.lifeAreaColorHexSnapshot == "112233")
+        #expect(session.goalIDSnapshot == goal.id)
+        #expect(session.goalTitleSnapshot == "Релиз")
         #expect(repository.insertedSessions.count == 1)
     }
 
@@ -63,7 +72,7 @@ struct FocusSessionUseCasesTests {
 
         #expect(restored === session)
         #expect(session.status == .completed)
-        #expect(session.endAt == now)
+        #expect(session.endAt == start.addingTimeInterval(60))
         #expect(focusRepository.saveCallCount == 1)
     }
 

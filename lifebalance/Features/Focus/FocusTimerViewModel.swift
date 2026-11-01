@@ -127,12 +127,16 @@ final class FocusTimerViewModel {
     }
 
     @discardableResult
-    func finish() -> Bool {
+    func finish(endedAt: Date = .now) -> Bool {
         guard let session else { return false }
         stopTicking()
         notificationScheduler.cancelCompletion(sessionID: session.id)
         do {
-            try finishFocusSessionUseCase.execute(session, completeTask: false)
+            try finishFocusSessionUseCase.execute(
+                session,
+                completeTask: false,
+                endedAt: endedAt
+            )
             didFinish = true
             displaySeconds = 0
             errorMessage = nil
@@ -191,7 +195,7 @@ final class FocusTimerViewModel {
         displaySeconds = remainingSeconds(for: session)
         if displaySeconds <= 0 {
             stopTicking()
-            _ = finish()
+            _ = finish(endedAt: scheduledEndDate(for: session))
         }
     }
 
@@ -201,7 +205,7 @@ final class FocusTimerViewModel {
         guard remaining > 0 else { return }
         notificationScheduler.scheduleCompletion(
             sessionID: session.id,
-            taskTitle: session.task?.title,
+            taskTitle: session.taskTitleSnapshot ?? session.task?.title,
             after: TimeInterval(remaining)
         )
     }
@@ -210,5 +214,11 @@ final class FocusTimerViewModel {
         let effectiveNow = session.status == .paused ? (session.pausedAt ?? now) : now
         let elapsed = effectiveNow.timeIntervalSince(session.startAt) - Double(session.pausedSeconds)
         return max(0, Int((Double(session.plannedSeconds) - elapsed).rounded()))
+    }
+
+    private func scheduledEndDate(for session: FocusSession) -> Date {
+        session.startAt.addingTimeInterval(
+            TimeInterval(session.plannedSeconds + session.pausedSeconds)
+        )
     }
 }

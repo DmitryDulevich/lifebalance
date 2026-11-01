@@ -195,7 +195,7 @@ struct ViewModelTests {
         let viewModel = GoalDetailViewModel(
             goal: goal,
             toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: repository),
-            deleteTaskUseCase: DeleteTaskUseCase(taskRepository: repository),
+            setTaskStatusUseCase: SetTaskStatusUseCase(taskRepository: repository),
             setGoalStatusUseCase: SetGoalStatusUseCase(goalRepository: goalRepository)
         )
 
@@ -217,7 +217,7 @@ struct ViewModelTests {
     }
 
     @Test
-    func goalDetailsEditsAndDeletesLinkedTask() {
+    func goalDetailsEditsAndArchivesLinkedTask() {
         let taskRepository = FakeTaskRepository()
         let goalRepository = FakeGoalRepository()
         let firstTask = TaskItem(title: "Первый шаг", status: .completed)
@@ -228,7 +228,7 @@ struct ViewModelTests {
         let viewModel = GoalDetailViewModel(
             goal: goal,
             toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: taskRepository),
-            deleteTaskUseCase: DeleteTaskUseCase(taskRepository: taskRepository),
+            setTaskStatusUseCase: SetTaskStatusUseCase(taskRepository: taskRepository),
             setGoalStatusUseCase: SetGoalStatusUseCase(goalRepository: goalRepository)
         )
 
@@ -236,9 +236,11 @@ struct ViewModelTests {
         #expect(viewModel.showTaskForm)
         #expect(viewModel.editingTask?.id == secondTask.id)
 
-        viewModel.delete(firstTask)
+        viewModel.archive(firstTask)
 
-        #expect(taskRepository.deletedTasks.map(\.id) == [firstTask.id])
+        #expect(firstTask.status == .archived)
+        #expect(taskRepository.deletedTasks.isEmpty)
+        #expect(taskRepository.saveCallCount == 1)
         #expect(viewModel.tasks.map(\.id) == [secondTask.id])
         #expect(viewModel.progress.completedTaskCount == 0)
         #expect(viewModel.progress.totalTaskCount == 1)
@@ -254,14 +256,14 @@ struct ViewModelTests {
         let viewModel = GoalDetailViewModel(
             goal: goal,
             toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: taskRepository),
-            deleteTaskUseCase: DeleteTaskUseCase(taskRepository: taskRepository),
+            setTaskStatusUseCase: SetTaskStatusUseCase(taskRepository: taskRepository),
             setGoalStatusUseCase: SetGoalStatusUseCase(goalRepository: goalRepository)
         )
 
         viewModel.startCreatingTask()
         viewModel.startEditing(task)
         viewModel.toggleCompletion(task)
-        viewModel.delete(task)
+        viewModel.archive(task)
 
         #expect(!viewModel.canAddTask)
         #expect(!viewModel.canModifyTasks)
@@ -353,12 +355,14 @@ struct ViewModelTests {
         )
 
         viewModel.start()
-        viewModel.session?.startAt = Date.now.addingTimeInterval(-120)
+        let expiredStart = Date.now.addingTimeInterval(-120)
+        viewModel.session?.startAt = expiredStart
         viewModel.applicationDidBecomeActive()
 
         #expect(viewModel.didFinish)
         #expect(viewModel.displaySeconds == 0)
         #expect(viewModel.session?.status == .completed)
+        #expect(viewModel.session?.endAt == expiredStart.addingTimeInterval(60))
         #expect(notificationScheduler.cancelledSessionIDs.last == viewModel.session?.id)
     }
 

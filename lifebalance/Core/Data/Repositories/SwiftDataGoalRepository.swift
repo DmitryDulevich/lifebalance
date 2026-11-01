@@ -21,12 +21,40 @@ final class SwiftDataGoalRepository: GoalRepository {
         return try context.fetch(descriptor)
     }
 
-    func insert(_ goal: Goal) throws {
-        context.insert(goal)
-        try context.save()
+    func fetchStatusEvents() throws -> [GoalStatusEvent] {
+        let descriptor = FetchDescriptor<GoalStatusEvent>(
+            sortBy: [SortDescriptor(\.changedAt)]
+        )
+        return try context.fetch(descriptor)
     }
 
-    func save() throws {
-        try context.save()
+    func insert(_ goal: Goal, recording event: GoalStatusEvent?) throws {
+        context.insert(goal)
+        if let event {
+            context.insert(event)
+        }
+        do {
+            try context.save()
+        } catch {
+            if let event {
+                context.delete(event)
+            }
+            context.delete(goal)
+            throw error
+        }
+    }
+
+    func save(recording event: GoalStatusEvent?) throws {
+        if let event {
+            context.insert(event)
+        }
+        do {
+            try context.save()
+        } catch {
+            if let event {
+                context.delete(event)
+            }
+            throw error
+        }
     }
 }

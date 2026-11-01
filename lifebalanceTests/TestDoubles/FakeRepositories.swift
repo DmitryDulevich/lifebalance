@@ -132,6 +132,7 @@ final class FakeUserSettingsRepository: UserSettingsRepository {
 final class FakeGoalRepository: GoalRepository {
     var activeGoals: [Goal] = []
     var otherGoals: [Goal] = []
+    var statusEvents: [GoalStatusEvent] = []
     private(set) var insertedGoals: [Goal] = []
     private(set) var saveCallCount = 0
     var fetchError: Error?
@@ -148,7 +149,12 @@ final class FakeGoalRepository: GoalRepository {
         return (activeGoals + otherGoals).sorted { $0.createdAt > $1.createdAt }
     }
 
-    func insert(_ goal: Goal) throws {
+    func fetchStatusEvents() throws -> [GoalStatusEvent] {
+        if let fetchError { throw fetchError }
+        return statusEvents.sorted { $0.changedAt < $1.changedAt }
+    }
+
+    func insert(_ goal: Goal, recording event: GoalStatusEvent?) throws {
         if let insertError { throw insertError }
         if goal.status == .active {
             activeGoals.append(goal)
@@ -156,11 +162,17 @@ final class FakeGoalRepository: GoalRepository {
             otherGoals.append(goal)
         }
         insertedGoals.append(goal)
+        if let event {
+            statusEvents.append(event)
+        }
     }
 
-    func save() throws {
+    func save(recording event: GoalStatusEvent?) throws {
         saveCallCount += 1
         if let saveError { throw saveError }
+        if let event {
+            statusEvents.append(event)
+        }
     }
 }
 

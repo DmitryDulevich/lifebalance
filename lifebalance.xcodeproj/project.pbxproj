@@ -21,12 +21,28 @@
 			remoteGlobalIDString = CE9550752F5B5467000E20E2;
 			remoteInfo = lifebalance;
 		};
+		C30000000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE95506E2F5B5467000E20E2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE9550752F5B5467000E20E2;
+			remoteInfo = lifebalance;
+		};
+		D40000000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE95506E2F5B5467000E20E2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE9550752F5B5467000E20E2;
+			remoteInfo = lifebalance;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		A10000000000000000000001 /* lifebalanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B20000000000000000000001 /* lifebalanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C30000000000000000000001 /* lifebalanceV1MigrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceV1MigrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9550762F5B5467000E20E2 /* lifebalance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lifebalance.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D40000000000000000000001 /* lifebalanceV2MigrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceV2MigrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,9 +56,19 @@
 			path = lifebalanceUITests;
 			sourceTree = "<group>";
 		};
+		C30000000000000000000002 /* lifebalanceV1MigrationTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = lifebalanceV1MigrationTests;
+			sourceTree = "<group>";
+		};
 		CE9550782F5B5467000E20E2 /* lifebalance */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = lifebalance;
+			sourceTree = "<group>";
+		};
+		D40000000000000000000002 /* lifebalanceV2MigrationTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = lifebalanceV2MigrationTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -62,7 +88,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C30000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE9550732F5B5467000E20E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000003 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -77,6 +117,8 @@
 			children = (
 				CE9550782F5B5467000E20E2 /* lifebalance */,
 				A10000000000000000000002 /* lifebalanceTests */,
+				C30000000000000000000002 /* lifebalanceV1MigrationTests */,
+				D40000000000000000000002 /* lifebalanceV2MigrationTests */,
 				B20000000000000000000002 /* lifebalanceUITests */,
 				CE9550772F5B5467000E20E2 /* Products */,
 			);
@@ -87,6 +129,8 @@
 			children = (
 				CE9550762F5B5467000E20E2 /* lifebalance.app */,
 				A10000000000000000000001 /* lifebalanceTests.xctest */,
+				C30000000000000000000001 /* lifebalanceV1MigrationTests.xctest */,
+				D40000000000000000000001 /* lifebalanceV2MigrationTests.xctest */,
 				B20000000000000000000001 /* lifebalanceUITests.xctest */,
 			);
 			name = Products;
@@ -141,6 +185,29 @@
 			productReference = B20000000000000000000001 /* lifebalanceUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		C30000000000000000000006 /* lifebalanceV1MigrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3000000000000000000000B /* Build configuration list for PBXNativeTarget "lifebalanceV1MigrationTests" */;
+			buildPhases = (
+				C30000000000000000000005 /* Sources */,
+				C30000000000000000000003 /* Frameworks */,
+				C30000000000000000000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C30000000000000000000008 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C30000000000000000000002 /* lifebalanceV1MigrationTests */,
+			);
+			name = lifebalanceV1MigrationTests;
+			packageProductDependencies = (
+			);
+			productName = lifebalanceV1MigrationTests;
+			productReference = C30000000000000000000001 /* lifebalanceV1MigrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		CE9550752F5B5467000E20E2 /* lifebalance */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE9550812F5B5469000E20E2 /* Build configuration list for PBXNativeTarget "lifebalance" */;
@@ -163,6 +230,29 @@
 			productReference = CE9550762F5B5467000E20E2 /* lifebalance.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D40000000000000000000006 /* lifebalanceV2MigrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4000000000000000000000B /* Build configuration list for PBXNativeTarget "lifebalanceV2MigrationTests" */;
+			buildPhases = (
+				D40000000000000000000005 /* Sources */,
+				D40000000000000000000003 /* Frameworks */,
+				D40000000000000000000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D40000000000000000000008 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D40000000000000000000002 /* lifebalanceV2MigrationTests */,
+			);
+			name = lifebalanceV2MigrationTests;
+			packageProductDependencies = (
+			);
+			productName = lifebalanceV2MigrationTests;
+			productReference = D40000000000000000000001 /* lifebalanceV2MigrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -181,16 +271,24 @@
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = CE9550752F5B5467000E20E2;
 					};
+					C30000000000000000000006 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = CE9550752F5B5467000E20E2;
+					};
 					CE9550752F5B5467000E20E2 = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					D40000000000000000000006 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = CE9550752F5B5467000E20E2;
 					};
 				};
 			};
 			buildConfigurationList = CE9550712F5B5467000E20E2 /* Build configuration list for PBXProject "lifebalance" */;
-			developmentRegion = en;
+			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				ru,
 				Base,
 			);
 			mainGroup = CE95506D2F5B5467000E20E2;
@@ -202,6 +300,8 @@
 			targets = (
 				CE9550752F5B5467000E20E2 /* lifebalance */,
 				A10000000000000000000006 /* lifebalanceTests */,
+				C30000000000000000000006 /* lifebalanceV1MigrationTests */,
+				D40000000000000000000006 /* lifebalanceV2MigrationTests */,
 				B20000000000000000000006 /* lifebalanceUITests */,
 			);
 		};
@@ -222,7 +322,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C30000000000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE9550742F5B5467000E20E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000004 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,7 +360,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C30000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE9550722F5B5467000E20E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000005 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -266,6 +394,16 @@
 			target = CE9550752F5B5467000E20E2 /* lifebalance */;
 			targetProxy = B20000000000000000000007 /* PBXContainerItemProxy */;
 		};
+		C30000000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE9550752F5B5467000E20E2 /* lifebalance */;
+			targetProxy = C30000000000000000000007 /* PBXContainerItemProxy */;
+		};
+		D40000000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE9550752F5B5467000E20E2 /* lifebalance */;
+			targetProxy = D40000000000000000000007 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -277,9 +415,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ZT4848V65;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dds.habbits.testTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -298,9 +436,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ZT4848V65;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dds.habbits.testTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -318,9 +456,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ZT4848V65;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dds.habbits.testUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -338,9 +476,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ZT4848V65;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dds.habbits.testUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -348,6 +486,48 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = lifebalance;
+			};
+			name = Release;
+		};
+		C30000000000000000000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZT4848V65;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.v1migrationtests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lifebalance.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/lifebalance";
+			};
+			name = Debug;
+		};
+		C3000000000000000000000A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZT4848V65;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.v1migrationtests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lifebalance.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/lifebalance";
 			};
 			name = Release;
 		};
@@ -404,7 +584,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -463,7 +643,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -483,6 +663,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Баланс";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -493,7 +674,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dds.habbits.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -514,6 +695,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Баланс";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -524,7 +706,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dds.habbits.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -533,6 +715,48 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D40000000000000000000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZT4848V65;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.v2migrationtests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lifebalance.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/lifebalance";
+			};
+			name = Debug;
+		};
+		D4000000000000000000000A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZT4848V65;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.v2migrationtests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/lifebalance.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/lifebalance";
 			};
 			name = Release;
 		};
@@ -557,6 +781,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		C3000000000000000000000B /* Build configuration list for PBXNativeTarget "lifebalanceV1MigrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C30000000000000000000009 /* Debug */,
+				C3000000000000000000000A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CE9550712F5B5467000E20E2 /* Build configuration list for PBXProject "lifebalance" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -571,6 +804,15 @@
 			buildConfigurations = (
 				CE9550822F5B5469000E20E2 /* Debug */,
 				CE9550832F5B5469000E20E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4000000000000000000000B /* Build configuration list for PBXNativeTarget "lifebalanceV2MigrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D40000000000000000000009 /* Debug */,
+				D4000000000000000000000A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

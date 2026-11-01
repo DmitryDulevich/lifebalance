@@ -40,6 +40,20 @@ struct ProfileView: View {
                 }
 
                 Section("О приложении") {
+                    NavigationLink {
+                        DiagnosticsView()
+                    } label: {
+                        Label("Диагностика", systemImage: "stethoscope")
+                    }
+                    .accessibilityIdentifier("profile.diagnostics")
+
+                    NavigationLink {
+                        PrivacyPolicyView()
+                    } label: {
+                        Label("Политика конфиденциальности", systemImage: "hand.raised.fill")
+                    }
+                    .accessibilityIdentifier("profile.privacy_policy")
+
                     LabeledContent("Версия", value: appVersion)
                     Label("Данные хранятся на устройстве", systemImage: "lock.shield")
                         .foregroundStyle(Palette.textSecondary)

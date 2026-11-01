@@ -37,11 +37,31 @@ enum LifebalanceSchemaV2: VersionedSchema {
     }
 }
 
+/// Preserves historical meaning when tasks, goals, or life areas change later.
+/// Unchanged models intentionally reuse their V2 definitions.
+enum LifebalanceSchemaV3: VersionedSchema {
+    static let versionIdentifier = Schema.Version(3, 0, 0)
+
+    static var models: [any PersistentModel.Type] {
+        [
+            LifebalanceSchemaV2.UserSettings.self,
+            LifebalanceSchemaV2.LifeArea.self,
+            LifebalanceSchemaV2.BalanceSnapshot.self,
+            LifebalanceSchemaV2.BalanceRating.self,
+            TaskItem.self,
+            Goal.self,
+            GoalStatusEvent.self,
+            FocusSession.self
+        ]
+    }
+}
+
 enum LifebalanceMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
         [
             LifebalanceSchemaV1.self,
-            LifebalanceSchemaV2.self
+            LifebalanceSchemaV2.self,
+            LifebalanceSchemaV3.self
         ]
     }
 
@@ -50,6 +70,10 @@ enum LifebalanceMigrationPlan: SchemaMigrationPlan {
             .lightweight(
                 fromVersion: LifebalanceSchemaV1.self,
                 toVersion: LifebalanceSchemaV2.self
+            ),
+            .lightweight(
+                fromVersion: LifebalanceSchemaV2.self,
+                toVersion: LifebalanceSchemaV3.self
             )
         ]
     }

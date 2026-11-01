@@ -2,7 +2,7 @@ import SwiftUI
 
 struct GoalDetailView: View {
     @State private var viewModel: GoalDetailViewModel
-    @State private var taskPendingDeletion: TaskItem?
+    @State private var taskPendingArchival: TaskItem?
     @Environment(\.dismiss) private var dismiss
 
     let container: AppContainer
@@ -88,7 +88,7 @@ struct GoalDetailView: View {
                                                 viewModel.startEditing(task)
                                             }
                                             Button("Удалить", role: .destructive) {
-                                                taskPendingDeletion = task
+                                                taskPendingArchival = task
                                             }
                                         }
                                     }
@@ -135,24 +135,24 @@ struct GoalDetailView: View {
                 Text("Отметить цель как завершённую?")
             }
             .confirmationDialog(
-                "Удалить задачу?",
+                "Архивировать задачу?",
                 isPresented: Binding(
-                    get: { taskPendingDeletion != nil },
-                    set: { if !$0 { taskPendingDeletion = nil } }
+                    get: { taskPendingArchival != nil },
+                    set: { if !$0 { taskPendingArchival = nil } }
                 ),
                 titleVisibility: .visible
             ) {
-                Button("Удалить", role: .destructive) {
-                    guard let task = taskPendingDeletion else { return }
-                    viewModel.delete(task)
-                    taskPendingDeletion = nil
+                Button("Архивировать", role: .destructive) {
+                    guard let task = taskPendingArchival else { return }
+                    viewModel.archive(task)
+                    taskPendingArchival = nil
                     onChanged()
                 }
                 Button("Отмена", role: .cancel) {
-                    taskPendingDeletion = nil
+                    taskPendingArchival = nil
                 }
             } message: {
-                Text(taskPendingDeletion?.title ?? "")
+                Text(taskPendingArchival?.title ?? "")
             }
         }
         .appErrorAlert($viewModel.errorMessage)

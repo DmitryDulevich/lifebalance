@@ -10,12 +10,31 @@ import SwiftData
 
 @main
 struct LifebalanceApp: App {
-    private let persistence = AppPersistence.bootstrap()
+    private let persistence: AppPersistence?
+
+    init() {
+        if Self.isUnitTestHost {
+            persistence = nil
+        } else {
+            MetricKitCrashReporter.shared.start()
+            AppLogger.info("app.launch")
+            persistence = AppPersistence.bootstrap()
+        }
+    }
 
     var body: some Scene {
         WindowGroup {
-            RootView(persistenceErrorMessage: persistence.startupErrorMessage)
+            if let persistence {
+                RootView(persistenceErrorMessage: persistence.startupErrorMessage)
+                    .modelContainer(persistence.modelContainer)
+            } else {
+                EmptyView()
+            }
         }
-        .modelContainer(persistence.modelContainer)
+    }
+
+    private static var isUnitTestHost: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+            && !ProcessInfo.processInfo.arguments.contains("--ui-testing")
     }
 }

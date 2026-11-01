@@ -13,18 +13,18 @@ final class GoalDetailViewModel {
     private(set) var progress: GoalProgress
 
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
-    private let deleteTaskUseCase: DeleteTaskUseCase
+    private let setTaskStatusUseCase: SetTaskStatusUseCase
     private let setGoalStatusUseCase: SetGoalStatusUseCase
 
     init(
         goal: Goal,
         toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
-        deleteTaskUseCase: DeleteTaskUseCase,
+        setTaskStatusUseCase: SetTaskStatusUseCase,
         setGoalStatusUseCase: SetGoalStatusUseCase
     ) {
         self.goal = goal
         self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
-        self.deleteTaskUseCase = deleteTaskUseCase
+        self.setTaskStatusUseCase = setTaskStatusUseCase
         self.setGoalStatusUseCase = setGoalStatusUseCase
         self.tasks = Self.sortedTasks(for: goal)
         self.progress = GoalProgressCalculator.summary(for: goal)
@@ -69,15 +69,14 @@ final class GoalDetailViewModel {
         }
     }
 
-    func delete(_ task: TaskItem) {
+    func archive(_ task: TaskItem) {
         guard canModifyTasks else { return }
         do {
-            try deleteTaskUseCase.execute(task)
-            tasks.removeAll { $0.id == task.id }
-            progress = GoalProgressCalculator.summary(for: tasks)
+            try setTaskStatusUseCase.execute(task, status: .archived)
+            reloadPresentationState()
             errorMessage = nil
         } catch {
-            AppLogger.error(error, context: "goal_detail.delete_task")
+            AppLogger.error(error, context: "goal_detail.archive_task")
             errorMessage = error.localizedDescription
         }
     }

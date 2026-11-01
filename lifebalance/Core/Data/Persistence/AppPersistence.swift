@@ -11,6 +11,7 @@ struct AppPersistence {
             do {
                 let container = try makeContainer(isStoredInMemoryOnly: true)
                 try seedUITestDataIfNeeded(in: container)
+                StorageDiagnostics.markReady()
                 return AppPersistence(modelContainer: container, startupErrorMessage: nil)
             } catch {
                 AppLogger.error(error, context: "ui_testing.container.create")
@@ -18,28 +19,38 @@ struct AppPersistence {
         }
 
         do {
-            return AppPersistence(
+            let persistence = AppPersistence(
                 modelContainer: try makeContainer(),
                 startupErrorMessage: nil
             )
+            StorageDiagnostics.markReady()
+            AppLogger.info("storage.container.ready", metadata: ["schema": "3.0.0"])
+            return persistence
         } catch {
-            AppLogger.error(error, context: "storage.container.create")
+            let originalError = error
+            let incidentID = AppLogger.error(error, context: "storage.container.create")
 
             do {
                 let fallbackContainer = try makeFallbackContainer()
+                StorageDiagnostics.markFallback(after: originalError)
+                AppLogger.notice(
+                    "storage.container.fallback",
+                    metadata: ["incident": String(incidentID.uuidString.prefix(8))]
+                )
                 return AppPersistence(
                     modelContainer: fallbackContainer,
-                    startupErrorMessage: "Не удалось открыть локальное хранилище. Ваши данные не удалялись. Полностью закройте приложение и запустите его снова."
+                    startupErrorMessage: "Не удалось открыть локальное хранилище. Ваши данные не удалялись. Полностью закройте приложение и запустите его снова. Код диагностики: \(incidentID.uuidString.prefix(8))."
                 )
             } catch {
-                AppLogger.error(error, context: "storage.fallback_container.create")
+                StorageDiagnostics.markFailed(after: error)
+                AppLogger.critical(error, context: "storage.fallback_container.create")
                 fatalError("Failed to create the fallback ModelContainer: \(error)")
             }
         }
     }
 
     static func makeContainer(isStoredInMemoryOnly: Bool = false) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: LifebalanceSchemaV2.self)
+        let schema = Schema(versionedSchema: LifebalanceSchemaV3.self)
         let configuration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: isStoredInMemoryOnly

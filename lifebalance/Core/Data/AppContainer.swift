@@ -21,7 +21,6 @@ final class AppContainer {
     let setTaskStatusUseCase: SetTaskStatusUseCase
     let rescheduleTasksUseCase: RescheduleTasksUseCase
     let updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase
-    let deleteTaskUseCase: DeleteTaskUseCase
     let createGoalUseCase: CreateGoalUseCase
     let updateGoalUseCase: UpdateGoalUseCase
     let setGoalStatusUseCase: SetGoalStatusUseCase
@@ -68,7 +67,6 @@ final class AppContainer {
         self.setTaskStatusUseCase = SetTaskStatusUseCase(taskRepository: taskRepository)
         self.rescheduleTasksUseCase = RescheduleTasksUseCase(taskRepository: taskRepository)
         self.updateTaskQuadrantUseCase = UpdateTaskQuadrantUseCase(taskRepository: taskRepository)
-        self.deleteTaskUseCase = DeleteTaskUseCase(taskRepository: taskRepository)
         self.createGoalUseCase = CreateGoalUseCase(goalRepository: goalRepository)
         self.updateGoalUseCase = UpdateGoalUseCase(goalRepository: goalRepository)
         self.setGoalStatusUseCase = SetGoalStatusUseCase(goalRepository: goalRepository)
@@ -125,7 +123,7 @@ extension AppContainer {
         GoalDetailViewModel(
             goal: goal,
             toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
-            deleteTaskUseCase: deleteTaskUseCase,
+            setTaskStatusUseCase: setTaskStatusUseCase,
             setGoalStatusUseCase: setGoalStatusUseCase
         )
     }

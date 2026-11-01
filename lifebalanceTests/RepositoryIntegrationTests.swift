@@ -181,6 +181,7 @@ struct RepositoryIntegrationTests {
         let fetchedGoals = try goalRepository.fetchAll()
         let loadedGoal = try #require(fetchedGoals.first)
         #expect(loadedGoal.status == .archived)
+        #expect(try goalRepository.fetchStatusEvents().map(\.status) == [.active, .archived])
         #expect(loadedGoal.tasks.map(\.id) == [task.id])
         #expect(try taskRepository.fetchAll().first?.goal?.id == goal.id)
     }

@@ -70,28 +70,10 @@ struct WelcomeView: View {
         }
         .padding(24)
         .sheet(isPresented: $viewModel.showPrivacyPolicy) {
-            PrivacyPolicyPlaceholderView()
+            NavigationStack {
+                PrivacyPolicyView(showsCloseButton: true)
+            }
         }
         .appErrorAlert($viewModel.errorMessage)
-    }
-}
-
-private struct PrivacyPolicyPlaceholderView: View {
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                Text("Здесь будет размещена политика конфиденциальности продукта.")
-                    .padding()
-            }
-            .navigationTitle("Политика конфиденциальности")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Закрыть") { dismiss() }
-                }
-            }
-        }
     }
 }

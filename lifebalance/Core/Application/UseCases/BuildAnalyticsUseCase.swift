@@ -47,6 +47,7 @@ struct AnalyticsReport {
     let completedFocusSessions: Int
     let completedTasks: Int
     let createdGoals: Int
+    let completedGoals: Int
     let goalCounts: [GoalStatus: Int]
     let daily: [AnalyticsDailyPoint]
     let focusByArea: [AnalyticsAreaFocus]
@@ -81,6 +82,7 @@ final class BuildAnalyticsUseCase {
         let sessions = try focusSessionRepository.fetchAll()
         let tasks = try taskRepository.fetchAll()
         let goals = try goalRepository.fetchAll()
+        let goalStatusEvents = try goalRepository.fetchStatusEvents()
         let snapshots = try balanceRepository.fetchAllSnapshots()
         let today = calendar.startOfDay(for: now)
         let start = calendar.date(byAdding: .day, value: -(period.rawValue - 1), to: today) ?? today
@@ -100,11 +102,12 @@ final class BuildAnalyticsUseCase {
         for session in completedSessions {
             let seconds = Self.elapsedSeconds(for: session)
             focusByDay[calendar.startOfDay(for: session.startAt), default: 0] += seconds
-            let area = session.task?.lifeArea
-            let key = area?.id.uuidString ?? "unassigned"
+            let currentArea = session.task?.lifeArea
+            let areaID = session.lifeAreaIDSnapshot ?? currentArea?.id
+            let key = areaID?.uuidString ?? "unassigned"
             var bucket = areaBuckets[key] ?? (
-                name: area?.name ?? "Без сферы",
-                colorHex: area?.colorHex ?? "8E8E93",
+                name: session.lifeAreaNameSnapshot ?? currentArea?.name ?? "Без сферы",
+                colorHex: session.lifeAreaColorHexSnapshot ?? currentArea?.colorHex ?? "8E8E93",
                 seconds: 0
             )
             bucket.seconds += seconds
@@ -141,6 +144,9 @@ final class BuildAnalyticsUseCase {
             completedFocusSessions: completedSessions.count,
             completedTasks: completedTasks.count,
             createdGoals: goals.filter { $0.createdAt >= start && $0.createdAt <= now }.count,
+            completedGoals: Set(goalStatusEvents.lazy.filter { event in
+                event.status == .completed && event.changedAt >= start && event.changedAt <= now
+            }.map(\.goalID)).count,
             goalCounts: Dictionary(grouping: goals, by: \.status).mapValues(\.count),
             daily: daily,
             focusByArea: areaBuckets.map { key, value in

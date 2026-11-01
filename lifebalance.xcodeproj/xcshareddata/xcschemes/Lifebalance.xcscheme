@@ -49,6 +49,34 @@
                ReferencedContainer = "container:lifebalance.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C30000000000000000000006"
+               BuildableName = "lifebalanceV1MigrationTests.xctest"
+               BlueprintName = "lifebalanceV1MigrationTests"
+               ReferencedContainer = "container:lifebalance.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D40000000000000000000006"
+               BuildableName = "lifebalanceV2MigrationTests.xctest"
+               BlueprintName = "lifebalanceV2MigrationTests"
+               ReferencedContainer = "container:lifebalance.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -66,6 +94,28 @@
                BlueprintIdentifier = "A10000000000000000000006"
                BuildableName = "lifebalanceTests.xctest"
                BlueprintName = "lifebalanceTests"
+               ReferencedContainer = "container:lifebalance.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C30000000000000000000006"
+               BuildableName = "lifebalanceV1MigrationTests.xctest"
+               BlueprintName = "lifebalanceV1MigrationTests"
+               ReferencedContainer = "container:lifebalance.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D40000000000000000000006"
+               BuildableName = "lifebalanceV2MigrationTests.xctest"
+               BlueprintName = "lifebalanceV2MigrationTests"
                ReferencedContainer = "container:lifebalance.xcodeproj">
             </BuildableReference>
          </TestableReference>

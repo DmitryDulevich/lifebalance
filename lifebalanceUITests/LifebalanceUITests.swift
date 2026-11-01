@@ -72,6 +72,39 @@ final class LifebalanceUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Хобби"].waitForExistence(timeout: 5))
     }
 
+    func testOpensPrivacyPolicyAfterOnboarding() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.tabBars.buttons["Профиль"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Профиль"].tap()
+
+        let privacyLink = app.buttons["profile.privacy_policy"]
+        XCTAssertTrue(privacyLink.waitForExistence(timeout: 5))
+        privacyLink.tap()
+
+        XCTAssertTrue(app.navigationBars["Конфиденциальность"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Какие данные использует приложение"].exists)
+        XCTAssertTrue(app.staticTexts["Хранение и удаление"].exists)
+    }
+
+    func testOpensDiagnosticsAndOffersExport() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.tabBars.buttons["Профиль"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Профиль"].tap()
+        app.buttons["profile.diagnostics"].tap()
+
+        XCTAssertTrue(app.navigationBars["Диагностика"].waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            app.descendants(matching: .any)["diagnostics.storage.state"]
+                .waitForExistence(timeout: 5)
+        )
+        XCTAssertTrue(
+            app.descendants(matching: .any)["diagnostics.export"]
+                .waitForExistence(timeout: 5)
+        )
+    }
+
     func testPausesAndArchivesGoal() {
         let app = launchApp(completedOnboarding: true)
 

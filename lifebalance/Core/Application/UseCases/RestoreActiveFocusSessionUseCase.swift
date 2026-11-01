@@ -22,7 +22,11 @@ final class RestoreActiveFocusSessionUseCase {
         }
 
         if session.status == .running && remainingSeconds(for: session, at: now) <= 0 {
-            try finishFocusSessionUseCase.execute(session, completeTask: false, endedAt: now)
+            try finishFocusSessionUseCase.execute(
+                session,
+                completeTask: false,
+                endedAt: scheduledEndDate(for: session)
+            )
         }
 
         return session
@@ -31,5 +35,11 @@ final class RestoreActiveFocusSessionUseCase {
     private func remainingSeconds(for session: FocusSession, at now: Date) -> TimeInterval {
         let elapsed = now.timeIntervalSince(session.startAt) - Double(session.pausedSeconds)
         return Double(session.plannedSeconds) - elapsed
+    }
+
+    private func scheduledEndDate(for session: FocusSession) -> Date {
+        session.startAt.addingTimeInterval(
+            TimeInterval(session.plannedSeconds + session.pausedSeconds)
+        )
     }
 }
