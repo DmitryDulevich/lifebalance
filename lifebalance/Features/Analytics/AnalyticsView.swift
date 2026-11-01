@@ -71,13 +71,16 @@ struct AnalyticsView: View {
 
     private func summaryGrid(_ report: AnalyticsReport) -> some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-            StatTile(value: "\(report.totalFocusMinutes) мин", label: "фокуса")
+            StatTile(
+                value: String(localized: "\(report.totalFocusMinutes) мин"),
+                label: String(localized: "фокуса")
+            )
                 .accessibilityIdentifier("analytics.focus_minutes")
-            StatTile(value: "\(report.completedFocusSessions)", label: "фокус-сессий")
-            StatTile(value: "\(report.completedTasks)", label: "задач выполнено")
+            StatTile(value: "\(report.completedFocusSessions)", label: String(localized: "фокус-сессий"))
+            StatTile(value: "\(report.completedTasks)", label: String(localized: "задач выполнено"))
                 .accessibilityIdentifier("analytics.completed_tasks")
-            StatTile(value: "\(report.createdGoals)", label: "целей создано")
-            StatTile(value: "\(report.completedGoals)", label: "целей завершено")
+            StatTile(value: "\(report.createdGoals)", label: String(localized: "целей создано"))
+            StatTile(value: "\(report.completedGoals)", label: String(localized: "целей завершено"))
                 .accessibilityIdentifier("analytics.completed_goals")
         }
     }
@@ -86,8 +89,8 @@ struct AnalyticsView: View {
         chartCard(title: "Фокус по дням") {
             Chart(report.daily) { point in
                 BarMark(
-                    x: .value("День", point.date, unit: .day),
-                    y: .value("Минуты", point.focusMinutes)
+                    x: .value(String(localized: "День"), point.date, unit: .day),
+                    y: .value(String(localized: "Минуты"), point.focusMinutes)
                 )
                 .foregroundStyle(Palette.accent.gradient)
                 .cornerRadius(4)
@@ -101,8 +104,8 @@ struct AnalyticsView: View {
         chartCard(title: "Выполненные задачи") {
             Chart(report.daily) { point in
                 BarMark(
-                    x: .value("День", point.date, unit: .day),
-                    y: .value("Задачи", point.completedTasks)
+                    x: .value(String(localized: "День"), point.date, unit: .day),
+                    y: .value(String(localized: "Задачи"), point.completedTasks)
                 )
                 .foregroundStyle(Color.green.gradient)
                 .cornerRadius(4)
@@ -119,7 +122,7 @@ struct AnalyticsView: View {
                     HStack {
                         Text(row.name)
                         Spacer()
-                        Text("\(row.minutes) мин")
+                        Text(String(localized: "\(row.minutes) мин"))
                             .foregroundStyle(Palette.textSecondary)
                     }
                     .font(.system(size: 13, weight: .semibold))
@@ -170,14 +173,14 @@ struct AnalyticsView: View {
             chartCard(title: "История баланса") {
                 Chart(points) { point in
                     LineMark(
-                        x: .value("Дата", point.date),
-                        y: .value("Средняя оценка", point.average)
+                        x: .value(String(localized: "Дата"), point.date),
+                        y: .value(String(localized: "Средняя оценка"), point.average)
                     )
                     .foregroundStyle(Palette.accent)
                     .interpolationMethod(.catmullRom)
                     PointMark(
-                        x: .value("Дата", point.date),
-                        y: .value("Средняя оценка", point.average)
+                        x: .value(String(localized: "Дата"), point.date),
+                        y: .value(String(localized: "Средняя оценка"), point.average)
                     )
                     .foregroundStyle(Palette.accent)
                 }
@@ -188,14 +191,14 @@ struct AnalyticsView: View {
     }
 
     private func chartCard<Content: View>(
-        title: String,
+        title: LocalizedStringKey,
         @ViewBuilder content: () -> Content
     ) -> some View {
         sectionCard(title: title, content: content)
     }
 
     private func sectionCard<Content: View>(
-        title: String,
+        title: LocalizedStringKey,
         @ViewBuilder content: () -> Content
     ) -> some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -212,6 +215,8 @@ struct AnalyticsView: View {
     }
 
     private func goalStatusSummary(_ counts: [GoalStatus: Int]) -> String {
-        "Активные: \(counts[.active, default: 0]) · Пауза: \(counts[.paused, default: 0]) · Завершённые: \(counts[.completed, default: 0])"
+        String(
+            localized: "Активные: \(counts[.active, default: 0]) · Пауза: \(counts[.paused, default: 0]) · Завершённые: \(counts[.completed, default: 0])"
+        )
     }
 }

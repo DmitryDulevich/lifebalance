@@ -9,9 +9,9 @@ final class StartFocusSessionUseCase {
         var errorDescription: String? {
             switch self {
             case .alreadyRunning:
-                return "Уже есть активная фокус-сессия. Завершите её перед началом новой."
+                return String(localized: "Уже есть активная фокус-сессия. Завершите её перед началом новой.")
             case .invalidDuration:
-                return "Продолжительность фокус-сессии должна быть от 1 минуты до 24 часов."
+                return String(localized: "Продолжительность фокус-сессии должна быть от 1 минуты до 24 часов.")
             }
         }
     }

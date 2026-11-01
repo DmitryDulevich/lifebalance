@@ -4,7 +4,7 @@ enum TaskRescheduleError: LocalizedError {
     case inactiveTask
 
     var errorDescription: String? {
-        "Переносить можно только активные задачи."
+        String(localized: "Переносить можно только активные задачи.")
     }
 }
 

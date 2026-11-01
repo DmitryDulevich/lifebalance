@@ -83,15 +83,15 @@ struct DiagnosticsView: View {
             }
             Button("Отмена", role: .cancel) {}
         }
-        .appErrorAlert($errorMessage, title: "Не удалось подготовить отчёт")
+        .appErrorAlert($errorMessage, title: String(localized: "Не удалось подготовить отчёт"))
     }
 
     private var storageTitle: String {
         switch storageHealth.state {
-        case .unknown: "Не проверено"
-        case .ready: "Работает"
-        case .fallback: "Резервный режим"
-        case .failed: "Ошибка"
+        case .unknown: String(localized: "Не проверено")
+        case .ready: String(localized: "Работает")
+        case .fallback: String(localized: "Резервный режим")
+        case .failed: String(localized: "Ошибка")
         }
     }
 

@@ -19,11 +19,11 @@ enum TaskValidationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyTitle:
-            return "Введите название задачи."
+            return String(localized: "Введите название задачи.")
         case .titleTooLong:
-            return "Название задачи не должно превышать 120 символов."
+            return String(localized: "Название задачи не должно превышать 120 символов.")
         case .invalidEstimate:
-            return "Оценка времени должна быть от 1 минуты до 24 часов."
+            return String(localized: "Оценка времени должна быть от 1 минуты до 24 часов.")
         }
     }
 }

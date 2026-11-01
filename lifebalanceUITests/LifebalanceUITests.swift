@@ -199,11 +199,31 @@ final class LifebalanceUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["25 мин"].waitForExistence(timeout: 5))
     }
 
-    private func launchApp(completedOnboarding: Bool = false) -> XCUIApplication {
+    func testLaunchesInEnglish() {
+        let app = launchApp(completedOnboarding: true, language: "en", locale: "en_US")
+
+        XCTAssertTrue(app.tabBars.buttons["Today"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Tasks"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Goals"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Balance"].exists)
+        XCTAssertTrue(app.tabBars.buttons["Profile"].exists)
+    }
+
+    private func launchApp(
+        completedOnboarding: Bool = false,
+        language: String? = nil,
+        locale: String? = nil
+    ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing"]
         if completedOnboarding {
             app.launchArguments.append("--ui-testing-completed")
+        }
+        if let language {
+            app.launchArguments += ["-AppleLanguages", "(\(language))"]
+        }
+        if let locale {
+            app.launchArguments += ["-AppleLocale", locale]
         }
         app.launch()
         return app

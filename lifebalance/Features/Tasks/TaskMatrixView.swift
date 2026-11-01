@@ -57,7 +57,7 @@ struct TaskMatrixView: View {
     private var eliminateTasks: [TaskItem] { viewModel.filteredTasks.filter { $0.important == false && $0.urgent == false } }
     private var inboxTasks: [TaskItem] { viewModel.filteredTasks.filter { $0.important == nil || $0.urgent == nil } }
 
-    private func columnHeader(_ text: String) -> some View {
+    private func columnHeader(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.system(size: 10, weight: .bold))
             .tracking(0.4)
@@ -65,7 +65,7 @@ struct TaskMatrixView: View {
             .frame(maxWidth: .infinity)
     }
 
-    private func verticalLabel(_ text: String) -> some View {
+    private func verticalLabel(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.system(size: 10, weight: .bold))
             .tracking(0.4)
@@ -76,7 +76,7 @@ struct TaskMatrixView: View {
     }
 
     private func quadrant(
-        title: String,
+        title: LocalizedStringKey,
         color: Color,
         tasks: [TaskItem],
         important: Bool,

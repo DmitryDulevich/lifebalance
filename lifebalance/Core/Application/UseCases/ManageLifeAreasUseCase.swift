@@ -16,15 +16,15 @@ enum LifeAreaManagementError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidName:
-            return "Название сферы должно содержать от 1 до 30 символов."
+            return String(localized: "Название сферы должно содержать от 1 до 30 символов.")
         case .duplicateName:
-            return "Сфера с таким названием уже существует, возможно, в архиве."
+            return String(localized: "Сфера с таким названием уже существует, возможно, в архиве.")
         case .minimumActiveAreas:
-            return "Должно остаться минимум 3 активные сферы."
+            return String(localized: "Должно остаться минимум 3 активные сферы.")
         case .maximumActiveAreas:
-            return "Можно использовать не более 8 активных сфер."
+            return String(localized: "Можно использовать не более 8 активных сфер.")
         case .invalidReordering:
-            return "Не удалось изменить порядок сфер. Обновите экран и повторите попытку."
+            return String(localized: "Не удалось изменить порядок сфер. Обновите экран и повторите попытку.")
         }
     }
 }

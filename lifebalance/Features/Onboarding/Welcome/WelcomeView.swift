@@ -10,9 +10,9 @@ struct WelcomeView: View {
     }
 
     private let benefits: [(icon: String, title: String)] = [
-        ("target", "Приоритеты"),
-        ("timer", "Фокус"),
-        ("chart.pie.fill", "Баланс")
+        ("target", String(localized: "Приоритеты")),
+        ("timer", String(localized: "Фокус")),
+        ("chart.pie.fill", String(localized: "Баланс"))
     ]
 
     var body: some View {

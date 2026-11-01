@@ -112,6 +112,8 @@ struct AreaSelectionView: View {
     }
 
     private var remainingWord: String {
-        (3 - viewModel.selectedCount) == 1 ? "сферу" : "сферы"
+        (3 - viewModel.selectedCount) == 1
+            ? String(localized: "сферу")
+            : String(localized: "сферы")
     }
 }

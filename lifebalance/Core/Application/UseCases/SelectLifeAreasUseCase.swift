@@ -18,15 +18,15 @@ final class SelectLifeAreasUseCase {
         var errorDescription: String? {
             switch self {
             case .tooFew:
-                return "Выберите минимум 3 сферы."
+                return String(localized: "Выберите минимум 3 сферы.")
             case .tooMany:
-                return "Можно выбрать не более 8 сфер."
+                return String(localized: "Можно выбрать не более 8 сфер.")
             case .invalidName:
-                return "Название сферы должно содержать от 1 до 30 символов."
+                return String(localized: "Название сферы должно содержать от 1 до 30 символов.")
             case .duplicateName:
-                return "Названия выбранных сфер не должны повторяться."
+                return String(localized: "Названия выбранных сфер не должны повторяться.")
             case .conflictsWithSavedSelection:
-                return "В приложении уже сохранён другой набор сфер."
+                return String(localized: "В приложении уже сохранён другой набор сфер.")
             }
         }
     }

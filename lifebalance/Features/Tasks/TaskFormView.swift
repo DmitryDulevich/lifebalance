@@ -79,7 +79,9 @@ struct TaskFormView: View {
                     Text(error).foregroundStyle(.red)
                 }
             }
-            .navigationTitle(viewModel.isEditing ? "Задача" : "Новая задача")
+            .navigationTitle(
+                viewModel.isEditing ? String(localized: "Задача") : String(localized: "Новая задача")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

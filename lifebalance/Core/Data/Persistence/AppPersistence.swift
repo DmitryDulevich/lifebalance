@@ -39,7 +39,9 @@ struct AppPersistence {
                 )
                 return AppPersistence(
                     modelContainer: fallbackContainer,
-                    startupErrorMessage: "Не удалось открыть локальное хранилище. Ваши данные не удалялись. Полностью закройте приложение и запустите его снова. Код диагностики: \(incidentID.uuidString.prefix(8))."
+                    startupErrorMessage: String(
+                        localized: "Не удалось открыть локальное хранилище. Ваши данные не удалялись. Полностью закройте приложение и запустите его снова. Код диагностики: \(incidentID.uuidString.prefix(8))."
+                    )
                 )
             } catch {
                 StorageDiagnostics.markFailed(after: error)

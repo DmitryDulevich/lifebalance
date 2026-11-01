@@ -8,6 +8,7 @@ struct TaskListView: View {
     private struct Group {
         let title: String
         let tasks: [TaskItem]
+        var isOverdue = false
     }
 
     var body: some View {
@@ -20,7 +21,7 @@ struct TaskListView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(group.title)
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(group.title == "Просрочено" ? Palette.overdue : Palette.textSecondary)
+                                .foregroundStyle(group.isOverdue ? Palette.overdue : Palette.textSecondary)
 
                             VStack(spacing: 8) {
                                 ForEach(group.tasks) { task in
@@ -29,7 +30,7 @@ struct TaskListView: View {
                                             title: task.title,
                                             subtitle: TaskDisplay.subtitle(
                                                 for: task,
-                                                showOverdueLabel: group.title == "Просрочено",
+                                                showOverdueLabel: group.isOverdue,
                                                 showGoal: true
                                             ),
                                             ringColor: TaskDisplay.ringColor(for: task),
@@ -66,10 +67,10 @@ struct TaskListView: View {
 
     private func groupedTasks() -> [Group] {
         if viewModel.selectedStatus == .completed {
-            return [Group(title: "Выполненные", tasks: viewModel.filteredTasks)]
+            return [Group(title: String(localized: "Выполненные"), tasks: viewModel.filteredTasks)]
         }
         if viewModel.selectedStatus == .archived {
-            return [Group(title: "Архив", tasks: viewModel.filteredTasks)]
+            return [Group(title: String(localized: "Архив"), tasks: viewModel.filteredTasks)]
         }
 
         let calendar = Calendar.current
@@ -87,11 +88,11 @@ struct TaskListView: View {
         let noDate = tasks.filter { $0.dueDate == nil }
 
         return [
-            Group(title: "Просрочено", tasks: overdue),
-            Group(title: "Сегодня", tasks: today),
-            Group(title: "Завтра", tasks: tomorrow),
-            Group(title: "Позже", tasks: later),
-            Group(title: "Без даты", tasks: noDate)
+            Group(title: String(localized: "Просрочено"), tasks: overdue, isOverdue: true),
+            Group(title: String(localized: "Сегодня"), tasks: today),
+            Group(title: String(localized: "Завтра"), tasks: tomorrow),
+            Group(title: String(localized: "Позже"), tasks: later),
+            Group(title: String(localized: "Без даты"), tasks: noDate)
         ]
     }
 
@@ -121,15 +122,15 @@ struct TaskListView: View {
 
     private var emptyTitle: String {
         switch viewModel.selectedStatus {
-        case .active: "Нет активных задач"
-        case .completed: "Нет выполненных задач"
-        case .archived: "Архив пуст"
+        case .active: String(localized: "Нет активных задач")
+        case .completed: String(localized: "Нет выполненных задач")
+        case .archived: String(localized: "Архив пуст")
         }
     }
 
     private var emptyDescription: String {
         viewModel.selectedStatus == .active
-            ? "Нажмите «+», чтобы создать первую задачу."
-            : "Здесь появятся задачи с выбранным статусом."
+            ? String(localized: "Нажмите «+», чтобы создать первую задачу.")
+            : String(localized: "Здесь появятся задачи с выбранным статусом.")
     }
 }

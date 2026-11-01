@@ -7,9 +7,9 @@ enum GoalValidationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyTitle:
-            return "Введите название цели."
+            return String(localized: "Введите название цели.")
         case .titleTooLong:
-            return "Название цели не должно превышать 120 символов."
+            return String(localized: "Название цели не должно превышать 120 символов.")
         }
     }
 }

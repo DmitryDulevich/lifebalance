@@ -46,14 +46,20 @@ struct GoalFormView: View {
                     Text(error).foregroundStyle(.red)
                 }
             }
-            .navigationTitle(viewModel.isEditing ? "Редактирование цели" : "Новая цель")
+            .navigationTitle(
+                viewModel.isEditing
+                    ? String(localized: "Редактирование цели")
+                    : String(localized: "Новая цель")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Отмена") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(viewModel.isEditing ? "Сохранить" : "Создать") {
+                    Button(
+                        viewModel.isEditing ? String(localized: "Сохранить") : String(localized: "Создать")
+                    ) {
                         if viewModel.save() {
                             onSaved()
                             dismiss()

@@ -288,6 +288,7 @@
 			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				en,
 				ru,
 				Base,
 			);

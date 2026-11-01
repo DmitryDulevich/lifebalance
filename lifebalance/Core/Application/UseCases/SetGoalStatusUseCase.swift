@@ -4,7 +4,7 @@ enum GoalStatusTransitionError: LocalizedError {
     case invalidTransition(from: GoalStatus, to: GoalStatus)
 
     var errorDescription: String? {
-        "Недопустимый переход между состояниями цели."
+        String(localized: "Недопустимый переход между состояниями цели.")
     }
 }
 

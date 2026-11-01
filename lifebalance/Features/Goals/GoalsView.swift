@@ -14,7 +14,7 @@ struct GoalsView: View {
 
     private static let relativeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.locale = .autoupdatingCurrent
         formatter.unitsStyle = .full
         return formatter
     }()
@@ -180,30 +180,30 @@ struct GoalsView: View {
         if let targetDate = goal.targetDate {
             parts.append(Self.relativeFormatter.localizedString(for: targetDate, relativeTo: .now))
         }
-        return parts.isEmpty ? "Без сферы" : parts.joined(separator: " · ")
+        return parts.isEmpty ? String(localized: "Без сферы") : parts.joined(separator: " · ")
     }
 
     private func title(for status: GoalStatus) -> String {
         switch status {
-        case .active: "Активные"
-        case .paused: "Пауза"
-        case .completed: "Готово"
-        case .archived: "Архив"
+        case .active: String(localized: "Активные")
+        case .paused: String(localized: "Пауза")
+        case .completed: String(localized: "Готово")
+        case .archived: String(localized: "Архив")
         }
     }
 
     private var emptyTitle: String {
         switch viewModel.selectedStatus {
-        case .active: "Пока нет активных целей"
-        case .paused: "Нет целей на паузе"
-        case .completed: "Нет завершённых целей"
-        case .archived: "Архив пуст"
+        case .active: String(localized: "Пока нет активных целей")
+        case .paused: String(localized: "Нет целей на паузе")
+        case .completed: String(localized: "Нет завершённых целей")
+        case .archived: String(localized: "Архив пуст")
         }
     }
 
     private var emptyDescription: String {
         viewModel.selectedStatus == .active
-            ? "Цель — это измеримый результат. Нажмите «+», чтобы создать первую."
-            : "Здесь появятся цели с выбранным статусом."
+            ? String(localized: "Цель — это измеримый результат. Нажмите «+», чтобы создать первую.")
+            : String(localized: "Здесь появятся цели с выбранным статусом.")
     }
 }

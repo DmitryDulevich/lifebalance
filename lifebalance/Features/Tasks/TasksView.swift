@@ -36,7 +36,10 @@ struct TasksView: View {
                     statusFilters
 
                     if viewModel.selectedStatus == .active {
-                        SegmentedToggle(options: ["Список", "Матрица"], selection: $viewModel.viewMode)
+                        SegmentedToggle(
+                            options: [String(localized: "Список"), String(localized: "Матрица")],
+                            selection: $viewModel.viewMode
+                        )
                     }
 
                     TextField("Поиск задач", text: $viewModel.searchText)
@@ -45,7 +48,7 @@ struct TasksView: View {
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            FilterChip(label: "Все", isActive: viewModel.selectedAreaID == nil) {
+                            FilterChip(label: String(localized: "Все"), isActive: viewModel.selectedAreaID == nil) {
                                 viewModel.selectedAreaID = nil
                             }
                             ForEach(viewModel.lifeAreas) { area in
@@ -64,7 +67,7 @@ struct TasksView: View {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
                                 FilterChip(
-                                    label: "Все цели",
+                                    label: String(localized: "Все цели"),
                                     isActive: viewModel.selectedGoalID == nil
                                 ) {
                                     viewModel.selectedGoalID = nil
@@ -140,9 +143,9 @@ struct TasksView: View {
 
     private func title(for status: TaskStatus) -> String {
         switch status {
-        case .active: "Активные"
-        case .completed: "Выполненные"
-        case .archived: "Архив"
+        case .active: String(localized: "Активные")
+        case .completed: String(localized: "Выполненные")
+        case .archived: String(localized: "Архив")
         }
     }
 }

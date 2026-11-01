@@ -42,7 +42,7 @@ struct FocusTimerView: View {
                             .foregroundStyle(Palette.textSecondary)
                             .accessibilityIdentifier("focus.title")
 
-                        Text(viewModel.task?.title ?? "Свободная сессия")
+                        Text(viewModel.task?.title ?? String(localized: "Свободная сессия"))
                             .font(.system(size: 21, weight: .bold))
                             .foregroundStyle(Palette.textPrimary)
                             .multilineTextAlignment(.center)
@@ -92,7 +92,7 @@ struct FocusTimerView: View {
                                 dismiss()
                             }
                         } label: {
-                            Text(viewModel.didFinish ? "Готово" : "Завершить")
+                            Text(viewModel.didFinish ? String(localized: "Готово") : String(localized: "Завершить"))
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 30)

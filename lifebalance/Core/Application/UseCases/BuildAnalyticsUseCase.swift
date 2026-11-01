@@ -6,8 +6,8 @@ enum AnalyticsPeriod: Int, CaseIterable, Hashable, Sendable {
 
     var title: String {
         switch self {
-        case .sevenDays: "7 дней"
-        case .thirtyDays: "30 дней"
+        case .sevenDays: String(localized: "7 дней")
+        case .thirtyDays: String(localized: "30 дней")
         }
     }
 }
@@ -106,7 +106,7 @@ final class BuildAnalyticsUseCase {
             let areaID = session.lifeAreaIDSnapshot ?? currentArea?.id
             let key = areaID?.uuidString ?? "unassigned"
             var bucket = areaBuckets[key] ?? (
-                name: session.lifeAreaNameSnapshot ?? currentArea?.name ?? "Без сферы",
+                name: session.lifeAreaNameSnapshot ?? currentArea?.name ?? String(localized: "Без сферы"),
                 colorHex: session.lifeAreaColorHexSnapshot ?? currentArea?.colorHex ?? "8E8E93",
                 seconds: 0
             )

@@ -128,7 +128,11 @@ private struct LifeAreaFormView: View {
                         .foregroundStyle(.red)
                 }
             }
-            .navigationTitle(viewModel.editingArea == nil ? "Новая сфера" : "Редактирование")
+            .navigationTitle(
+                viewModel.editingArea == nil
+                    ? String(localized: "Новая сфера")
+                    : String(localized: "Редактирование")
+            )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

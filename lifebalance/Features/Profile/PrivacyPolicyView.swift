@@ -56,7 +56,7 @@ struct PrivacyPolicyView: View {
         }
     }
 
-    private func policySection(title: String, text: String) -> some View {
+    private func policySection(title: LocalizedStringKey, text: LocalizedStringKey) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.headline)

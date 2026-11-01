@@ -24,9 +24,10 @@ final class LocalFocusNotificationScheduler: FocusNotificationScheduling {
                 guard granted, !Task.isCancelled else { return }
 
                 let content = UNMutableNotificationContent()
-                content.title = "Фокус-сессия завершена"
-                content.body = taskTitle.map { "Время работы над «\($0)» закончилось." }
-                    ?? "Запланированное время фокусировки закончилось."
+                content.title = String(localized: "Фокус-сессия завершена")
+                content.body = taskTitle.map { title in
+                    String(localized: "Время работы над «\(title)» закончилось.")
+                } ?? String(localized: "Запланированное время фокусировки закончилось.")
                 content.sound = .default
 
                 let trigger = UNTimeIntervalNotificationTrigger(

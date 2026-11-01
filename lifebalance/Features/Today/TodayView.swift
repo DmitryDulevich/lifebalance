@@ -14,8 +14,8 @@ struct TodayView: View {
 
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "EEEE, d MMMM"
+        formatter.locale = .autoupdatingCurrent
+        formatter.setLocalizedDateFormatFromTemplate("EEEE d MMMM")
         return formatter
     }()
 
@@ -71,8 +71,14 @@ struct TodayView: View {
                     }
 
                     HStack(spacing: 8) {
-                        StatTile(value: "\(data.completedCountToday)/\(data.totalCountToday)", label: "выполнено")
-                        StatTile(value: "\(data.focusMinutesToday) мин", label: "фокуса")
+                        StatTile(
+                            value: "\(data.completedCountToday)/\(data.totalCountToday)",
+                            label: String(localized: "выполнено")
+                        )
+                        StatTile(
+                            value: String(localized: "\(data.focusMinutesToday) мин"),
+                            label: String(localized: "фокуса")
+                        )
                     }
 
                     if !data.lifeAreas.isEmpty {
@@ -91,7 +97,7 @@ struct TodayView: View {
 
                     if !data.overdueTasks.isEmpty {
                         section(
-                            title: "Просрочено",
+                            title: String(localized: "Просрочено"),
                             titleColor: Palette.overdue,
                             tasks: data.overdueTasks,
                             showOverdue: true,
@@ -100,7 +106,11 @@ struct TodayView: View {
                     }
 
                     if !data.todayTasks.isEmpty {
-                        section(title: "Запланировано на сегодня", titleColor: Palette.textSecondary, tasks: data.todayTasks)
+                        section(
+                            title: String(localized: "Запланировано на сегодня"),
+                            titleColor: Palette.textSecondary,
+                            tasks: data.todayTasks
+                        )
                     }
 
                     if data.overdueTasks.isEmpty && data.todayTasks.isEmpty {
@@ -113,7 +123,11 @@ struct TodayView: View {
                     }
 
                     if !data.doneTasks.isEmpty {
-                        section(title: "Выполнено сегодня", titleColor: Palette.textSecondary, tasks: data.doneTasks)
+                        section(
+                            title: String(localized: "Выполнено сегодня"),
+                            titleColor: Palette.textSecondary,
+                            tasks: data.doneTasks
+                        )
                     }
                 }
                 .padding(20)

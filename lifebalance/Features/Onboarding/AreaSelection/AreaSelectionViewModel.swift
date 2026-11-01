@@ -72,11 +72,11 @@ final class AreaSelectionViewModel {
     func addCustomArea() {
         let trimmed = customNameInput.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty, trimmed.count <= 30 else {
-            customAreaErrorMessage = "Название должно быть от 1 до 30 символов."
+            customAreaErrorMessage = String(localized: "Название должно быть от 1 до 30 символов.")
             return
         }
         guard !isDuplicateName(trimmed) else {
-            customAreaErrorMessage = "Сфера с таким названием уже есть."
+            customAreaErrorMessage = String(localized: "Сфера с таким названием уже есть.")
             return
         }
 

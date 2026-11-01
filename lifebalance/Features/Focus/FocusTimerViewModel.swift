@@ -43,8 +43,8 @@ final class FocusTimerViewModel {
     }
 
     var statusText: String {
-        if didFinish { return "Сессия завершена" }
-        return isPaused ? "На паузе" : "Идёт сессия"
+        if didFinish { return String(localized: "Сессия завершена") }
+        return isPaused ? String(localized: "На паузе") : String(localized: "Идёт сессия")
     }
 
     /// Remaining-time fraction (1 = just started, 0 = time's up) — the ring

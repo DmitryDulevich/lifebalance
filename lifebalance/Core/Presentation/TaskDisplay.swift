@@ -13,15 +13,15 @@ enum TaskDisplay {
             parts.append(area.name)
         }
         if showOverdueLabel {
-            parts.append("Просрочено")
+            parts.append(String(localized: "Просрочено"))
         }
         if let minutes = task.estimateMinutes {
-            parts.append("\(minutes) мин")
+            parts.append(String(localized: "\(minutes) мин"))
         }
         if showGoal, let goal = task.goal {
             parts.append(goal.title)
         }
-        return parts.isEmpty ? "Без срока" : parts.joined(separator: " · ")
+        return parts.isEmpty ? String(localized: "Без срока") : parts.joined(separator: " · ")
     }
 
     static func ringColor(for task: TaskItem) -> Color {

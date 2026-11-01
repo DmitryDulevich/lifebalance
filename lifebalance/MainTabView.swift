@@ -65,7 +65,7 @@ struct MainTabView: View {
                 onSaved: { dataRevision += 1 }
             )
         }
-        .appErrorAlert($errorMessage, title: "Не удалось загрузить данные")
+        .appErrorAlert($errorMessage, title: String(localized: "Не удалось загрузить данные"))
     }
 
     private func prepareQuickAddMenu() {

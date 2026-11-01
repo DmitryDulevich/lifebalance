@@ -10,11 +10,11 @@ final class SaveBalanceSnapshotUseCase {
         var errorDescription: String? {
             switch self {
             case .noRatings:
-                return "Оцените хотя бы одну сферу, чтобы сохранить снимок."
+                return String(localized: "Оцените хотя бы одну сферу, чтобы сохранить снимок.")
             case .valueOutOfRange:
-                return "Оценка сферы должна быть от 1 до 10."
+                return String(localized: "Оценка сферы должна быть от 1 до 10.")
             case .duplicateArea:
-                return "Одна сфера не может встречаться в снимке несколько раз."
+                return String(localized: "Одна сфера не может встречаться в снимке несколько раз.")
             }
         }
     }

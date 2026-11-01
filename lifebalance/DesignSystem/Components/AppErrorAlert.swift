@@ -3,7 +3,7 @@ import SwiftUI
 extension View {
     func appErrorAlert(
         _ message: Binding<String?>,
-        title: String = "Не удалось выполнить действие"
+        title: String = String(localized: "Не удалось выполнить действие")
     ) -> some View {
         alert(
             title,
@@ -16,7 +16,7 @@ extension View {
                 message.wrappedValue = nil
             }
         } message: {
-            Text(message.wrappedValue ?? "Неизвестная ошибка")
+            Text(message.wrappedValue ?? String(localized: "Неизвестная ошибка"))
         }
     }
 }

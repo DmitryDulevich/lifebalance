@@ -4,7 +4,7 @@ enum TaskStatusTransitionError: LocalizedError {
     case invalidTransition(from: TaskStatus, to: TaskStatus)
 
     var errorDescription: String? {
-        "Недопустимый переход между состояниями задачи."
+        String(localized: "Недопустимый переход между состояниями задачи.")
     }
 }
 
