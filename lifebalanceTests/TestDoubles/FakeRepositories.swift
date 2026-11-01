@@ -167,6 +167,7 @@ final class FakeGoalRepository: GoalRepository {
 @MainActor
 final class FakeBalanceRepository: BalanceRepository {
     var latestSnapshot: BalanceSnapshot?
+    var snapshots: [BalanceSnapshot] = []
     private(set) var savedSnapshotCallCount = 0
     private(set) var upsertCallCount = 0
     private(set) var lastRatings: [AreaRatingInput] = []
@@ -184,6 +185,14 @@ final class FakeBalanceRepository: BalanceRepository {
     func fetchLatestSnapshot() throws -> BalanceSnapshot? {
         if let fetchError { throw fetchError }
         return latestSnapshot
+    }
+
+    func fetchAllSnapshots() throws -> [BalanceSnapshot] {
+        if let fetchError { throw fetchError }
+        if !snapshots.isEmpty {
+            return snapshots.sorted { $0.createdAt < $1.createdAt }
+        }
+        return latestSnapshot.map { [$0] } ?? []
     }
 
     func upsertTodaySnapshot(ratings: [AreaRatingInput], note: String?) throws {

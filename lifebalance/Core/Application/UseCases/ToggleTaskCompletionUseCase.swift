@@ -9,6 +9,9 @@ final class ToggleTaskCompletionUseCase {
     }
 
     func execute(_ task: TaskItem) throws {
+        guard task.status != .archived else {
+            throw TaskStatusTransitionError.invalidTransition(from: .archived, to: .completed)
+        }
         let previousStatus = task.status
         let previousCompletedAt = task.completedAt
 

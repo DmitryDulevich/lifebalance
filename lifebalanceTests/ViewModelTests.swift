@@ -36,19 +36,59 @@ struct ViewModelTests {
     }
 
     @Test
+    func tasksViewModelFiltersByLifecycleStatusAndGoal() {
+        let taskRepository = FakeTaskRepository()
+        let lifeAreaRepository = FakeLifeAreaRepository()
+        let goalRepository = FakeGoalRepository()
+        let releaseGoal = Goal(title: "Релиз")
+        let healthGoal = Goal(title: "Здоровье")
+        goalRepository.activeGoals = [releaseGoal, healthGoal]
+        let activeReleaseTask = TaskItem(title: "Сборка", goal: releaseGoal)
+        let completedReleaseTask = TaskItem(title: "Дизайн", status: .completed, goal: releaseGoal)
+        let completedHealthTask = TaskItem(title: "Тренировка", status: .completed, goal: healthGoal)
+        let archivedTask = TaskItem(title: "Старый план", status: .archived, goal: releaseGoal)
+        taskRepository.tasks = [activeReleaseTask, completedReleaseTask, completedHealthTask, archivedTask]
+        let viewModel = makeTasksViewModel(
+            taskRepository: taskRepository,
+            lifeAreaRepository: lifeAreaRepository,
+            goalRepository: goalRepository
+        )
+
+        viewModel.load()
+        viewModel.selectedStatus = .completed
+        viewModel.selectedGoalID = releaseGoal.id
+
+        #expect(viewModel.filteredTasks.map(\.id) == [completedReleaseTask.id])
+        #expect(viewModel.count(for: .active) == 1)
+        #expect(viewModel.count(for: .completed) == 2)
+        #expect(viewModel.count(for: .archived) == 1)
+
+        viewModel.setStatus(.archived, for: completedReleaseTask)
+        #expect(completedReleaseTask.status == .archived)
+        #expect(viewModel.count(for: .completed) == 1)
+        #expect(viewModel.count(for: .archived) == 2)
+    }
+
+    @Test
     func todayViewModelBuildsContentAndExposesLoadFailure() {
         let lifeAreaRepository = FakeLifeAreaRepository()
         let taskRepository = FakeTaskRepository()
+        let goalRepository = FakeGoalRepository()
         let focusRepository = FakeFocusSessionRepository()
         let toggleUseCase = ToggleTaskCompletionUseCase(taskRepository: taskRepository)
         let viewModel = TodayViewModel(
             lifeAreaRepository: lifeAreaRepository,
             taskRepository: taskRepository,
+            goalRepository: goalRepository,
             focusSessionRepository: focusRepository,
-            toggleTaskCompletionUseCase: toggleUseCase
+            toggleTaskCompletionUseCase: toggleUseCase,
+            rescheduleTasksUseCase: RescheduleTasksUseCase(taskRepository: taskRepository)
         )
         let todayTask = TaskItem(title: "Сегодня", dueDate: .now)
         let doneTask = TaskItem(title: "Готово", status: .completed, completedAt: .now)
+        let goal = Goal(title: "Цель")
+        goal.tasks = [todayTask]
+        goalRepository.activeGoals = [goal]
         taskRepository.tasks = [todayTask, doneTask]
         focusRepository.sessions = [FocusSession(
             startAt: Date.now.addingTimeInterval(-1_800),
@@ -66,6 +106,8 @@ struct ViewModelTests {
         #expect(content.todayTasks.map(\.id) == [todayTask.id])
         #expect(content.completedCountToday == 1)
         #expect(content.focusMinutesToday == 30)
+        #expect(content.activeGoals.first?.goal.id == goal.id)
+        #expect(content.activeGoals.first?.progress.totalTaskCount == 1)
 
         taskRepository.fetchError = FakeRepositoryError.forcedFailure
         viewModel.load()
@@ -145,13 +187,16 @@ struct ViewModelTests {
     @Test
     func goalDetailsShowsLinkedTasksAndUpdatesProgress() {
         let repository = FakeTaskRepository()
+        let goalRepository = FakeGoalRepository()
         let activeTask = TaskItem(title: "Реализовать")
         let completedTask = TaskItem(title: "Спроектировать", status: .completed, completedAt: .now)
         let goal = Goal(title: "Выпустить приложение")
         goal.tasks = [completedTask, activeTask]
         let viewModel = GoalDetailViewModel(
             goal: goal,
-            toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: repository)
+            toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: repository),
+            deleteTaskUseCase: DeleteTaskUseCase(taskRepository: repository),
+            setGoalStatusUseCase: SetGoalStatusUseCase(goalRepository: goalRepository)
         )
 
         #expect(viewModel.tasks.map(\.id).first == activeTask.id)
@@ -162,7 +207,67 @@ struct ViewModelTests {
 
         #expect(viewModel.progress.completedTaskCount == 2)
         #expect(viewModel.progress.percentage == 100)
+        #expect(viewModel.showCompletionPrompt)
+
+        viewModel.completeGoal()
+
+        #expect(goal.status == .completed)
+        #expect(!viewModel.showCompletionPrompt)
         #expect(viewModel.errorMessage == nil)
+    }
+
+    @Test
+    func goalDetailsEditsAndDeletesLinkedTask() {
+        let taskRepository = FakeTaskRepository()
+        let goalRepository = FakeGoalRepository()
+        let firstTask = TaskItem(title: "Первый шаг", status: .completed)
+        let secondTask = TaskItem(title: "Второй шаг")
+        let goal = Goal(title: "Цель")
+        goal.tasks = [firstTask, secondTask]
+        taskRepository.tasks = [firstTask, secondTask]
+        let viewModel = GoalDetailViewModel(
+            goal: goal,
+            toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: taskRepository),
+            deleteTaskUseCase: DeleteTaskUseCase(taskRepository: taskRepository),
+            setGoalStatusUseCase: SetGoalStatusUseCase(goalRepository: goalRepository)
+        )
+
+        viewModel.startEditing(secondTask)
+        #expect(viewModel.showTaskForm)
+        #expect(viewModel.editingTask?.id == secondTask.id)
+
+        viewModel.delete(firstTask)
+
+        #expect(taskRepository.deletedTasks.map(\.id) == [firstTask.id])
+        #expect(viewModel.tasks.map(\.id) == [secondTask.id])
+        #expect(viewModel.progress.completedTaskCount == 0)
+        #expect(viewModel.progress.totalTaskCount == 1)
+    }
+
+    @Test
+    func archivedGoalDetailsAreReadOnly() {
+        let taskRepository = FakeTaskRepository()
+        let goalRepository = FakeGoalRepository()
+        let task = TaskItem(title: "Шаг")
+        let goal = Goal(title: "Архив", status: .archived)
+        goal.tasks = [task]
+        let viewModel = GoalDetailViewModel(
+            goal: goal,
+            toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: taskRepository),
+            deleteTaskUseCase: DeleteTaskUseCase(taskRepository: taskRepository),
+            setGoalStatusUseCase: SetGoalStatusUseCase(goalRepository: goalRepository)
+        )
+
+        viewModel.startCreatingTask()
+        viewModel.startEditing(task)
+        viewModel.toggleCompletion(task)
+        viewModel.delete(task)
+
+        #expect(!viewModel.canAddTask)
+        #expect(!viewModel.canModifyTasks)
+        #expect(!viewModel.showTaskForm)
+        #expect(task.status == .active)
+        #expect(taskRepository.deletedTasks.isEmpty)
     }
 
     @Test
@@ -378,7 +483,7 @@ struct ViewModelTests {
             goalRepository: goalRepository,
             toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase(taskRepository: taskRepository),
             updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase(taskRepository: taskRepository),
-            deleteTaskUseCase: DeleteTaskUseCase(taskRepository: taskRepository)
+            setTaskStatusUseCase: SetTaskStatusUseCase(taskRepository: taskRepository)
         )
     }
 }

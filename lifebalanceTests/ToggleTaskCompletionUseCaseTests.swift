@@ -44,4 +44,17 @@ struct ToggleTaskCompletionUseCaseTests {
         #expect(task.status == .active)
         #expect(task.completedAt == nil)
     }
+
+    @Test("Archived task cannot be toggled")
+    func rejectsArchivedTask() {
+        let repository = FakeTaskRepository()
+        let useCase = ToggleTaskCompletionUseCase(taskRepository: repository)
+        let task = TaskItem(title: "Archived", status: .archived)
+
+        #expect(throws: TaskStatusTransitionError.self) {
+            try useCase.execute(task)
+        }
+        #expect(task.status == .archived)
+        #expect(repository.saveCallCount == 0)
+    }
 }

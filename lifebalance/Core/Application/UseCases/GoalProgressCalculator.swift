@@ -17,9 +17,14 @@ struct GoalProgress: Equatable, Sendable {
 /// Progress "by tasks" per PRD §4.3: completed / total of the goal's own tasks.
 enum GoalProgressCalculator {
     static func summary(for goal: Goal) -> GoalProgress {
-        GoalProgress(
-            completedTaskCount: goal.tasks.lazy.filter { $0.status == .completed }.count,
-            totalTaskCount: goal.tasks.count
+        summary(for: goal.tasks)
+    }
+
+    static func summary(for tasks: [TaskItem]) -> GoalProgress {
+        let progressTasks = tasks.filter { $0.status != .archived }
+        return GoalProgress(
+            completedTaskCount: progressTasks.lazy.filter { $0.status == .completed }.count,
+            totalTaskCount: progressTasks.count
         )
     }
 

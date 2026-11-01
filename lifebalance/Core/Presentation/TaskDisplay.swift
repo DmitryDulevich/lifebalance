@@ -3,7 +3,11 @@ import SwiftUI
 /// Shared row-subtitle formatting ("Область · 30 мин" / "Область · Просрочено · 30 мин"),
 /// used by both the Today and Tasks screens so task rows read identically everywhere.
 enum TaskDisplay {
-    static func subtitle(for task: TaskItem, showOverdueLabel: Bool = false) -> String {
+    static func subtitle(
+        for task: TaskItem,
+        showOverdueLabel: Bool = false,
+        showGoal: Bool = false
+    ) -> String {
         var parts: [String] = []
         if let area = task.lifeArea {
             parts.append(area.name)
@@ -13,6 +17,9 @@ enum TaskDisplay {
         }
         if let minutes = task.estimateMinutes {
             parts.append("\(minutes) мин")
+        }
+        if showGoal, let goal = task.goal {
+            parts.append(goal.title)
         }
         return parts.isEmpty ? "Без срока" : parts.joined(separator: " · ")
     }

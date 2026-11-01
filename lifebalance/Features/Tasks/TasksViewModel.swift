@@ -10,6 +10,8 @@ final class TasksViewModel {
 
     var searchText = ""
     var selectedAreaID: UUID?
+    var selectedGoalID: UUID?
+    var selectedStatus: TaskStatus = .active
     var viewMode = 0 // 0 = list, 1 = matrix
 
     var errorMessage: String?
@@ -21,7 +23,7 @@ final class TasksViewModel {
     private let goalRepository: GoalRepository
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
     private let updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase
-    private let deleteTaskUseCase: DeleteTaskUseCase
+    private let setTaskStatusUseCase: SetTaskStatusUseCase
 
     init(
         taskRepository: TaskRepository,
@@ -29,21 +31,21 @@ final class TasksViewModel {
         goalRepository: GoalRepository,
         toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
         updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase,
-        deleteTaskUseCase: DeleteTaskUseCase
+        setTaskStatusUseCase: SetTaskStatusUseCase
     ) {
         self.taskRepository = taskRepository
         self.lifeAreaRepository = lifeAreaRepository
         self.goalRepository = goalRepository
         self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
         self.updateTaskQuadrantUseCase = updateTaskQuadrantUseCase
-        self.deleteTaskUseCase = deleteTaskUseCase
+        self.setTaskStatusUseCase = setTaskStatusUseCase
     }
 
     func load() {
         do {
             tasks = try taskRepository.fetchAll()
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
-            goals = try goalRepository.fetchActive()
+            goals = try goalRepository.fetchAll()
             errorMessage = nil
         } catch {
             AppLogger.error(error, context: "tasks.load")
@@ -53,12 +55,26 @@ final class TasksViewModel {
 
     var filteredTasks: [TaskItem] {
         tasks.filter { task in
-            task.status == .active
+            task.status == selectedStatus
                 && (selectedAreaID == nil || task.lifeArea?.id == selectedAreaID)
+                && (selectedGoalID == nil || task.goal?.id == selectedGoalID)
                 && (searchText.isEmpty
                     || task.title.localizedCaseInsensitiveContains(searchText)
                     || (task.note?.localizedCaseInsensitiveContains(searchText) ?? false))
         }
+    }
+
+    var formGoals: [Goal] {
+        var result = goals.filter { $0.status == .active }
+        if let editingGoal = editingTask?.goal,
+           !result.contains(where: { $0.id == editingGoal.id }) {
+            result.append(editingGoal)
+        }
+        return result
+    }
+
+    func count(for status: TaskStatus) -> Int {
+        tasks.lazy.filter { $0.status == status }.count
     }
 
     func toggleCompletion(_ task: TaskItem) {
@@ -81,12 +97,14 @@ final class TasksViewModel {
         }
     }
 
-    func delete(_ task: TaskItem) {
+    func setStatus(_ status: TaskStatus, for task: TaskItem) {
         do {
-            try deleteTaskUseCase.execute(task)
+            try setTaskStatusUseCase.execute(task, status: status)
             load()
         } catch {
-            AppLogger.error(error, context: "tasks.delete")
+            if !(error is TaskStatusTransitionError) {
+                AppLogger.error(error, context: "tasks.set_status")
+            }
             errorMessage = error.localizedDescription
         }
     }

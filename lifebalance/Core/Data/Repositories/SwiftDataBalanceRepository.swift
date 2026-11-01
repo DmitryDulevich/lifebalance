@@ -30,6 +30,13 @@ final class SwiftDataBalanceRepository: BalanceRepository {
         return try context.fetch(descriptor).first
     }
 
+    func fetchAllSnapshots() throws -> [BalanceSnapshot] {
+        let descriptor = FetchDescriptor<BalanceSnapshot>(
+            sortBy: [SortDescriptor(\.createdAt, order: .forward)]
+        )
+        return try context.fetch(descriptor)
+    }
+
     func upsertTodaySnapshot(ratings: [AreaRatingInput], note: String?) throws {
         let latest = try fetchLatestSnapshot()
 

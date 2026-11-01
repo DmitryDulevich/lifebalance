@@ -2,6 +2,7 @@ import SwiftUI
 
 struct GoalDetailView: View {
     @State private var viewModel: GoalDetailViewModel
+    @State private var taskPendingDeletion: TaskItem?
     @Environment(\.dismiss) private var dismiss
 
     let container: AppContainer
@@ -29,6 +30,21 @@ struct GoalDetailView: View {
                     VStack(alignment: .leading, spacing: 18) {
                         progressCard
 
+                        if viewModel.goal.status == .archived {
+                            Label(
+                                "Архивная цель доступна только для просмотра",
+                                systemImage: "archivebox.fill"
+                            )
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(Palette.textSecondary)
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(Palette.cardBackground)
+                            )
+                        }
+
                         HStack {
                             Text("Задачи цели")
                                 .font(.system(size: 20, weight: .bold))
@@ -36,7 +52,7 @@ struct GoalDetailView: View {
                             Spacer()
                             if viewModel.canAddTask {
                                 Button {
-                                    viewModel.showTaskForm = true
+                                    viewModel.startCreatingTask()
                                 } label: {
                                     Image(systemName: "plus.circle.fill")
                                         .font(.system(size: 24))
@@ -65,6 +81,17 @@ struct GoalDetailView: View {
                                             onChanged()
                                         }
                                     )
+                                    .disabled(!viewModel.canModifyTasks)
+                                    .contextMenu {
+                                        if viewModel.canModifyTasks {
+                                            Button("Редактировать") {
+                                                viewModel.startEditing(task)
+                                            }
+                                            Button("Удалить", role: .destructive) {
+                                                taskPendingDeletion = task
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -84,13 +111,48 @@ struct GoalDetailView: View {
                     container: container,
                     lifeAreas: lifeAreas,
                     goals: [viewModel.goal],
-                    editingTask: nil,
-                    preselectedGoal: viewModel.goal,
+                    editingTask: viewModel.editingTask,
+                    preselectedGoal: viewModel.editingTask == nil ? viewModel.goal : nil,
                     onSaved: {
                         viewModel.taskWasSaved()
                         onChanged()
                     }
                 )
+            }
+            .confirmationDialog(
+                "Все задачи выполнены",
+                isPresented: $viewModel.showCompletionPrompt,
+                titleVisibility: .visible
+            ) {
+                Button("Завершить цель") {
+                    viewModel.completeGoal()
+                    onChanged()
+                }
+                Button("Не завершать", role: .cancel) {
+                    viewModel.keepGoalOpen()
+                }
+            } message: {
+                Text("Отметить цель как завершённую?")
+            }
+            .confirmationDialog(
+                "Удалить задачу?",
+                isPresented: Binding(
+                    get: { taskPendingDeletion != nil },
+                    set: { if !$0 { taskPendingDeletion = nil } }
+                ),
+                titleVisibility: .visible
+            ) {
+                Button("Удалить", role: .destructive) {
+                    guard let task = taskPendingDeletion else { return }
+                    viewModel.delete(task)
+                    taskPendingDeletion = nil
+                    onChanged()
+                }
+                Button("Отмена", role: .cancel) {
+                    taskPendingDeletion = nil
+                }
+            } message: {
+                Text(taskPendingDeletion?.title ?? "")
             }
         }
         .appErrorAlert($viewModel.errorMessage)

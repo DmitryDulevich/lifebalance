@@ -24,17 +24,26 @@ struct TaskListView: View {
 
                             VStack(spacing: 8) {
                                 ForEach(group.tasks) { task in
-                                    TaskRowView(
-                                        title: task.title,
-                                        subtitle: TaskDisplay.subtitle(for: task, showOverdueLabel: group.title == "Просрочено"),
-                                        ringColor: TaskDisplay.ringColor(for: task),
-                                        isCompleted: false,
-                                        onToggle: { viewModel.toggleCompletion(task) },
-                                        onPlay: { onPlay(task) }
-                                    )
-                                    .contextMenu {
-                                        Button("Редактировать") { onEdit(task) }
-                                        Button("Удалить", role: .destructive) { viewModel.delete(task) }
+                                    HStack(spacing: 8) {
+                                        TaskRowView(
+                                            title: task.title,
+                                            subtitle: TaskDisplay.subtitle(
+                                                for: task,
+                                                showOverdueLabel: group.title == "Просрочено",
+                                                showGoal: true
+                                            ),
+                                            ringColor: TaskDisplay.ringColor(for: task),
+                                            isCompleted: task.status == .completed,
+                                            onToggle: {
+                                                if task.status != .archived {
+                                                    viewModel.toggleCompletion(task)
+                                                }
+                                            },
+                                            onPlay: task.status == .active ? { onPlay(task) } : nil
+                                        )
+                                        .disabled(task.status == .archived)
+
+                                        taskMenu(task)
                                     }
                                 }
                             }
@@ -44,9 +53,9 @@ struct TaskListView: View {
 
                 if groups.allSatisfy({ $0.tasks.isEmpty }) {
                     ContentUnavailableView(
-                        "Нет задач",
+                        emptyTitle,
                         systemImage: "checklist",
-                        description: Text("Нажмите «+», чтобы создать первую задачу.")
+                        description: Text(emptyDescription)
                     )
                     .padding(.top, 20)
                 }
@@ -56,6 +65,13 @@ struct TaskListView: View {
     }
 
     private func groupedTasks() -> [Group] {
+        if viewModel.selectedStatus == .completed {
+            return [Group(title: "Выполненные", tasks: viewModel.filteredTasks)]
+        }
+        if viewModel.selectedStatus == .archived {
+            return [Group(title: "Архив", tasks: viewModel.filteredTasks)]
+        }
+
         let calendar = Calendar.current
         let startOfToday = calendar.startOfDay(for: .now)
         let tomorrowStart = calendar.date(byAdding: .day, value: 1, to: startOfToday) ?? startOfToday
@@ -77,5 +93,43 @@ struct TaskListView: View {
             Group(title: "Позже", tasks: later),
             Group(title: "Без даты", tasks: noDate)
         ]
+    }
+
+    @ViewBuilder
+    private func taskMenu(_ task: TaskItem) -> some View {
+        Menu {
+            switch task.status {
+            case .active:
+                Button("Редактировать") { onEdit(task) }
+                Button("Выполнить") { viewModel.setStatus(.completed, for: task) }
+                Button("Архивировать", role: .destructive) { viewModel.setStatus(.archived, for: task) }
+            case .completed:
+                Button("Редактировать") { onEdit(task) }
+                Button("Вернуть в активные") { viewModel.setStatus(.active, for: task) }
+                Button("Архивировать", role: .destructive) { viewModel.setStatus(.archived, for: task) }
+            case .archived:
+                Button("Восстановить") { viewModel.setStatus(.active, for: task) }
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .font(.system(size: 20))
+                .foregroundStyle(Palette.textSecondary)
+                .frame(width: 44, height: 44)
+        }
+        .accessibilityIdentifier("task.menu.\(task.title)")
+    }
+
+    private var emptyTitle: String {
+        switch viewModel.selectedStatus {
+        case .active: "Нет активных задач"
+        case .completed: "Нет выполненных задач"
+        case .archived: "Архив пуст"
+        }
+    }
+
+    private var emptyDescription: String {
+        viewModel.selectedStatus == .active
+            ? "Нажмите «+», чтобы создать первую задачу."
+            : "Здесь появятся задачи с выбранным статусом."
     }
 }

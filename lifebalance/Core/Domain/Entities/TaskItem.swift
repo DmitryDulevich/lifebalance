@@ -1,9 +1,10 @@
 import Foundation
 import SwiftData
 
-enum TaskStatus: String, Codable, Sendable {
+enum TaskStatus: String, Codable, CaseIterable, Hashable, Sendable {
     case active
     case completed
+    case archived
 }
 
 /// Named `TaskItem` (not `Task`) to avoid clashing with Swift's structured-concurrency `Task`.

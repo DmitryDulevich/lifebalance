@@ -25,6 +25,13 @@ struct ProfileView: View {
 
                 Section("Настройки") {
                     NavigationLink {
+                        AnalyticsView(container: container)
+                    } label: {
+                        Label("Аналитика и история", systemImage: "chart.xyaxis.line")
+                    }
+                    .accessibilityIdentifier("profile.analytics")
+
+                    NavigationLink {
                         LifeAreasSettingsView(container: container)
                     } label: {
                         Label("Сферы жизни", systemImage: "circle.grid.2x2.fill")

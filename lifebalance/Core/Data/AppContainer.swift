@@ -18,6 +18,8 @@ final class AppContainer {
     let createTaskUseCase: CreateTaskUseCase
     let updateTaskUseCase: UpdateTaskUseCase
     let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
+    let setTaskStatusUseCase: SetTaskStatusUseCase
+    let rescheduleTasksUseCase: RescheduleTasksUseCase
     let updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase
     let deleteTaskUseCase: DeleteTaskUseCase
     let createGoalUseCase: CreateGoalUseCase
@@ -28,6 +30,7 @@ final class AppContainer {
     let restoreActiveFocusSessionUseCase: RestoreActiveFocusSessionUseCase
     let adjustBalanceRatingUseCase: AdjustBalanceRatingUseCase
     let manageLifeAreasUseCase: ManageLifeAreasUseCase
+    let buildAnalyticsUseCase: BuildAnalyticsUseCase
 
     init(modelContext: ModelContext) {
         let lifeAreaRepository = SwiftDataLifeAreaRepository(context: modelContext)
@@ -62,6 +65,8 @@ final class AppContainer {
         self.createTaskUseCase = CreateTaskUseCase(taskRepository: taskRepository)
         self.updateTaskUseCase = UpdateTaskUseCase(taskRepository: taskRepository)
         self.toggleTaskCompletionUseCase = ToggleTaskCompletionUseCase(taskRepository: taskRepository)
+        self.setTaskStatusUseCase = SetTaskStatusUseCase(taskRepository: taskRepository)
+        self.rescheduleTasksUseCase = RescheduleTasksUseCase(taskRepository: taskRepository)
         self.updateTaskQuadrantUseCase = UpdateTaskQuadrantUseCase(taskRepository: taskRepository)
         self.deleteTaskUseCase = DeleteTaskUseCase(taskRepository: taskRepository)
         self.createGoalUseCase = CreateGoalUseCase(goalRepository: goalRepository)
@@ -79,6 +84,12 @@ final class AppContainer {
         )
         self.adjustBalanceRatingUseCase = AdjustBalanceRatingUseCase(balanceRepository: balanceRepository)
         self.manageLifeAreasUseCase = ManageLifeAreasUseCase(repository: lifeAreaRepository)
+        self.buildAnalyticsUseCase = BuildAnalyticsUseCase(
+            focusSessionRepository: focusSessionRepository,
+            taskRepository: taskRepository,
+            goalRepository: goalRepository,
+            balanceRepository: balanceRepository
+        )
     }
 }
 
@@ -90,7 +101,7 @@ extension AppContainer {
             goalRepository: goalRepository,
             toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
             updateTaskQuadrantUseCase: updateTaskQuadrantUseCase,
-            deleteTaskUseCase: deleteTaskUseCase
+            setTaskStatusUseCase: setTaskStatusUseCase
         )
     }
 
@@ -113,7 +124,9 @@ extension AppContainer {
     func makeGoalDetailViewModel(goal: Goal) -> GoalDetailViewModel {
         GoalDetailViewModel(
             goal: goal,
-            toggleTaskCompletionUseCase: toggleTaskCompletionUseCase
+            toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
+            deleteTaskUseCase: deleteTaskUseCase,
+            setGoalStatusUseCase: setGoalStatusUseCase
         )
     }
 
@@ -138,8 +151,10 @@ extension AppContainer {
         TodayViewModel(
             lifeAreaRepository: lifeAreaRepository,
             taskRepository: taskRepository,
+            goalRepository: goalRepository,
             focusSessionRepository: focusSessionRepository,
-            toggleTaskCompletionUseCase: toggleTaskCompletionUseCase
+            toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
+            rescheduleTasksUseCase: rescheduleTasksUseCase
         )
     }
 
@@ -149,6 +164,10 @@ extension AppContainer {
             balanceRepository: balanceRepository,
             adjustBalanceRatingUseCase: adjustBalanceRatingUseCase
         )
+    }
+
+    func makeAnalyticsViewModel() -> AnalyticsViewModel {
+        AnalyticsViewModel(buildAnalyticsUseCase: buildAnalyticsUseCase)
     }
 
     func makeFocusTimerViewModel(task: TaskItem?, plannedSeconds: Int) -> FocusTimerViewModel {

@@ -85,8 +85,18 @@ struct TodayView: View {
                         }
                     }
 
+                    if !data.activeGoals.isEmpty {
+                        activeGoalsSection(data.activeGoals)
+                    }
+
                     if !data.overdueTasks.isEmpty {
-                        section(title: "Просрочено", titleColor: Palette.overdue, tasks: data.overdueTasks, showOverdue: true)
+                        section(
+                            title: "Просрочено",
+                            titleColor: Palette.overdue,
+                            tasks: data.overdueTasks,
+                            showOverdue: true,
+                            canMoveToTomorrow: true
+                        )
                     }
 
                     if !data.todayTasks.isEmpty {
@@ -124,22 +134,101 @@ struct TodayView: View {
         .padding(.top, 8)
     }
 
-    private func section(title: String, titleColor: Color, tasks: [TaskItem], showOverdue: Bool = false) -> some View {
+    private func section(
+        title: String,
+        titleColor: Color,
+        tasks: [TaskItem],
+        showOverdue: Bool = false,
+        canMoveToTomorrow: Bool = false
+    ) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(titleColor)
+            HStack {
+                Text(title)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(titleColor)
+                Spacer()
+                if canMoveToTomorrow {
+                    Button("Все на завтра") {
+                        viewModel.moveAllOverdueToTomorrow()
+                    }
+                    .font(.system(size: 12, weight: .semibold))
+                    .accessibilityIdentifier("today.move_all_overdue")
+                }
+            }
 
             VStack(spacing: 8) {
                 ForEach(tasks) { task in
-                    TaskRowView(
-                        title: task.title,
-                        subtitle: TaskDisplay.subtitle(for: task, showOverdueLabel: showOverdue),
-                        ringColor: TaskDisplay.ringColor(for: task),
-                        isCompleted: task.status == .completed,
-                        onToggle: { viewModel.toggleCompletion(task) },
-                        onPlay: task.status == .completed ? nil : { focusTarget = FocusNavigationTarget(task: task) }
-                    )
+                    HStack(spacing: 8) {
+                        TaskRowView(
+                            title: task.title,
+                            subtitle: TaskDisplay.subtitle(
+                                for: task,
+                                showOverdueLabel: showOverdue,
+                                showGoal: true
+                            ),
+                            ringColor: TaskDisplay.ringColor(for: task),
+                            isCompleted: task.status == .completed,
+                            onToggle: { viewModel.toggleCompletion(task) },
+                            onPlay: task.status == .completed ? nil : {
+                                focusTarget = FocusNavigationTarget(task: task)
+                            }
+                        )
+
+                        if canMoveToTomorrow {
+                            Menu {
+                                Button("Перенести на завтра") {
+                                    viewModel.moveToTomorrow(task)
+                                }
+                            } label: {
+                                Image(systemName: "ellipsis.circle")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(Palette.textSecondary)
+                                    .frame(width: 44, height: 44)
+                            }
+                            .accessibilityIdentifier("today.task.menu.\(task.title)")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func activeGoalsSection(_ goals: [TodayViewModel.GoalSummary]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Активные цели")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(Palette.textSecondary)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(goals) { summary in
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(summary.goal.title)
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundStyle(Palette.textPrimary)
+                                .lineLimit(1)
+                                .accessibilityIdentifier("today.goal.\(summary.goal.title)")
+
+                            ProgressBarView(
+                                progress: summary.progress.fraction,
+                                color: Palette.accent
+                            )
+
+                            HStack {
+                                Text("\(summary.progress.completedTaskCount) из \(summary.progress.totalTaskCount)")
+                                Spacer()
+                                Text("\(summary.progress.percentage)%")
+                            }
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(Palette.textSecondary)
+                        }
+                        .padding(14)
+                        .frame(width: 220)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Palette.cardBackground)
+                        )
+                    }
                 }
             }
         }

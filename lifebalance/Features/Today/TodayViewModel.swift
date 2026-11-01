@@ -4,6 +4,13 @@ import Observation
 @Observable
 @MainActor
 final class TodayViewModel {
+    struct GoalSummary: Identifiable {
+        let goal: Goal
+        let progress: GoalProgress
+
+        var id: UUID { goal.id }
+    }
+
     struct Content {
         var lifeAreas: [LifeArea]
         var heroTask: TaskItem?
@@ -13,6 +20,7 @@ final class TodayViewModel {
         var completedCountToday: Int
         var totalCountToday: Int
         var focusMinutesToday: Int
+        var activeGoals: [GoalSummary]
     }
 
     var state: ViewState<Content> = .idle
@@ -20,19 +28,25 @@ final class TodayViewModel {
 
     private let lifeAreaRepository: LifeAreaRepository
     private let taskRepository: TaskRepository
+    private let goalRepository: GoalRepository
     private let focusSessionRepository: FocusSessionRepository
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
+    private let rescheduleTasksUseCase: RescheduleTasksUseCase
 
     init(
         lifeAreaRepository: LifeAreaRepository,
         taskRepository: TaskRepository,
+        goalRepository: GoalRepository,
         focusSessionRepository: FocusSessionRepository,
-        toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
+        toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
+        rescheduleTasksUseCase: RescheduleTasksUseCase
     ) {
         self.lifeAreaRepository = lifeAreaRepository
         self.taskRepository = taskRepository
+        self.goalRepository = goalRepository
         self.focusSessionRepository = focusSessionRepository
         self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
+        self.rescheduleTasksUseCase = rescheduleTasksUseCase
     }
 
     func load() {
@@ -41,6 +55,7 @@ final class TodayViewModel {
         do {
             let areas = try lifeAreaRepository.fetchActiveAreas()
             let allTasks = try taskRepository.fetchAll()
+            let goals = try goalRepository.fetchActive()
             let sessions = try focusSessionRepository.fetchAll()
 
             let calendar = Calendar.current
@@ -76,7 +91,10 @@ final class TodayViewModel {
                 doneTasks: done,
                 completedCountToday: done.count,
                 totalCountToday: overdue.count + today.count + done.count,
-                focusMinutesToday: focusSeconds / 60
+                focusMinutesToday: focusSeconds / 60,
+                activeGoals: goals.map {
+                    GoalSummary(goal: $0, progress: GoalProgressCalculator.summary(for: $0))
+                }
             ))
         } catch {
             AppLogger.error(error, context: "today.load")
@@ -90,6 +108,25 @@ final class TodayViewModel {
             load()
         } catch {
             AppLogger.error(error, context: "today.toggle_completion")
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func moveToTomorrow(_ task: TaskItem) {
+        rescheduleToTomorrow([task])
+    }
+
+    func moveAllOverdueToTomorrow() {
+        guard case .content(let content) = state else { return }
+        rescheduleToTomorrow(content.overdueTasks)
+    }
+
+    private func rescheduleToTomorrow(_ tasks: [TaskItem]) {
+        do {
+            try rescheduleTasksUseCase.moveToTomorrow(tasks)
+            load()
+        } catch {
+            AppLogger.error(error, context: "today.reschedule")
             errorMessage = error.localizedDescription
         }
     }

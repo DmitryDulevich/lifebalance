@@ -107,8 +107,63 @@ final class LifebalanceUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Тестовая фокус-задача"].exists)
         app.buttons["task.toggle.Тестовая фокус-задача"].tap()
 
+        XCTAssertTrue(app.buttons["Завершить цель"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["1 из 1 задач выполнено"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["100%"].exists)
+        app.buttons["Завершить цель"].tap()
+        app.buttons["Готово"].tap()
+
+        app.buttons["goals.filter.completed"].tap()
+        XCTAssertTrue(app.staticTexts["Тестовая цель"].waitForExistence(timeout: 5))
+    }
+
+    func testCompletesArchivesAndRestoresTask() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.tabBars.buttons["Задачи"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Задачи"].tap()
+
+        app.buttons["task.toggle.Тестовая фокус-задача"].tap()
+        app.buttons["tasks.filter.completed"].tap()
+        XCTAssertTrue(app.staticTexts["Тестовая фокус-задача"].waitForExistence(timeout: 5))
+
+        app.buttons["task.menu.Тестовая фокус-задача"].tap()
+        app.buttons["Архивировать"].tap()
+        app.buttons["tasks.filter.archived"].tap()
+        XCTAssertTrue(app.staticTexts["Тестовая фокус-задача"].waitForExistence(timeout: 5))
+
+        app.buttons["task.menu.Тестовая фокус-задача"].tap()
+        app.buttons["Восстановить"].tap()
+        app.buttons["tasks.filter.active"].tap()
+        XCTAssertTrue(app.staticTexts["Тестовая фокус-задача"].waitForExistence(timeout: 5))
+    }
+
+    func testTodayMovesOverdueTasksAndShowsGoalProgress() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.staticTexts["Просроченная задача"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["today.goal.Тестовая цель"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["today.focus.start"].exists)
+
+        app.buttons["today.move_all_overdue"].tap()
+
+        XCTAssertFalse(app.staticTexts["Просроченная задача"].waitForExistence(timeout: 2))
+    }
+
+    func testOpensAnalyticsAndChangesPeriod() {
+        let app = launchApp(completedOnboarding: true)
+
+        XCTAssertTrue(app.tabBars.buttons["Профиль"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Профиль"].tap()
+        app.buttons["profile.analytics"].tap()
+
+        XCTAssertTrue(app.navigationBars["Аналитика"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["25 мин"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Фокус по дням"].exists)
+        XCTAssertTrue(app.staticTexts["История баланса"].exists)
+
+        app.buttons["analytics.period.30"].tap()
+        XCTAssertTrue(app.staticTexts["25 мин"].waitForExistence(timeout: 5))
     }
 
     private func launchApp(completedOnboarding: Bool = false) -> XCUIApplication {

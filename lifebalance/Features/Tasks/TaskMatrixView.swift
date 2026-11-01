@@ -129,7 +129,7 @@ struct TaskMatrixView: View {
             Button("Удалить / ограничить") { viewModel.setQuadrant(task, important: false, urgent: false) }
             Divider()
             Button("Редактировать") { onEdit(task) }
-            Button("Удалить задачу", role: .destructive) { viewModel.delete(task) }
+            Button("Архивировать", role: .destructive) { viewModel.setStatus(.archived, for: task) }
         }
     }
 

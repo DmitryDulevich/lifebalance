@@ -99,12 +99,35 @@ struct AppPersistence {
             lifeArea: area,
             goal: goal
         )
+        let overdueTask = TaskItem(
+            title: "Просроченная задача",
+            dueDate: Calendar.current.date(byAdding: .day, value: -1, to: .now),
+            estimateMinutes: 15,
+            lifeArea: area
+        )
+        let focusSession = FocusSession(
+            startAt: Date.now.addingTimeInterval(-1_500),
+            endAt: .now,
+            plannedSeconds: 1_500,
+            status: .completed,
+            task: task
+        )
+        let balanceSnapshot = BalanceSnapshot(createdAt: Date.now.addingTimeInterval(-3_600))
+        let balanceRating = BalanceRating(
+            value: 7,
+            area: area,
+            snapshot: balanceSnapshot
+        )
         context.insert(settings)
         context.insert(area)
         context.insert(healthArea)
         context.insert(learningArea)
         context.insert(goal)
         context.insert(task)
+        context.insert(overdueTask)
+        context.insert(focusSession)
+        context.insert(balanceSnapshot)
+        context.insert(balanceRating)
         try context.save()
     }
 }

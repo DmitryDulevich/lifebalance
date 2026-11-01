@@ -33,7 +33,11 @@ struct TasksView: View {
                         .accessibilityIdentifier("tasks.add")
                     }
 
-                    SegmentedToggle(options: ["Список", "Матрица"], selection: $viewModel.viewMode)
+                    statusFilters
+
+                    if viewModel.selectedStatus == .active {
+                        SegmentedToggle(options: ["Список", "Матрица"], selection: $viewModel.viewMode)
+                    }
 
                     TextField("Поиск задач", text: $viewModel.searchText)
                         .padding(11)
@@ -56,7 +60,31 @@ struct TasksView: View {
                         }
                     }
 
-                    if viewModel.viewMode == 0 {
+                    if !viewModel.goals.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                FilterChip(
+                                    label: "Все цели",
+                                    isActive: viewModel.selectedGoalID == nil
+                                ) {
+                                    viewModel.selectedGoalID = nil
+                                }
+                                .accessibilityIdentifier("tasks.goal.all")
+
+                                ForEach(viewModel.goals) { goal in
+                                    FilterChip(
+                                        label: goal.title,
+                                        isActive: viewModel.selectedGoalID == goal.id
+                                    ) {
+                                        viewModel.selectedGoalID = goal.id
+                                    }
+                                    .accessibilityIdentifier("tasks.goal.\(goal.id.uuidString)")
+                                }
+                            }
+                        }
+                    }
+
+                    if viewModel.selectedStatus != .active || viewModel.viewMode == 0 {
                         TaskListView(
                             viewModel: viewModel,
                             onPlay: { focusTarget = FocusNavigationTarget(task: $0) },
@@ -84,7 +112,7 @@ struct TasksView: View {
                 TaskFormView(
                     container: container,
                     lifeAreas: viewModel.lifeAreas,
-                    goals: viewModel.goals,
+                    goals: viewModel.formGoals,
                     editingTask: viewModel.editingTask,
                     onSaved: { viewModel.load() }
                 )
@@ -92,5 +120,29 @@ struct TasksView: View {
         }
         .task(id: refreshToken) { viewModel.load() }
         .appErrorAlert($viewModel.errorMessage)
+    }
+
+    private var statusFilters: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(TaskStatus.allCases, id: \.self) { status in
+                    FilterChip(
+                        label: "\(title(for: status)) · \(viewModel.count(for: status))",
+                        isActive: viewModel.selectedStatus == status
+                    ) {
+                        viewModel.selectedStatus = status
+                    }
+                    .accessibilityIdentifier("tasks.filter.\(status.rawValue)")
+                }
+            }
+        }
+    }
+
+    private func title(for status: TaskStatus) -> String {
+        switch status {
+        case .active: "Активные"
+        case .completed: "Выполненные"
+        case .archived: "Архив"
+        }
     }
 }

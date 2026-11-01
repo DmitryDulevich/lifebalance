@@ -32,6 +32,7 @@ struct HeroFocusCard: View {
                     .background(Capsule().fill(.white.opacity(0.22)))
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("today.focus.start")
             .padding(.top, 14)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
