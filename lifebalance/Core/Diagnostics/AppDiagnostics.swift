@@ -124,7 +124,8 @@ final class AppDiagnostics: @unchecked Sendable {
         do {
             let directory = try diagnosticsDirectory()
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-            let name = "metric-\(UUID().uuidString).json"
+            let timestamp = Int64(Date.now.timeIntervalSince1970 * 1_000)
+            let name = "metric-\(String(format: "%013lld", timestamp))-\(UUID().uuidString).json"
             try data.write(to: directory.appending(path: name), options: .atomic)
             try pruneMetricPayloads(in: directory, keeping: 3)
             record(
@@ -235,14 +236,10 @@ final class AppDiagnostics: @unchecked Sendable {
     private func pruneMetricPayloads(in directory: URL, keeping limit: Int) throws {
         let urls = try fileManager.contentsOfDirectory(
             at: directory,
-            includingPropertiesForKeys: [.creationDateKey],
+            includingPropertiesForKeys: nil,
             options: [.skipsHiddenFiles]
         )
-        let sorted = urls.sorted {
-            let lhs = (try? $0.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast
-            let rhs = (try? $1.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast
-            return lhs > rhs
-        }
+        let sorted = urls.sorted { $0.lastPathComponent > $1.lastPathComponent }
         for url in sorted.dropFirst(limit) {
             try fileManager.removeItem(at: url)
         }
