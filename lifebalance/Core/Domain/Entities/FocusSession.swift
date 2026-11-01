@@ -86,7 +86,7 @@ extension LifebalanceSchemaV3 {
         var pausedSeconds: Int
         var pausedAt: Date?
         var status: FocusSessionStatus
-        var task: TaskItem?
+        var task: LifebalanceSchemaV2.TaskItem?
 
         /// Immutable labels used by historical analytics even after related models change.
         var taskIDSnapshot: UUID?
@@ -105,7 +105,7 @@ extension LifebalanceSchemaV3 {
             pausedSeconds: Int = 0,
             pausedAt: Date? = nil,
             status: FocusSessionStatus = .running,
-            task: TaskItem? = nil,
+            task: LifebalanceSchemaV2.TaskItem? = nil,
             taskIDSnapshot: UUID? = nil,
             taskTitleSnapshot: String? = nil,
             lifeAreaIDSnapshot: UUID? = nil,

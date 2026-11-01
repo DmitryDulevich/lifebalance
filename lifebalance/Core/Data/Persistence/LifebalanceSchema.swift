@@ -48,8 +48,8 @@ enum LifebalanceSchemaV3: VersionedSchema {
             LifebalanceSchemaV2.LifeArea.self,
             LifebalanceSchemaV2.BalanceSnapshot.self,
             LifebalanceSchemaV2.BalanceRating.self,
-            TaskItem.self,
-            Goal.self,
+            LifebalanceSchemaV2.TaskItem.self,
+            LifebalanceSchemaV2.Goal.self,
             GoalStatusEvent.self,
             FocusSession.self
         ]

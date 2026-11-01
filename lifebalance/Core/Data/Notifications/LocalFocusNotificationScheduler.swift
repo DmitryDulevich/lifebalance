@@ -12,7 +12,7 @@ final class LocalFocusNotificationScheduler: FocusNotificationScheduling {
 
     func scheduleCompletion(
         sessionID: UUID,
-        taskTitle: String?,
+        taskTitle _: String?,
         after timeInterval: TimeInterval
     ) {
         cancelCompletion(sessionID: sessionID)
@@ -25,9 +25,7 @@ final class LocalFocusNotificationScheduler: FocusNotificationScheduling {
 
                 let content = UNMutableNotificationContent()
                 content.title = String(localized: "Фокус-сессия завершена")
-                content.body = taskTitle.map { title in
-                    String(localized: "Время работы над «\(title)» закончилось.")
-                } ?? String(localized: "Запланированное время фокусировки закончилось.")
+                content.body = String(localized: "Запланированное время фокусировки закончилось.")
                 content.sound = .default
 
                 let trigger = UNTimeIntervalNotificationTrigger(

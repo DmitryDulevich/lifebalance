@@ -51,7 +51,9 @@ struct V2MigrationTests {
         )
 
         let goals = try currentContainer.mainContext.fetch(FetchDescriptor<Goal>())
-        let sessions = try currentContainer.mainContext.fetch(FetchDescriptor<FocusSession>())
+        let sessions = try currentContainer.mainContext.fetch(
+            FetchDescriptor<LifebalanceSchemaV3.FocusSession>()
+        )
         let events = try currentContainer.mainContext.fetch(FetchDescriptor<GoalStatusEvent>())
 
         #expect(goals.map(\.title) == ["Старая цель"])
