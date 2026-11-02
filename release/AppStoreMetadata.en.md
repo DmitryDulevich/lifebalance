@@ -25,6 +25,8 @@ The app includes:
 - goals with progress, pause, completion, and archive states;
 - tasks organized by priority, due date, and goal;
 - a Today screen for daily planning;
+- recurring tasks, habits, and a weekly review;
+- configurable local reminders that do not reveal task names;
 - a focus timer and session history;
 - analytics for completed tasks, focus, goals, and balance;
 - local data storage with no account or advertising.
@@ -47,4 +49,4 @@ The first test release of Balance includes goals, tasks, the Today screen, a foc
 
 ## What to Test
 
-Test onboarding, the complete lifecycle of goals and tasks, rescheduling unfinished tasks, focus sessions with a local notification, analytics, English and Russian UI, and data restoration after restarting the app. Report missing translations, truncated text, disappearing data, blocked UI, or incorrect progress calculations.
+Test onboarding, the complete lifecycle of goals and tasks, rescheduling unfinished tasks, habits, the weekly review, local reminders, the widget, focus sessions, analytics, feedback, English and Russian UI, and data restoration after restarting the app. Report missing translations, truncated text, disappearing data, blocked UI, or incorrect progress calculations.

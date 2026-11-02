@@ -35,7 +35,7 @@ enum StorageDiagnostics {
             StorageHealth(
                 state: .ready,
                 checkedAt: .now,
-                schemaVersion: "3.0.0",
+                schemaVersion: "4.0.0",
                 failureCategory: nil
             )
         )
@@ -46,7 +46,7 @@ enum StorageDiagnostics {
             StorageHealth(
                 state: .fallback,
                 checkedAt: .now,
-                schemaVersion: "3.0.0",
+                schemaVersion: "4.0.0",
                 failureCategory: category(for: error).rawValue
             )
         )
@@ -57,7 +57,7 @@ enum StorageDiagnostics {
             StorageHealth(
                 state: .failed,
                 checkedAt: .now,
-                schemaVersion: "3.0.0",
+                schemaVersion: "4.0.0",
                 failureCategory: category(for: error).rawValue
             )
         )

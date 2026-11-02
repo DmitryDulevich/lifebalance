@@ -25,6 +25,7 @@ final class TasksViewModel {
     private let updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase
     private let setTaskStatusUseCase: SetTaskStatusUseCase
     private let generateRecurringTasksUseCase: GenerateRecurringTasksUseCase?
+    private let refreshRemindersUseCase: RefreshRemindersUseCase?
 
     init(
         taskRepository: TaskRepository,
@@ -33,7 +34,8 @@ final class TasksViewModel {
         toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
         updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase,
         setTaskStatusUseCase: SetTaskStatusUseCase,
-        generateRecurringTasksUseCase: GenerateRecurringTasksUseCase? = nil
+        generateRecurringTasksUseCase: GenerateRecurringTasksUseCase? = nil,
+        refreshRemindersUseCase: RefreshRemindersUseCase? = nil
     ) {
         self.taskRepository = taskRepository
         self.lifeAreaRepository = lifeAreaRepository
@@ -42,6 +44,7 @@ final class TasksViewModel {
         self.updateTaskQuadrantUseCase = updateTaskQuadrantUseCase
         self.setTaskStatusUseCase = setTaskStatusUseCase
         self.generateRecurringTasksUseCase = generateRecurringTasksUseCase
+        self.refreshRemindersUseCase = refreshRemindersUseCase
     }
 
     func load() {
@@ -50,6 +53,7 @@ final class TasksViewModel {
             tasks = try taskRepository.fetchAll()
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
             goals = try goalRepository.fetchAll()
+            Task { try? await refreshRemindersUseCase?.execute() }
             errorMessage = nil
         } catch {
             AppLogger.error(error, context: "tasks.load")

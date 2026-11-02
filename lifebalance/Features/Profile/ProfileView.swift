@@ -25,6 +25,13 @@ struct ProfileView: View {
 
                 Section("Настройки") {
                     NavigationLink {
+                        ReminderSettingsView(container: container)
+                    } label: {
+                        Label("Напоминания", systemImage: "bell.badge")
+                    }
+                    .accessibilityIdentifier("profile.reminders")
+
+                    NavigationLink {
                         AnalyticsView(container: container)
                     } label: {
                         Label("Аналитика и история", systemImage: "chart.xyaxis.line")
@@ -40,6 +47,13 @@ struct ProfileView: View {
                 }
 
                 Section("О приложении") {
+                    NavigationLink {
+                        FeedbackView()
+                    } label: {
+                        Label("Обратная связь", systemImage: "bubble.left.and.bubble.right.fill")
+                    }
+                    .accessibilityIdentifier("profile.feedback")
+
                     NavigationLink {
                         DiagnosticsView()
                     } label: {

@@ -34,7 +34,7 @@ struct StorageHealth: Codable, Sendable {
     static let unknown = StorageHealth(
         state: .unknown,
         checkedAt: .now,
-        schemaVersion: "3.0.0",
+        schemaVersion: "4.0.0",
         failureCategory: nil
     )
 }

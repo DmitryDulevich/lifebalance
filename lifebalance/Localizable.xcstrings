@@ -2937,6 +2937,135 @@
         }
       }
     },
+    "В момент срока": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "At the due time" } } }
+    },
+    "Время": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Time" } } }
+    },
+    "Время для привычек": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Time for your habits" } } }
+    },
+    "Время подвести итоги недели": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Time for your weekly review" } } }
+    },
+    "День недели": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Day of week" } } }
+    },
+    "Доступ": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Access" } } }
+    },
+    "Другое": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Other" } } }
+    },
+    "Ежедневное напоминание": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Daily reminder" } } }
+    },
+    "Еженедельный обзор": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Weekly review" } } }
+    },
+    "За 1 день": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "1 day before" } } }
+    },
+    "За 1 час": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "1 hour before" } } }
+    },
+    "За 15 минут": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "15 minutes before" } } }
+    },
+    "За сколько": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Lead time" } } }
+    },
+    "Запрещены": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Denied" } } }
+    },
+    "Когда вы готовите сообщение через экран обратной связи, приложение создаёт локальный текстовый файл. Вы сами выбираете приложение и получателя для отправки. Диагностика добавляется только по вашему выбору, а автоматическая передача отсутствует.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "When you prepare a message on the feedback screen, the app creates a local text file. You choose the app and recipient used to send it. Diagnostics are included only if you choose to add them, and nothing is sent automatically." } } }
+    },
+    "На заблокированном экране название задачи не показывается.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "The task name is not shown on the Lock Screen." } } }
+    },
+    "Напоминания": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Reminders" } } }
+    },
+    "Напоминать об обзоре": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Review reminder" } } }
+    },
+    "Напоминать перед сроком": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Remind before due date" } } }
+    },
+    "Не запрашивались": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Not requested" } } }
+    },
+    "Не удалось подготовить сообщение": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Couldn’t prepare the message" } } }
+    },
+    "Обратная связь": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Feedback" } } }
+    },
+    "Откройте «Баланс», чтобы проверить запланированную задачу.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Open Balance to check your scheduled task." } } }
+    },
+    "Открыть настройки iOS": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Open iOS Settings" } } }
+    },
+    "Отметьте сегодняшние привычки и сохраните ритм.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Check in with today’s habits and keep your rhythm." } } }
+    },
+    "Отправить": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Send" } } }
+    },
+    "Оценить в App Store": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Rate on the App Store" } } }
+    },
+    "Подготовить сообщение": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Prepare message" } } }
+    },
+    "Поддержать приложение": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Support the app" } } }
+    },
+    "После подготовки выберите удобное приложение для отправки. Диагностика добавляется только по вашему выбору.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "After preparing the message, choose an app to send it. Diagnostics are included only if you choose to add them." } } }
+    },
+    "Посмотрите результаты и выберите приоритеты следующей недели.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Review your results and choose next week’s priorities." } } }
+    },
+    "Предложение": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Suggestion" } } }
+    },
+    "Приложить диагностику": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Include diagnostics" } } }
+    },
+    "Проблема": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Problem" } } }
+    },
+    "Разрешены": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Allowed" } } }
+    },
+    "Разрешите уведомления в настройках iOS.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Allow notifications in iOS Settings." } } }
+    },
+    "Расскажите, что можно улучшить": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Tell us what could be improved" } } }
+    },
+    "С вашего разрешения приложение создаёт локальные уведомления о завершении фокус-сессии, сроках задач, привычках и еженедельном обзоре. Названия задач не показываются в напоминаниях. Для этого данные не отправляются на сервер. Разрешение можно отозвать в системных настройках iOS.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "With your permission, the app creates local notifications for completed focus sessions, task due dates, habits, and weekly reviews. Task names are not shown in reminders. No data is sent to a server for this purpose. You can revoke permission in iOS Settings." } } }
+    },
+    "Скоро срок задачи": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "A task is due soon" } } }
+    },
+    "Сообщение разработчику": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Message to the developer" } } }
+    },
+    "Тип обращения": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Feedback type" } } }
+    },
+    "Уведомления": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Notifications" } } }
+    },
+    "iOS самостоятельно решает, когда показать окно оценки.": {
+      "localizations": { "en": { "stringUnit": { "state": "translated", "value": "iOS decides when to show the rating prompt." } } }
+    },
     "–": {
       "localizations": {
         "en": {

@@ -33,6 +33,7 @@ final class TodayViewModel {
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
     private let rescheduleTasksUseCase: RescheduleTasksUseCase
     private let generateRecurringTasksUseCase: GenerateRecurringTasksUseCase?
+    private let refreshRemindersUseCase: RefreshRemindersUseCase?
 
     init(
         lifeAreaRepository: LifeAreaRepository,
@@ -41,7 +42,8 @@ final class TodayViewModel {
         focusSessionRepository: FocusSessionRepository,
         toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
         rescheduleTasksUseCase: RescheduleTasksUseCase,
-        generateRecurringTasksUseCase: GenerateRecurringTasksUseCase? = nil
+        generateRecurringTasksUseCase: GenerateRecurringTasksUseCase? = nil,
+        refreshRemindersUseCase: RefreshRemindersUseCase? = nil
     ) {
         self.lifeAreaRepository = lifeAreaRepository
         self.taskRepository = taskRepository
@@ -50,6 +52,7 @@ final class TodayViewModel {
         self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
         self.rescheduleTasksUseCase = rescheduleTasksUseCase
         self.generateRecurringTasksUseCase = generateRecurringTasksUseCase
+        self.refreshRemindersUseCase = refreshRemindersUseCase
     }
 
     func load() {
@@ -114,6 +117,7 @@ final class TodayViewModel {
                     )
                 }
             ))
+            Task { try? await refreshRemindersUseCase?.execute() }
         } catch {
             AppLogger.error(error, context: "today.load")
             state = .error(error.localizedDescription)

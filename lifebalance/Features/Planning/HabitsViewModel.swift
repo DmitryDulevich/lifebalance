@@ -25,17 +25,20 @@ final class HabitsViewModel {
     private let habitRepository: HabitRepository
     private let lifeAreaRepository: LifeAreaRepository
     private let manageHabitsUseCase: ManageHabitsUseCase
+    private let refreshRemindersUseCase: RefreshRemindersUseCase?
 
     init(
         habitRepository: HabitRepository,
         lifeAreaRepository: LifeAreaRepository,
         manageHabitsUseCase: ManageHabitsUseCase,
-        recurringTaskRepository: RecurringTaskRepository
+        recurringTaskRepository: RecurringTaskRepository,
+        refreshRemindersUseCase: RefreshRemindersUseCase? = nil
     ) {
         self.habitRepository = habitRepository
         self.lifeAreaRepository = lifeAreaRepository
         self.manageHabitsUseCase = manageHabitsUseCase
         self.recurringTaskRepository = recurringTaskRepository
+        self.refreshRemindersUseCase = refreshRemindersUseCase
     }
 
     func load(now: Date = .now, calendar: Calendar = .current) {
@@ -56,6 +59,7 @@ final class HabitsViewModel {
                 )
             }
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
+            Task { try? await refreshRemindersUseCase?.execute() }
             errorMessage = nil
         } catch {
             AppLogger.error(error, context: "habits.load")

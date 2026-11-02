@@ -15,17 +15,20 @@ final class GoalDetailViewModel {
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
     private let setTaskStatusUseCase: SetTaskStatusUseCase
     private let setGoalStatusUseCase: SetGoalStatusUseCase
+    private let refreshRemindersUseCase: RefreshRemindersUseCase?
 
     init(
         goal: Goal,
         toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
         setTaskStatusUseCase: SetTaskStatusUseCase,
-        setGoalStatusUseCase: SetGoalStatusUseCase
+        setGoalStatusUseCase: SetGoalStatusUseCase,
+        refreshRemindersUseCase: RefreshRemindersUseCase? = nil
     ) {
         self.goal = goal
         self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
         self.setTaskStatusUseCase = setTaskStatusUseCase
         self.setGoalStatusUseCase = setGoalStatusUseCase
+        self.refreshRemindersUseCase = refreshRemindersUseCase
         self.tasks = Self.sortedTasks(for: goal)
         self.progress = GoalProgressCalculator.summary(for: goal)
     }
@@ -57,6 +60,7 @@ final class GoalDetailViewModel {
             try toggleTaskCompletionUseCase.execute(task)
             errorMessage = nil
             reloadPresentationState()
+            refreshReminders()
             if previousProgress.fraction < 1,
                progress.totalTaskCount > 0,
                progress.fraction == 1,
@@ -74,6 +78,7 @@ final class GoalDetailViewModel {
         do {
             try setTaskStatusUseCase.execute(task, status: .archived)
             reloadPresentationState()
+            refreshReminders()
             errorMessage = nil
         } catch {
             AppLogger.error(error, context: "goal_detail.archive_task")
@@ -98,6 +103,11 @@ final class GoalDetailViewModel {
 
     func taskWasSaved() {
         reloadPresentationState()
+        refreshReminders()
+    }
+
+    private func refreshReminders() {
+        Task { try? await refreshRemindersUseCase?.execute() }
     }
 
     private func reloadPresentationState() {

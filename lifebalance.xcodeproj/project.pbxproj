@@ -11,13 +11,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E50000000000000000000007 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CE95506E2F5B5467000E20E2 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E50000000000000000000006;
-			remoteInfo = TodayWidget;
-		};
 		A10000000000000000000007 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CE95506E2F5B5467000E20E2 /* Project object */;
@@ -45,6 +38,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = CE9550752F5B5467000E20E2;
 			remoteInfo = lifebalance;
+		};
+		E50000000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE95506E2F5B5467000E20E2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E50000000000000000000006;
+			remoteInfo = TodayWidget;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -76,7 +76,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				TodayWidget.entitlements,
 			);
 			target = E50000000000000000000006 /* TodayWidget */;
 		};

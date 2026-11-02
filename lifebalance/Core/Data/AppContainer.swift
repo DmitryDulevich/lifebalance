@@ -13,6 +13,8 @@ final class AppContainer {
     let habitRepository: HabitRepository
     let weeklyReviewRepository: WeeklyReviewRepository
     let focusNotificationScheduler: FocusNotificationScheduling
+    let reminderScheduler: ReminderScheduling
+    let reminderPreferencesStore: ReminderPreferencesStore
 
     let selectLifeAreasUseCase: SelectLifeAreasUseCase
     let saveBalanceSnapshotUseCase: SaveBalanceSnapshotUseCase
@@ -36,6 +38,7 @@ final class AppContainer {
     let generateRecurringTasksUseCase: GenerateRecurringTasksUseCase
     let manageHabitsUseCase: ManageHabitsUseCase
     let buildWeeklyReviewUseCase: BuildWeeklyReviewUseCase
+    let refreshRemindersUseCase: RefreshRemindersUseCase
 
     init(modelContext: ModelContext) {
         let lifeAreaRepository = SwiftDataLifeAreaRepository(context: modelContext)
@@ -60,6 +63,12 @@ final class AppContainer {
         self.focusNotificationScheduler = ProcessInfo.processInfo.arguments.contains("--ui-testing")
             ? NoopFocusNotificationScheduler()
             : LocalFocusNotificationScheduler()
+        let reminderPreferencesStore = ReminderPreferencesStore()
+        let reminderScheduler: ReminderScheduling = ProcessInfo.processInfo.arguments.contains("--ui-testing")
+            ? NoopReminderScheduler()
+            : LocalReminderScheduler()
+        self.reminderPreferencesStore = reminderPreferencesStore
+        self.reminderScheduler = reminderScheduler
 
         self.selectLifeAreasUseCase = SelectLifeAreasUseCase(
             lifeAreaRepository: lifeAreaRepository,
@@ -111,16 +120,31 @@ final class AppContainer {
             balanceRepository: balanceRepository,
             habitRepository: habitRepository
         )
+        self.refreshRemindersUseCase = RefreshRemindersUseCase(
+            taskRepository: taskRepository,
+            habitRepository: habitRepository,
+            preferencesStore: reminderPreferencesStore,
+            scheduler: reminderScheduler
+        )
     }
 }
 
 extension AppContainer {
+    func makeReminderSettingsViewModel() -> ReminderSettingsViewModel {
+        ReminderSettingsViewModel(
+            preferencesStore: reminderPreferencesStore,
+            scheduler: reminderScheduler,
+            refreshRemindersUseCase: refreshRemindersUseCase
+        )
+    }
+
     func makeHabitsViewModel() -> HabitsViewModel {
         HabitsViewModel(
             habitRepository: habitRepository,
             lifeAreaRepository: lifeAreaRepository,
             manageHabitsUseCase: manageHabitsUseCase,
-            recurringTaskRepository: recurringTaskRepository
+            recurringTaskRepository: recurringTaskRepository,
+            refreshRemindersUseCase: refreshRemindersUseCase
         )
     }
 
@@ -140,7 +164,8 @@ extension AppContainer {
             toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
             updateTaskQuadrantUseCase: updateTaskQuadrantUseCase,
             setTaskStatusUseCase: setTaskStatusUseCase,
-            generateRecurringTasksUseCase: generateRecurringTasksUseCase
+            generateRecurringTasksUseCase: generateRecurringTasksUseCase,
+            refreshRemindersUseCase: refreshRemindersUseCase
         )
     }
 
@@ -165,7 +190,8 @@ extension AppContainer {
             goal: goal,
             toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
             setTaskStatusUseCase: setTaskStatusUseCase,
-            setGoalStatusUseCase: setGoalStatusUseCase
+            setGoalStatusUseCase: setGoalStatusUseCase,
+            refreshRemindersUseCase: refreshRemindersUseCase
         )
     }
 
@@ -194,7 +220,8 @@ extension AppContainer {
             focusSessionRepository: focusSessionRepository,
             toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
             rescheduleTasksUseCase: rescheduleTasksUseCase,
-            generateRecurringTasksUseCase: generateRecurringTasksUseCase
+            generateRecurringTasksUseCase: generateRecurringTasksUseCase,
+            refreshRemindersUseCase: refreshRemindersUseCase
         )
     }
 
