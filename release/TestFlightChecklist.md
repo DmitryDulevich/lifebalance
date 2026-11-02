@@ -3,6 +3,7 @@
 ## Уже подготовлено в проекте
 
 - [x] Bundle ID: `com.dds.lifebalance`
+- [x] Widget Bundle ID: `com.dds.lifebalance.TodayWidget`
 - [x] Версия `1.0`, build `1`
 - [x] Deployment target iOS 17.0
 - [x] Automatic signing
@@ -19,6 +20,9 @@
 
 - [ ] Устранить блокировку Xcode Accounts: у текущей учётной записи нет App Store Connect provider
 - [ ] Создать или загрузить App Store distribution provisioning profile для `com.dds.lifebalance`
+- [ ] Зарегистрировать App Group `group.com.dds.lifebalance`
+- [ ] Включить App Groups для `com.dds.lifebalance` и `com.dds.lifebalance.TodayWidget`
+- [ ] Обновить provisioning profiles приложения и виджета после регистрации App Group
 - [ ] Включить GitHub Pages для каталога `/docs` и проверить публичный Privacy Policy URL
 - [ ] Опубликовать Support URL с реальными контактными данными
 - [ ] Создать приложение в App Store Connect с Bundle ID `com.dds.lifebalance`

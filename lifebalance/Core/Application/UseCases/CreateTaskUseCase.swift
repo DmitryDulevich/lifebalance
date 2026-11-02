@@ -9,12 +9,14 @@ struct TaskInput {
     var estimateMinutes: Int?
     var lifeArea: LifeArea?
     var goal: Goal?
+    var recurrence: TaskRecurrenceInput? = nil
 }
 
 enum TaskValidationError: LocalizedError {
     case emptyTitle
     case titleTooLong
     case invalidEstimate
+    case recurrenceRequiresDate
 
     var errorDescription: String? {
         switch self {
@@ -24,6 +26,8 @@ enum TaskValidationError: LocalizedError {
             return String(localized: "Название задачи не должно превышать 120 символов.")
         case .invalidEstimate:
             return String(localized: "Оценка времени должна быть от 1 минуты до 24 часов.")
+        case .recurrenceRequiresDate:
+            return String(localized: "Для повторяющейся задачи укажите дату первого выполнения.")
         }
     }
 }
@@ -44,6 +48,9 @@ enum TaskInputValidator {
         if let estimate = normalized.estimateMinutes {
             guard validEstimateMinutes.contains(estimate) else { throw TaskValidationError.invalidEstimate }
         }
+        if normalized.recurrence != nil, normalized.dueDate == nil {
+            throw TaskValidationError.recurrenceRequiresDate
+        }
         return normalized
     }
 }
@@ -55,9 +62,11 @@ private extension String {
 @MainActor
 final class CreateTaskUseCase {
     private let taskRepository: TaskRepository
+    private let recurringTaskRepository: RecurringTaskRepository?
 
-    init(taskRepository: TaskRepository) {
+    init(taskRepository: TaskRepository, recurringTaskRepository: RecurringTaskRepository? = nil) {
         self.taskRepository = taskRepository
+        self.recurringTaskRepository = recurringTaskRepository
     }
 
     @discardableResult
@@ -75,6 +84,34 @@ final class CreateTaskUseCase {
             goal: input.goal
         )
         try taskRepository.insert(task)
+
+        if let recurrence = input.recurrence,
+           let firstDate = input.dueDate,
+           let recurringTaskRepository {
+            let template = RecurringTask(
+                sourceTaskID: task.id,
+                title: input.title,
+                taskNote: input.note,
+                frequency: recurrence.frequency,
+                recurrenceInterval: recurrence.interval,
+                nextDueDate: RecurrenceCalculator.nextDate(
+                    after: firstDate,
+                    frequency: recurrence.frequency,
+                    interval: recurrence.interval
+                ),
+                important: input.important,
+                urgent: input.urgent,
+                estimateMinutes: input.estimateMinutes,
+                lifeArea: input.lifeArea,
+                goal: input.goal
+            )
+            do {
+                try recurringTaskRepository.insert(template)
+            } catch {
+                try? taskRepository.delete(task)
+                throw error
+            }
+        }
         return task
     }
 }

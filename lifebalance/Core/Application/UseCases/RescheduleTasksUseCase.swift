@@ -49,4 +49,33 @@ final class RescheduleTasksUseCase {
             throw error
         }
     }
+
+    func move(
+        _ tasks: [TaskItem],
+        to day: Date,
+        calendar: Calendar = .current
+    ) throws {
+        guard tasks.allSatisfy({ $0.status == .active }) else {
+            throw TaskRescheduleError.inactiveTask
+        }
+        guard !tasks.isEmpty else { return }
+
+        let previousDates = tasks.map { ($0, $0.dueDate) }
+        let targetDay = calendar.startOfDay(for: day)
+        for task in tasks {
+            let source = task.dueDate ?? day
+            let time = calendar.dateComponents([.hour, .minute], from: source)
+            task.dueDate = calendar.date(
+                bySettingHour: time.hour ?? 9,
+                minute: time.minute ?? 0,
+                second: 0,
+                of: targetDay
+            ) ?? targetDay
+        }
+
+        do { try taskRepository.save() } catch {
+            for (task, dueDate) in previousDates { task.dueDate = dueDate }
+            throw error
+        }
+    }
 }

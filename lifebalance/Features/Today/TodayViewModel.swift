@@ -32,6 +32,7 @@ final class TodayViewModel {
     private let focusSessionRepository: FocusSessionRepository
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
     private let rescheduleTasksUseCase: RescheduleTasksUseCase
+    private let generateRecurringTasksUseCase: GenerateRecurringTasksUseCase?
 
     init(
         lifeAreaRepository: LifeAreaRepository,
@@ -39,7 +40,8 @@ final class TodayViewModel {
         goalRepository: GoalRepository,
         focusSessionRepository: FocusSessionRepository,
         toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
-        rescheduleTasksUseCase: RescheduleTasksUseCase
+        rescheduleTasksUseCase: RescheduleTasksUseCase,
+        generateRecurringTasksUseCase: GenerateRecurringTasksUseCase? = nil
     ) {
         self.lifeAreaRepository = lifeAreaRepository
         self.taskRepository = taskRepository
@@ -47,12 +49,14 @@ final class TodayViewModel {
         self.focusSessionRepository = focusSessionRepository
         self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
         self.rescheduleTasksUseCase = rescheduleTasksUseCase
+        self.generateRecurringTasksUseCase = generateRecurringTasksUseCase
     }
 
     func load() {
         state = .loading
         errorMessage = nil
         do {
+            try generateRecurringTasksUseCase?.execute()
             let areas = try lifeAreaRepository.fetchActiveAreas()
             let allTasks = try taskRepository.fetchAll()
             let goals = try goalRepository.fetchActive()
@@ -83,7 +87,7 @@ final class TodayViewModel {
                     return partial + elapsed
                 }
 
-            state = .content(Content(
+            let content = Content(
                 lifeAreas: areas,
                 heroTask: overdue.first ?? today.first,
                 overdueTasks: overdue,
@@ -94,6 +98,20 @@ final class TodayViewModel {
                 focusMinutesToday: focusSeconds / 60,
                 activeGoals: goals.map {
                     GoalSummary(goal: $0, progress: GoalProgressCalculator.summary(for: $0))
+                }
+            )
+            state = .content(content)
+            let overdueIDs = Set(overdue.map(\.id))
+            TodayWidgetSnapshotStore.save(TodayWidgetSnapshot(
+                updatedAt: now,
+                completedCount: content.completedCountToday,
+                totalCount: content.totalCountToday,
+                focusMinutes: content.focusMinutesToday,
+                tasks: Array((overdue + today).prefix(3)).map {
+                    TodayWidgetSnapshot.Task(
+                        title: $0.title,
+                        isOverdue: overdueIDs.contains($0.id)
+                    )
                 }
             ))
         } catch {

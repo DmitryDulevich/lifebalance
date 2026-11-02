@@ -24,7 +24,7 @@ struct AppPersistence {
                 startupErrorMessage: nil
             )
             StorageDiagnostics.markReady()
-            AppLogger.info("storage.container.ready", metadata: ["schema": "3.0.0"])
+            AppLogger.info("storage.container.ready", metadata: ["schema": "4.0.0"])
             return persistence
         } catch {
             let originalError = error
@@ -52,7 +52,7 @@ struct AppPersistence {
     }
 
     static func makeContainer(isStoredInMemoryOnly: Bool = false) throws -> ModelContainer {
-        let schema = Schema(versionedSchema: LifebalanceSchemaV3.self)
+        let schema = Schema(versionedSchema: LifebalanceSchemaV4.self)
         let configuration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: isStoredInMemoryOnly

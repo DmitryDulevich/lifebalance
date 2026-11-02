@@ -32,7 +32,7 @@ struct V1MigrationTests {
             try oldContainer.mainContext.save()
         }
 
-        let currentSchema = Schema(versionedSchema: LifebalanceSchemaV3.self)
+        let currentSchema = Schema(versionedSchema: LifebalanceSchemaV4.self)
         let currentConfiguration = ModelConfiguration(
             schema: currentSchema,
             url: storeURL,

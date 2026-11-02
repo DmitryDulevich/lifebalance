@@ -17,11 +17,12 @@ struct PersistenceTests {
 
     @Test
     func migrationPlanContainsAllReleasedTransitions() {
-        #expect(LifebalanceMigrationPlan.schemas.count == 3)
-        #expect(LifebalanceMigrationPlan.stages.count == 2)
+        #expect(LifebalanceMigrationPlan.schemas.count == 4)
+        #expect(LifebalanceMigrationPlan.stages.count == 3)
         #expect(LifebalanceSchemaV1.versionIdentifier == Schema.Version(1, 0, 0))
         #expect(LifebalanceSchemaV2.versionIdentifier == Schema.Version(2, 0, 0))
         #expect(LifebalanceSchemaV3.versionIdentifier == Schema.Version(3, 0, 0))
+        #expect(LifebalanceSchemaV4.versionIdentifier == Schema.Version(4, 0, 0))
     }
 
     @Test

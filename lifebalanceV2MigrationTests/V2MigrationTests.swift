@@ -38,7 +38,7 @@ struct V2MigrationTests {
             try oldContainer.mainContext.save()
         }
 
-        let currentSchema = Schema(versionedSchema: LifebalanceSchemaV3.self)
+        let currentSchema = Schema(versionedSchema: LifebalanceSchemaV4.self)
         let currentConfiguration = ModelConfiguration(
             schema: currentSchema,
             url: storeURL,
@@ -55,9 +55,11 @@ struct V2MigrationTests {
             FetchDescriptor<LifebalanceSchemaV3.FocusSession>()
         )
         let events = try currentContainer.mainContext.fetch(FetchDescriptor<GoalStatusEvent>())
+        let habits = try currentContainer.mainContext.fetch(FetchDescriptor<Habit>())
 
         #expect(goals.map(\.title) == ["Старая цель"])
         #expect(events.isEmpty)
+        #expect(habits.isEmpty)
         #expect(sessions.first?.taskTitleSnapshot == nil)
         #expect(sessions.first?.task?.title == "Старая задача")
     }

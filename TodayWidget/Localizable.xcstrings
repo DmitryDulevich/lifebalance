@@ -1,0 +1,46 @@
+{
+  "sourceLanguage" : "ru",
+  "strings" : {
+    "%lld мин фокуса" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld focus min"
+          }
+        }
+      }
+    },
+    "Задачи и прогресс текущего дня." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasks and progress for today."
+          }
+        }
+      }
+    },
+    "План выполнен" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan completed"
+          }
+        }
+      }
+    },
+    "Сегодня" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

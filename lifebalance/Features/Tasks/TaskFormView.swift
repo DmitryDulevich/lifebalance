@@ -75,6 +75,26 @@ struct TaskFormView: View {
                         .keyboardType(.numberPad)
                 }
 
+                if !viewModel.isEditing {
+                    Section("Повторение") {
+                        Toggle("Повторять задачу", isOn: $viewModel.recurrenceEnabled)
+                            .onChange(of: viewModel.recurrenceEnabled) { _, enabled in
+                                if enabled && !viewModel.hasDueDate {
+                                    viewModel.hasDueDate = true
+                                    viewModel.dueDate = .now
+                                }
+                            }
+
+                        if viewModel.recurrenceEnabled {
+                            Picker("Периодичность", selection: $viewModel.recurrenceFrequency) {
+                                ForEach(RecurrenceFrequency.allCases, id: \.self) { frequency in
+                                    Text(frequency.localizedTitle).tag(frequency)
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if let error = viewModel.errorMessage {
                     Text(error).foregroundStyle(.red)
                 }

@@ -61,6 +61,8 @@ struct TodayView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     header
 
+                    planningLinks
+
                     if let hero = data.heroTask {
                         HeroFocusCard(
                             title: hero.title,
@@ -146,6 +148,40 @@ struct TodayView: View {
                 .foregroundStyle(Palette.textPrimary)
         }
         .padding(.top, 8)
+    }
+
+    private var planningLinks: some View {
+        HStack(spacing: 10) {
+            NavigationLink {
+                WeeklyReviewView(container: container)
+            } label: {
+                planningCard(title: String(localized: "Обзор недели"), icon: "calendar.badge.checkmark")
+            }
+            .accessibilityIdentifier("today.weekly_review")
+
+            NavigationLink {
+                HabitsView(container: container)
+            } label: {
+                planningCard(title: String(localized: "Привычки"), icon: "repeat.circle.fill")
+            }
+            .accessibilityIdentifier("today.habits")
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func planningCard(title: String, icon: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .foregroundStyle(Palette.accent)
+            Text(title)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(Palette.textPrimary)
+                .lineLimit(1)
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity)
+        .background(RoundedRectangle(cornerRadius: 14).fill(Palette.cardBackground))
     }
 
     private func section(

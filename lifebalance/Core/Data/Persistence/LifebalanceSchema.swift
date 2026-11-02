@@ -56,12 +56,37 @@ enum LifebalanceSchemaV3: VersionedSchema {
     }
 }
 
+/// Adds planning features without changing the existing task graph.
+/// Recurrence templates generate independent task instances, so completed
+/// occurrences remain available to history and analytics.
+enum LifebalanceSchemaV4: VersionedSchema {
+    static let versionIdentifier = Schema.Version(4, 0, 0)
+
+    static var models: [any PersistentModel.Type] {
+        [
+            LifebalanceSchemaV2.UserSettings.self,
+            LifebalanceSchemaV2.LifeArea.self,
+            LifebalanceSchemaV2.BalanceSnapshot.self,
+            LifebalanceSchemaV2.BalanceRating.self,
+            LifebalanceSchemaV2.TaskItem.self,
+            LifebalanceSchemaV2.Goal.self,
+            LifebalanceSchemaV3.GoalStatusEvent.self,
+            LifebalanceSchemaV3.FocusSession.self,
+            RecurringTask.self,
+            Habit.self,
+            HabitCheckIn.self,
+            WeeklyReview.self
+        ]
+    }
+}
+
 enum LifebalanceMigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
         [
             LifebalanceSchemaV1.self,
             LifebalanceSchemaV2.self,
-            LifebalanceSchemaV3.self
+            LifebalanceSchemaV3.self,
+            LifebalanceSchemaV4.self
         ]
     }
 
@@ -74,6 +99,10 @@ enum LifebalanceMigrationPlan: SchemaMigrationPlan {
             .lightweight(
                 fromVersion: LifebalanceSchemaV2.self,
                 toVersion: LifebalanceSchemaV3.self
+            ),
+            .lightweight(
+                fromVersion: LifebalanceSchemaV3.self,
+                toVersion: LifebalanceSchemaV4.self
             )
         ]
     }

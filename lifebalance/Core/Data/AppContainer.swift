@@ -9,6 +9,9 @@ final class AppContainer {
     let taskRepository: TaskRepository
     let goalRepository: GoalRepository
     let focusSessionRepository: FocusSessionRepository
+    let recurringTaskRepository: RecurringTaskRepository
+    let habitRepository: HabitRepository
+    let weeklyReviewRepository: WeeklyReviewRepository
     let focusNotificationScheduler: FocusNotificationScheduling
 
     let selectLifeAreasUseCase: SelectLifeAreasUseCase
@@ -30,6 +33,9 @@ final class AppContainer {
     let adjustBalanceRatingUseCase: AdjustBalanceRatingUseCase
     let manageLifeAreasUseCase: ManageLifeAreasUseCase
     let buildAnalyticsUseCase: BuildAnalyticsUseCase
+    let generateRecurringTasksUseCase: GenerateRecurringTasksUseCase
+    let manageHabitsUseCase: ManageHabitsUseCase
+    let buildWeeklyReviewUseCase: BuildWeeklyReviewUseCase
 
     init(modelContext: ModelContext) {
         let lifeAreaRepository = SwiftDataLifeAreaRepository(context: modelContext)
@@ -38,6 +44,9 @@ final class AppContainer {
         let taskRepository = SwiftDataTaskRepository(context: modelContext)
         let goalRepository = SwiftDataGoalRepository(context: modelContext)
         let focusSessionRepository = SwiftDataFocusSessionRepository(context: modelContext)
+        let recurringTaskRepository = SwiftDataRecurringTaskRepository(context: modelContext)
+        let habitRepository = SwiftDataHabitRepository(context: modelContext)
+        let weeklyReviewRepository = SwiftDataWeeklyReviewRepository(context: modelContext)
 
         self.lifeAreaRepository = lifeAreaRepository
         self.userSettingsRepository = userSettingsRepository
@@ -45,6 +54,9 @@ final class AppContainer {
         self.taskRepository = taskRepository
         self.goalRepository = goalRepository
         self.focusSessionRepository = focusSessionRepository
+        self.recurringTaskRepository = recurringTaskRepository
+        self.habitRepository = habitRepository
+        self.weeklyReviewRepository = weeklyReviewRepository
         self.focusNotificationScheduler = ProcessInfo.processInfo.arguments.contains("--ui-testing")
             ? NoopFocusNotificationScheduler()
             : LocalFocusNotificationScheduler()
@@ -61,7 +73,10 @@ final class AppContainer {
             userSettingsRepository: userSettingsRepository
         )
 
-        self.createTaskUseCase = CreateTaskUseCase(taskRepository: taskRepository)
+        self.createTaskUseCase = CreateTaskUseCase(
+            taskRepository: taskRepository,
+            recurringTaskRepository: recurringTaskRepository
+        )
         self.updateTaskUseCase = UpdateTaskUseCase(taskRepository: taskRepository)
         self.toggleTaskCompletionUseCase = ToggleTaskCompletionUseCase(taskRepository: taskRepository)
         self.setTaskStatusUseCase = SetTaskStatusUseCase(taskRepository: taskRepository)
@@ -88,10 +103,35 @@ final class AppContainer {
             goalRepository: goalRepository,
             balanceRepository: balanceRepository
         )
+        self.generateRecurringTasksUseCase = GenerateRecurringTasksUseCase(repository: recurringTaskRepository)
+        self.manageHabitsUseCase = ManageHabitsUseCase(repository: habitRepository)
+        self.buildWeeklyReviewUseCase = BuildWeeklyReviewUseCase(
+            taskRepository: taskRepository,
+            focusSessionRepository: focusSessionRepository,
+            balanceRepository: balanceRepository,
+            habitRepository: habitRepository
+        )
     }
 }
 
 extension AppContainer {
+    func makeHabitsViewModel() -> HabitsViewModel {
+        HabitsViewModel(
+            habitRepository: habitRepository,
+            lifeAreaRepository: lifeAreaRepository,
+            manageHabitsUseCase: manageHabitsUseCase,
+            recurringTaskRepository: recurringTaskRepository
+        )
+    }
+
+    func makeWeeklyReviewViewModel() -> WeeklyReviewViewModel {
+        WeeklyReviewViewModel(
+            buildUseCase: buildWeeklyReviewUseCase,
+            reviewRepository: weeklyReviewRepository,
+            rescheduleTasksUseCase: rescheduleTasksUseCase
+        )
+    }
+
     func makeTasksViewModel() -> TasksViewModel {
         TasksViewModel(
             taskRepository: taskRepository,
@@ -99,7 +139,8 @@ extension AppContainer {
             goalRepository: goalRepository,
             toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
             updateTaskQuadrantUseCase: updateTaskQuadrantUseCase,
-            setTaskStatusUseCase: setTaskStatusUseCase
+            setTaskStatusUseCase: setTaskStatusUseCase,
+            generateRecurringTasksUseCase: generateRecurringTasksUseCase
         )
     }
 
@@ -152,7 +193,8 @@ extension AppContainer {
             goalRepository: goalRepository,
             focusSessionRepository: focusSessionRepository,
             toggleTaskCompletionUseCase: toggleTaskCompletionUseCase,
-            rescheduleTasksUseCase: rescheduleTasksUseCase
+            rescheduleTasksUseCase: rescheduleTasksUseCase,
+            generateRecurringTasksUseCase: generateRecurringTasksUseCase
         )
     }
 

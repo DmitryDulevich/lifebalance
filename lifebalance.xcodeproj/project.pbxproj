@@ -6,7 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E5000000000000000000000D /* TodayWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E50000000000000000000001 /* TodayWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		E50000000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE95506E2F5B5467000E20E2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E50000000000000000000006;
+			remoteInfo = TodayWidget;
+		};
 		A10000000000000000000007 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CE95506E2F5B5467000E20E2 /* Project object */;
@@ -37,13 +48,39 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E5000000000000000000000C /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				E5000000000000000000000D /* TodayWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		A10000000000000000000001 /* lifebalanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B20000000000000000000001 /* lifebalanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C30000000000000000000001 /* lifebalanceV1MigrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceV1MigrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9550762F5B5467000E20E2 /* lifebalance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lifebalance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40000000000000000000001 /* lifebalanceV2MigrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lifebalanceV2MigrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E50000000000000000000001 /* TodayWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TodayWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E5000000000000000000000E /* Exceptions for "TodayWidget" folder in "TodayWidget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				TodayWidget.entitlements,
+			);
+			target = E50000000000000000000006 /* TodayWidget */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A10000000000000000000002 /* lifebalanceTests */ = {
@@ -69,6 +106,14 @@
 		D40000000000000000000002 /* lifebalanceV2MigrationTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = lifebalanceV2MigrationTests;
+			sourceTree = "<group>";
+		};
+		E50000000000000000000002 /* TodayWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E5000000000000000000000E /* Exceptions for "TodayWidget" folder in "TodayWidget" target */,
+			);
+			path = TodayWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -109,6 +154,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E50000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -120,6 +172,7 @@
 				C30000000000000000000002 /* lifebalanceV1MigrationTests */,
 				D40000000000000000000002 /* lifebalanceV2MigrationTests */,
 				B20000000000000000000002 /* lifebalanceUITests */,
+				E50000000000000000000002 /* TodayWidget */,
 				CE9550772F5B5467000E20E2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -132,6 +185,7 @@
 				C30000000000000000000001 /* lifebalanceV1MigrationTests.xctest */,
 				D40000000000000000000001 /* lifebalanceV2MigrationTests.xctest */,
 				B20000000000000000000001 /* lifebalanceUITests.xctest */,
+				E50000000000000000000001 /* TodayWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,10 +269,12 @@
 				CE9550722F5B5467000E20E2 /* Sources */,
 				CE9550732F5B5467000E20E2 /* Frameworks */,
 				CE9550742F5B5467000E20E2 /* Resources */,
+				E5000000000000000000000C /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E50000000000000000000008 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				CE9550782F5B5467000E20E2 /* lifebalance */,
@@ -253,6 +309,28 @@
 			productReference = D40000000000000000000001 /* lifebalanceV2MigrationTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		E50000000000000000000006 /* TodayWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5000000000000000000000B /* Build configuration list for PBXNativeTarget "TodayWidget" */;
+			buildPhases = (
+				E50000000000000000000005 /* Sources */,
+				E50000000000000000000003 /* Frameworks */,
+				E50000000000000000000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E50000000000000000000002 /* TodayWidget */,
+			);
+			name = TodayWidget;
+			packageProductDependencies = (
+			);
+			productName = TodayWidget;
+			productReference = E50000000000000000000001 /* TodayWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -282,6 +360,9 @@
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = CE9550752F5B5467000E20E2;
 					};
+					E50000000000000000000006 = {
+						CreatedOnToolsVersion = 26.3;
+					};
 				};
 			};
 			buildConfigurationList = CE9550712F5B5467000E20E2 /* Build configuration list for PBXProject "lifebalance" */;
@@ -304,6 +385,7 @@
 				C30000000000000000000006 /* lifebalanceV1MigrationTests */,
 				D40000000000000000000006 /* lifebalanceV2MigrationTests */,
 				B20000000000000000000006 /* lifebalanceUITests */,
+				E50000000000000000000006 /* TodayWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -338,6 +420,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D40000000000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E50000000000000000000004 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -382,6 +471,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E50000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -404,6 +500,11 @@
 			isa = PBXTargetDependency;
 			target = CE9550752F5B5467000E20E2 /* lifebalance */;
 			targetProxy = D40000000000000000000007 /* PBXContainerItemProxy */;
+		};
+		E50000000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E50000000000000000000006 /* TodayWidget */;
+			targetProxy = E50000000000000000000007 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -660,6 +761,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = lifebalance/lifebalance.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -693,6 +795,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = lifebalance/lifebalance.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -763,6 +866,62 @@
 			};
 			name = Release;
 		};
+		E50000000000000000000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = TodayWidget/TodayWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZT4848V65;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TodayWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.TodayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E5000000000000000000000A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = TodayWidget/TodayWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6ZT4848V65;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TodayWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dds.lifebalance.TodayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -816,6 +975,15 @@
 			buildConfigurations = (
 				D40000000000000000000009 /* Debug */,
 				D4000000000000000000000A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5000000000000000000000B /* Build configuration list for PBXNativeTarget "TodayWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E50000000000000000000009 /* Debug */,
+				E5000000000000000000000A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -13,6 +13,8 @@ final class TaskFormViewModel {
     var important: Bool?
     var urgent: Bool?
     var estimateMinutesText: String
+    var recurrenceEnabled: Bool
+    var recurrenceFrequency: RecurrenceFrequency
     var errorMessage: String?
 
     let lifeAreas: [LifeArea]
@@ -45,6 +47,8 @@ final class TaskFormViewModel {
             important = task.important
             urgent = task.urgent
             estimateMinutesText = task.estimateMinutes.map(String.init) ?? ""
+            recurrenceEnabled = false
+            recurrenceFrequency = .weekly
         } else {
             title = ""
             note = ""
@@ -55,6 +59,8 @@ final class TaskFormViewModel {
             important = nil
             urgent = nil
             estimateMinutesText = ""
+            recurrenceEnabled = false
+            recurrenceFrequency = .weekly
         }
     }
 
@@ -69,7 +75,10 @@ final class TaskFormViewModel {
             urgent: urgent,
             estimateMinutes: Int(estimateMinutesText),
             lifeArea: lifeAreas.first { $0.id == selectedAreaID },
-            goal: goals.first { $0.id == selectedGoalID }
+            goal: goals.first { $0.id == selectedGoalID },
+            recurrence: !isEditing && recurrenceEnabled
+                ? TaskRecurrenceInput(frequency: recurrenceFrequency)
+                : nil
         )
         do {
             if let editingTask {

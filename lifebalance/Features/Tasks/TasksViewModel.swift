@@ -24,6 +24,7 @@ final class TasksViewModel {
     private let toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase
     private let updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase
     private let setTaskStatusUseCase: SetTaskStatusUseCase
+    private let generateRecurringTasksUseCase: GenerateRecurringTasksUseCase?
 
     init(
         taskRepository: TaskRepository,
@@ -31,7 +32,8 @@ final class TasksViewModel {
         goalRepository: GoalRepository,
         toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase,
         updateTaskQuadrantUseCase: UpdateTaskQuadrantUseCase,
-        setTaskStatusUseCase: SetTaskStatusUseCase
+        setTaskStatusUseCase: SetTaskStatusUseCase,
+        generateRecurringTasksUseCase: GenerateRecurringTasksUseCase? = nil
     ) {
         self.taskRepository = taskRepository
         self.lifeAreaRepository = lifeAreaRepository
@@ -39,10 +41,12 @@ final class TasksViewModel {
         self.toggleTaskCompletionUseCase = toggleTaskCompletionUseCase
         self.updateTaskQuadrantUseCase = updateTaskQuadrantUseCase
         self.setTaskStatusUseCase = setTaskStatusUseCase
+        self.generateRecurringTasksUseCase = generateRecurringTasksUseCase
     }
 
     func load() {
         do {
+            try generateRecurringTasksUseCase?.execute()
             tasks = try taskRepository.fetchAll()
             lifeAreas = try lifeAreaRepository.fetchActiveAreas()
             goals = try goalRepository.fetchAll()

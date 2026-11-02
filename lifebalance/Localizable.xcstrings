@@ -261,12 +261,12 @@
         }
       }
     },
-    "Баланс хранит введённые вами цели, задачи, сферы жизни, оценки баланса и историю фокус-сессий локально на вашем устройстве. Приложение не создаёт учётную запись и не отправляет эти данные разработчику.": {
+    "Баланс хранит введённые вами цели, задачи, расписания повторений, привычки, еженедельные обзоры, сферы жизни, оценки баланса и историю фокус-сессий локально на вашем устройстве. Приложение не создаёт учётную запись и не отправляет эти данные разработчику.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Balance stores the goals, tasks, life areas, balance ratings, and focus-session history you enter locally on your device. The app does not create an account or send this data to the developer."
+            "value": "Balance stores the goals, tasks, recurrence schedules, habits, weekly reviews, life areas, balance ratings, and focus-session history you enter locally on your device. The app does not create an account or send this data to the developer."
           }
         }
       }
@@ -2017,12 +2017,12 @@
         }
       }
     },
-    "Редакция от 1 ноября 2026 года": {
+    "Редакция от 2 ноября 2026 года": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Effective November 1, 2026"
+            "value": "Effective November 2, 2026"
           }
         }
       }
@@ -2563,6 +2563,376 @@
           "stringUnit": {
             "state": "translated",
             "value": "goals created"
+          }
+        }
+      }
+    },
+    "%lld из %lld за неделю": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld of %2$lld this week"
+          }
+        }
+      }
+    },
+    "%lld раз в неделю": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld times a week"
+          }
+        }
+      }
+    },
+    "Для повторяющейся задачи укажите дату первого выполнения.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the first due date for a recurring task."
+          }
+        }
+      }
+    },
+    "Введите название привычки.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a habit name."
+          }
+        }
+      }
+    },
+    "Цель должна быть от 1 до 7 раз в неделю.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The target must be between 1 and 7 times a week."
+          }
+        }
+      }
+    },
+    "Каждую неделю": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every week"
+          }
+        }
+      }
+    },
+    "Каждый день": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every day"
+          }
+        }
+      }
+    },
+    "Каждый месяц": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every month"
+          }
+        }
+      }
+    },
+    "По рабочим дням": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On weekdays"
+          }
+        }
+      }
+    },
+    "Добавьте небольшое регулярное действие.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a small action you want to repeat."
+          }
+        }
+      }
+    },
+    "Название привычки": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habit name"
+          }
+        }
+      }
+    },
+    "Нет привычек": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No habits"
+          }
+        }
+      }
+    },
+    "Новая привычка": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New habit"
+          }
+        }
+      }
+    },
+    "Привычки": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Habits"
+          }
+        }
+      }
+    },
+    "Обзор недели": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekly review"
+          }
+        }
+      }
+    },
+    "Главные приоритеты": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Top priorities"
+          }
+        }
+      }
+    },
+    "До трёх приоритетов следующей недели": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to three priorities for next week"
+          }
+        }
+      }
+    },
+    "Завершить обзор": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete review"
+          }
+        }
+      }
+    },
+    "Итоги недели": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This week"
+          }
+        }
+      }
+    },
+    "Короткий итог недели": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A short reflection on the week"
+          }
+        }
+      }
+    },
+    "Обновить обзор": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update review"
+          }
+        }
+      }
+    },
+    "Перенести на следующую неделю": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move to next week"
+          }
+        }
+      }
+    },
+    "Что получилось": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What went well"
+          }
+        }
+      }
+    },
+    "минут фокуса": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "focus minutes"
+          }
+        }
+      }
+    },
+    "привычки": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "habits"
+          }
+        }
+      }
+    },
+    "средний баланс": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "average balance"
+          }
+        }
+      }
+    },
+    "Периодичность": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frequency"
+          }
+        }
+      }
+    },
+    "Повторение": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recurrence"
+          }
+        }
+      }
+    },
+    "Повторять задачу": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repeat task"
+          }
+        }
+      }
+    },
+    "Нет повторяющихся задач": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No recurring tasks"
+          }
+        }
+      }
+    },
+    "Повторение можно включить при создании задачи.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on recurrence when creating a task."
+          }
+        }
+      }
+    },
+    "Повторяющиеся задачи": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recurring tasks"
+          }
+        }
+      }
+    },
+    "Планирование": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planning"
+          }
+        }
+      }
+    },
+    "Следующее выполнение: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next occurrence: %@"
+          }
+        }
+      }
+    },
+    "Серия: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Streak: %lld"
+          }
+        }
+      }
+    },
+    "Виджет": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget"
+          }
+        }
+      }
+    },
+    "Для работы виджета приложение сохраняет краткую сводку экрана «Сегодня» в защищённом общем контейнере приложения и его виджета. Сводка остаётся на устройстве и не отправляется на сервер.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To power the widget, the app stores a short Today summary in a protected container shared by the app and its widget. The summary stays on your device and is not sent to a server."
           }
         }
       }
